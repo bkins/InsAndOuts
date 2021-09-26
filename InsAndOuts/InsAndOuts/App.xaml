@@ -1,12 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:utilities="clr-namespace:InsAndOuts.Utilities;assembly=InsAndOuts"
+             xmlns:richTextEditor="clr-namespace:Syncfusion.XForms.RichTextEditor;assembly=Syncfusion.SfRichTextEditor.XForms"
              x:Class="InsAndOuts.App">
     <!--
         Define global resources and styles here, that apply to all pages in your app.
     -->
     <Application.Resources>
         <ResourceDictionary>
+            
+            <Style x:Key="EntryStyle" 
+                   TargetType="Entry">
+                <Setter Property="Keyboard" Value="{x:Static utilities:GlobalKeyboards.SuggestionsWithWordCapitalization}" />
+            </Style>
+            
+            <Style x:Key="EditorStyle" 
+                   TargetType="Editor">
+                <Setter Property="Keyboard" Value="{x:Static utilities:GlobalKeyboards.SuggestionsWithSentenceCapitalization}" />
+            </Style>
+            
+            <Color x:Key="PrimaryBackColor">#2196F3</Color>
+            <Color x:Key="PrimaryForeColor">White</Color>
+            <Color x:Key="PrimaryUnselectedLightForeColor">AntiqueWhite</Color>
+            <Color x:Key="PrimaryUnselectedDarkForeColor">LightGray</Color>
+            <Color x:Key="PageBackgroundColor">White</Color>
+
+            <x:Double x:Key="AccordionHeight">30</x:Double>
+            <x:Double x:Key="AccordionItemHeight">25></x:Double>
+            <x:Double x:Key="AccordionItemButtonWidth">50></x:Double>
+
+            <Style TargetType="Entry">
+                <Setter Property="TextColor" Value="DarkSlateGray" />
+                <Setter Property="PlaceholderColor" Value="LightGray" />
+            </Style>
+
+            <Style TargetType="Editor">
+                <Setter Property="TextColor" Value="DarkSlateGray" />
+                <Setter Property="PlaceholderColor" Value="LightGray" />
+            </Style>
+                
+            <!--<Style TargetType="richTextEditor:SfRichTextEditor">
+                <Setter Property="AutoSize" Value="TextChanges"/>
+                <Setter Property="ToolbarOptions" Value="Bold,FontColor,Italic,IncreaseIndent,DecreaseIndent,NumberList"/>
+            </Style>-->
+
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="DarkSlateGray" />
+            </Style>
+            
+            <Style TargetType="Picker">
+                <Setter Property="TextColor" Value="DarkSlateGray" />
+                <Setter Property="TitleColor" Value="LightGray" />
+            </Style>
+            <Style TargetType="TabBar">
+                <Setter Property="Shell.TabBarBackgroundColor"
+                        Value="{StaticResource PrimaryBackColor}" />
+                <Setter Property="Shell.TabBarTitleColor"
+                        Value="Black" />
+                <Setter Property="Shell.TabBarUnselectedColor"
+                        Value="{StaticResource PrimaryUnselectedLightForeColor}" />
+            </Style>
+
+
             <Color x:Key="Primary">#2196F3</Color>
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="White"></Setter>

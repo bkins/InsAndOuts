@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InsAndOuts.Views.HomePage"
+             Title="Home">
+    <ContentPage.ToolbarItems >
+
+        <ToolbarItem x:Name="Configuration"
+                     IconImageSource="gearWheel.png"
+                     Clicked="Configuration_OnClicked"
+                     />
+
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            
+            <Button x:Name="ReportButton"
+                    Text="Report"
+                    Clicked="ReportButton_OnClicked"
+                    />
+            <Button x:Name="BrowseDataButton"
+                    Text="Browse Data"
+                    />
+            <Button x:Name="TendsAnalysisReportsButton"
+                    Text="Tends/Analysis/Reports"
+                    />
+            <Button x:Name="AboutButton"
+                    Text="About"
+                    />
+            <Button x:Name="LoadTestData"
+                    Text="LoadTestData"
+                    Clicked="LoadTestData_OnClicked"
+                    />
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

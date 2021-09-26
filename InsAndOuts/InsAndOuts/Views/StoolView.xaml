@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             x:Class="InsAndOuts.Views.StoolView"
+             Title="Add New Stool"
+             >
+    <ContentPage.Content>
+        <StackLayout>
+
+            <Editor x:Name="DescriptionEditor"
+                    Placeholder="Describe the stool"
+                    Unfocused="DescriptionEditor_OnUnfocused"
+            />
+
+            <Picker x:Name="StoolTypePicker"
+                    Title="Select Bristol Stool Type:"
+                    SelectedIndexChanged="Picker_OnSelectedIndexChanged"
+                    >
+                <Picker.Items>
+                    <x:String>Type 1: Separate hard lumps, like nuts (difficult to pass and can be black)</x:String>
+                    <x:String>Type 2: Sausage-shaped, but lumpy</x:String>
+                    <x:String>Type 3: Like a sausage but with cracks on its surface (can be black)</x:String>
+                    <x:String>Type 4: Like a sausage or snake, smooth and soft (average stool)</x:String>
+                    <x:String>Type 5: Soft blobs with clear cut edges</x:String>
+                    <x:String>Type 6: Fluffy pieces with ragged edges, a mushy stool (diarrhea)</x:String>
+                    <x:String>Type 7: Watery, no solid pieces, entirely liquid (diarrhea)</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <DatePicker x:Name="WhenDatePicker"
+                        Unfocused="WhenDatePicker_OnUnfocused"
+            />
+            
+            <TimePicker x:Name="WhenTimePicker"
+                        Unfocused="WhenTimePicker_OnUnfocused"
+                        
+            />
+
+            <Image x:Name="TakePictureImage"
+                   Source="camera.png"
+                   HeightRequest="50"
+                   HorizontalOptions="End"
+                   Margin="0, 0, 5, 0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Tapped="TakePictureImage_Tapped"
+                        NumberOfTapsRequired="1" />
+                </Image.GestureRecognizers>
+            </Image>
+
+            <Image x:Name="ImageFromCamera"/>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

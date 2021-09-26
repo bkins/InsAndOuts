@@ -1,4 +1,10 @@
-﻿using System;
+using Syncfusion.SfPicker.XForms.UWP;
+using Syncfusion.XForms.UWP.Buttons;
+using Syncfusion.SfAutoComplete.XForms.UWP;
+using Syncfusion.XForms.UWP.RichTextEditor;
+using Syncfusion.SfRangeSlider.XForms.UWP;
+using System.Reflection;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,7 +63,13 @@ namespace InsAndOuts.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 global::Xamarin.Forms.Forms.SetFlags("Shell_UWP_Experimental");
-                Xamarin.Forms.Forms.Init(e);
+List<Assembly> assembliesToInclude = new List<Assembly>();
+assembliesToInclude.Add(typeof(SfPickerRenderer).GetTypeInfo().Assembly);
+assembliesToInclude.Add(typeof(SfButtonRenderer).GetTypeInfo().Assembly);
+assembliesToInclude.Add(typeof(SfAutoCompleteRenderer).GetTypeInfo().Assembly);
+assembliesToInclude.Add(typeof(SfRichTextEditorRenderer).GetTypeInfo().Assembly);
+assembliesToInclude.Add(typeof(SfRangeSliderRenderer).GetTypeInfo().Assembly);
+Xamarin.Forms.Forms.Init(e, assembliesToInclude);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

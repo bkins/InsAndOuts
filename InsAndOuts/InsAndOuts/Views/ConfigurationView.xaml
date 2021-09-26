@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InsAndOuts.Views.ConfigurationView"
+             xmlns:viewmodels="clr-namespace:InsAndOuts.ViewModels;assembly=InsAndOuts"
+             xmlns:views="clr-namespace:InsAndOuts.Views;assembly=InsAndOuts"
+             x:DataType="views:ConfigurationView"
+             
+             Title="Settings"
+             >
+    <ContentPage.Content >
+
+        <StackLayout>
+
+            <StackLayout VerticalOptions="Start">
+                <Grid ColumnDefinitions="*,auto"
+                      RowDefinitions="auto">
+
+                    <Label x:Name="UseHtmlSwitchLabel"
+                           Text="Use HTML formatted emails"
+                           FontAttributes="Bold"
+                           FontSize="Medium"
+                           Grid.Row="0"
+                           Grid.Column="0"
+                           />
+                    <Label x:Name="UseHtmlSwitchLabelMoreInfo"
+                           Text="(This will allow you to format your emails better.  Turn it off if you need to send email as Plain Text.)"
+                           FontSize="Small"
+                           Grid.Row="1"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           />
+
+                    <Switch x:Name="UseHtmlSwitch"
+                            IsToggled="True"
+                            Toggled="UseHtmlSwitch_OnToggled"
+                            Grid.Column="1"
+                            />
+                </Grid>
+                
+                <Label x:Name="EmailToDoctorLabel"
+                       Text="Enter the email address of the doctor to whom to send the reports to:"
+                       FontAttributes="Bold"
+                       FontSize="Medium"
+                       />
+
+                <Entry x:Name="EmailToDoctorEditor"
+                        Placeholder="Doctor's email address"
+                        Text="{Binding EmailToDoctor}"
+                        Unfocused="EmailToDoctorEditor_OnUnfocused"
+                        />
+
+                <Button x:Name="DoneButton"
+                        Text="Done"
+                        Clicked="DoneButton_OnClicked"
+                        />
+
+            </StackLayout>
+            
+            <Grid ColumnDefinitions="auto,*">
+                <Label x:Name="AdvancedLabel"
+                       Text="Advanced Options"
+                       Grid.Column="0"
+                       />
+                <Switch x:Name="AdvancedSwitch"
+                        IsToggled="False"
+                        Grid.Column="1"
+                        Toggled="AdvancedSwitch_OnToggled"
+                />
+            </Grid>
+            
+
+            <StackLayout VerticalOptions="CenterAndExpand">
+
+                <StackLayout x:Name="MiddleStackLayout"
+                             IsVisible="False">
+
+                    <Button x:Name="ClearSettings"
+                            Text="Clear Settings"
+                            Clicked="ClearSettings_OnClicked"
+                            />
+
+                    <Button x:Name="ClearData"
+                        Text="Clear All Data"
+                        Clicked="ClearData_OnClicked"
+                        VerticalOptions="End"
+                        />
+
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout VerticalOptions="End">
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

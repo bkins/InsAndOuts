@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:picker="clr-namespace:Syncfusion.SfPicker.XForms;assembly=Syncfusion.SfPicker.XForms"
+             xmlns:listCollection="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+             xmlns:richTextEditor="clr-namespace:Syncfusion.XForms.RichTextEditor;assembly=Syncfusion.SfRichTextEditor.XForms"
+             
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:InsAndOuts.Views;assembly=InsAndOuts"
+             x:Class="InsAndOuts.Views.DailyReportView"
+             x:DataType="views:DailyReportView"
+             x:Name="DailyReportViewName"
+             Title="Report to Doctor"
+             >
+
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="FillAndExpand">
+            
+            <picker:SfPicker x:Name="ReportDatePicker" 
+                             HeaderBackgroundColor="{DynamicResource Primary}"
+                             PickerMode="Dialog"
+                             IsEnabled="True"
+                             VerticalOptions="Center" 
+                             HorizontalOptions="Center" 
+                             HeaderText="Available Dates" 
+                             ShowFooter="True"
+                             ShowHeader="True"
+                                 
+                             OkButtonClicked="ReportDatePicker_OnOkButtonClicked"
+                             CancelButtonClicked="ReportDatePicker_OnCancelButtonClicked"
+                             />
+
+            <Grid ColumnDefinitions="auto,*"
+                  RowDefinitions="auto,auto,auto,*"
+                  VerticalOptions="FillAndExpand">
+
+                <Label x:Name="ReportDateLabel"
+                       Text="Date to report on:"
+                       FontSize="Medium"
+                       VerticalTextAlignment="Start"
+                       Grid.Column="0"
+                       Grid.Row="0"
+                       />
+
+                <Label x:Name="ReportDatePickedLabel"
+                       Grid.Column="1"
+                       Grid.Row="0"
+                       Text="Pick a date..."
+                       IsVisible="True"
+                       FontSize="Medium"
+                       VerticalOptions="Start"
+                       >
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowReportDatePickerCommand, Source={x:Reference Name=DailyReportViewName}}" />
+                    </Label.GestureRecognizers>
+
+                </Label>
+
+                <Label x:Name="HtmlSwitchLabel"
+                       Text="Send report as HTML"
+                       FontSize="Medium"
+                       VerticalTextAlignment="Start"
+                       Grid.Column="0"
+                       Grid.Row="1"
+                       />
+
+                <Switch x:Name="HtmlSwitch"
+                        IsToggled="True"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Start"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Toggled="HtmlSwitch_OnToggled"
+                        />
+
+                <Entry x:Name="SendTo"
+                       Placeholder="Whom to send the report to"
+                       VerticalOptions="Start"
+                       Grid.Column="0"
+                       Grid.Row="2"
+                       />
+
+                <Button x:Name="SendReport"
+                        Text="Send Report"
+                        VerticalOptions="Start"
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        Clicked="SendReport_OnClicked"
+                        />
+
+                <Editor x:Name="ReportPlainText"
+                        Placeholder="Report Details"
+                        IsVisible="False"
+                        VerticalOptions="FillAndExpand"
+                        IsReadOnly="True"
+                        Grid.Column="0"
+                        Grid.Row="3"
+                        Grid.ColumnSpan="2"
+                />
+
+                <richTextEditor:SfRichTextEditor x:Name="ReportHtml"
+                                                 ShowToolbar="False"
+                                                 IsVisible="True"
+                                                 ReadOnly="True"
+                                                 VerticalOptions="FillAndExpand"
+                                                 DefaultFontSize="Small"
+                                                 Grid.Column="0"
+                                                 Grid.Row="3"
+                                                 Grid.ColumnSpan="2"
+                />
+
+            </Grid>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

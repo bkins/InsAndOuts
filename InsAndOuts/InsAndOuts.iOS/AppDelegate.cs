@@ -1,4 +1,9 @@
-﻿using System;
+using Syncfusion.SfPicker.XForms.iOS;
+using Syncfusion.XForms.iOS.Buttons;
+using Syncfusion.SfAutoComplete.XForms.iOS;
+using Syncfusion.XForms.iOS.RichTextEditor;
+using Syncfusion.SfRangeSlider.XForms.iOS;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,7 +27,12 @@ namespace InsAndOuts.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            global::Xamarin.Forms.Forms.Init();
+global::Xamarin.Forms.Forms.Init();
+SfPickerRenderer.Init();
+SfButtonRenderer.Init();
+SfAutoCompleteRenderer.Init();
+SfRichTextEditorRenderer.Init();
+SfRangeSliderRenderer.Init();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

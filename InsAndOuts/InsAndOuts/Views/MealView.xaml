@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+xmlns:richTextEditor="clr-namespace:Syncfusion.XForms.RichTextEditor;assembly=Syncfusion.SfRichTextEditor.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InsAndOuts.Views.MealView"
+             Title="Add New Meal"
+            >
+    <ContentPage.Content>
+        <StackLayout>
+
+            <Entry x:Name="NameEntry"
+                   Placeholder="Name of meal"
+                   Unfocused="NameEntry_OnUnfocused"
+                   Focused="NameEntry_OnFocused"
+                   />
+
+            <Editor x:Name="DescriptionEditor"
+                    Placeholder="What did you eat"
+                    Unfocused="DescriptionEditor_OnUnfocused"
+                    Focused="DescriptionEditor_OnFocused"
+                    IsVisible="False"
+                    />
+
+            <richTextEditor:SfRichTextEditor x:Name="DescriptionRtf"
+                                             PlaceHolder="What did you eat"
+                                             AutoSize="TextChanges"
+                                             ToolbarOptions="Bold,FontColor,Italic,IncreaseIndent,DecreaseIndent,BulletList,Alignment"
+                                             VerticalOptions="FillAndExpand"
+                                             Unfocused="DescriptionRtf_OnUnfocused"
+                                             Focused="DescriptionRtf_OnFocused"
+                                             IsVisible="True"
+                                             ToolbarPosition="Top"
+
+                                             />
+
+            <DatePicker x:Name="WhenDatePicker"
+                        Unfocused="WhenDatePicker_OnUnfocused"
+                        Focused="WhenDatePicker_OnFocused"
+                        />
+
+            <TimePicker x:Name="WhenTimePicker"
+                        Unfocused="WhenTimePicker_OnUnfocused"
+                        Focused="WhenTimePicker_OnFocused"
+                        />
+            
+            <button:SfButton x:Name="SaveButton" 
+                             Text="SAVE"
+                             ImageAlignment="Bottom"
+                             ShowIcon="False"
+                             ImageSource="saved.png"
+                             VerticalOptions="Center"
+                             BackgroundColor="{StaticResource Primary}"
+                             Margin="0,0,0,25"
+                             Clicked="SaveButton_OnClicked"
+                             />
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

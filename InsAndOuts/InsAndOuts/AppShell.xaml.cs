@@ -1,7 +1,7 @@
 ﻿using InsAndOuts.ViewModels;
-using InsAndOuts.Views;
 using System;
 using System.Collections.Generic;
+using InsAndOuts.Views;
 using Xamarin.Forms;
 
 namespace InsAndOuts
@@ -11,8 +11,12 @@ namespace InsAndOuts
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
-            Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
+            Routing.RegisterRoute(nameof(HomePage),          typeof(HomePage));
+            Routing.RegisterRoute(nameof(MealView),         typeof(MealView));
+            Routing.RegisterRoute(nameof(ConfigurationView), typeof(ConfigurationView));
+            Routing.RegisterRoute(nameof(PainView),          typeof(PainView));
+            Routing.RegisterRoute(nameof(StoolView),         typeof(StoolView));
+            Routing.RegisterRoute(nameof(DailyReportView),   typeof(DailyReportView));
         }
 
         private async void OnMenuItemClicked(object sender, EventArgs e)
