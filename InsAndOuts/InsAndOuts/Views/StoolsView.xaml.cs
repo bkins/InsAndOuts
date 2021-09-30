@@ -19,9 +19,10 @@ namespace InsAndOuts.Views
     public partial class StoolsView : ContentPage, IDisposable
     {
         
-        public  StoolViewModel ViewModel         { get; set; }
-        private bool           LeftToTakePicture { get; set; }
-
+        public  StoolViewModel ViewModel               { get; set; }
+        private bool           LeftToTakePicture       { get; set; }
+        private double         SaveButtonInitialHeight { get; set; }
+        
         public StoolsView()
         {
             InitializeComponent();
@@ -31,6 +32,8 @@ namespace InsAndOuts.Views
 
             DescriptionHtmlRtEditor.IsVisible    = Configuration.UseHtmlForEmailBody;
             DescriptionPlainTextEditor.IsVisible = ! DescriptionHtmlRtEditor.IsVisible;
+
+            SaveButtonInitialHeight = SaveButton.Height;
         }
         
         protected override void OnAppearing()
@@ -60,6 +63,8 @@ namespace InsAndOuts.Views
             WhenDatePicker.Date          = DateTime.Today;
             WhenTimePicker.Time          = DateTime.Now.TimeOfDay;
             
+            SetSaveButtonNotSaved();
+
             ViewModel = new StoolViewModel();
 
             UpdateViewTitle();
@@ -79,8 +84,9 @@ namespace InsAndOuts.Views
 
         private void SetSaveButtonNotSaved()
         {
-            SaveButton.ShowIcon = false;
-            SaveButton.Text     = "SAVE";
+            SaveButton.ShowIcon      = false;
+            SaveButton.Text          = "SAVE";
+            SaveButton.HeightRequest = SaveButtonInitialHeight;
         }
         
         private void SetSaveButtonSaved(SfButton button)
@@ -288,6 +294,8 @@ namespace InsAndOuts.Views
                                         , EventArgs e)
         {
             ViewModel.SaveStool();
+            
+            UpdateViewTitle();
 
             if (sender is SfButton button)
                 SetSaveButtonSaved(button);
