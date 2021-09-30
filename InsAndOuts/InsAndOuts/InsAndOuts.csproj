@@ -36,7 +36,7 @@
     <EmbeddedResource Update="Views\PainView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\StoolView.xaml">
+    <EmbeddedResource Update="Views\StoolsView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Themes\DarkTheme.xaml">

@@ -10,5 +10,6 @@ namespace InsAndOuts.Models
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+
     }
 }

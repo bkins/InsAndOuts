@@ -24,7 +24,6 @@
                              HeaderText="Available Dates" 
                              ShowFooter="True"
                              ShowHeader="True"
-                                 
                              OkButtonClicked="ReportDatePicker_OnOkButtonClicked"
                              CancelButtonClicked="ReportDatePicker_OnCancelButtonClicked"
                              />

@@ -12,6 +12,10 @@ namespace InsAndOuts.Models
         public int Id    { get; set; }
         public int Level { get; set; }
 
+        public Pain()
+        {
+            Level = 0;
+        }
 
     }
 }

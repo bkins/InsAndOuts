@@ -22,7 +22,7 @@
                       />
         <ShellContent Title="Stool"
                       Icon="stool.png"
-                      ContentTemplate="{DataTemplate views:StoolView}"
+                      ContentTemplate="{DataTemplate views:StoolsView}"
                       />
         <ShellContent Title="Pain"
                       Icon="pain.png"

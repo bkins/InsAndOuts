@@ -25,6 +25,7 @@
             <Color x:Key="PrimaryUnselectedLightForeColor">AntiqueWhite</Color>
             <Color x:Key="PrimaryUnselectedDarkForeColor">LightGray</Color>
             <Color x:Key="PageBackgroundColor">White</Color>
+            <Color x:Key="PageForegroundColor">Black</Color>
 
             <x:Double x:Key="AccordionHeight">30</x:Double>
             <x:Double x:Key="AccordionItemHeight">25></x:Double>

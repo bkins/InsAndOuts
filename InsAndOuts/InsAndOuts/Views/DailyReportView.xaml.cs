@@ -21,8 +21,9 @@ namespace InsAndOuts.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DailyReportView : ContentPage
     {
-        private static string   EmailToDoctor => Configuration.EmailToDoctor;
-        private static DateTime DateToReport  { get; set; }
+        private static string   EmailToDoctor        => Configuration.EmailToDoctor;
+        private static DateTime DateToReport         { get; set; }
+        public static  string   DefaultSfPickerValue { get; set; }
 
         public  DailyReportViewModel ViewModel     { get; set; }
 
@@ -33,15 +34,17 @@ namespace InsAndOuts.Views
             InitializeComponent();
 
             DateToReport = DateTime.Today;
+
             GenerateReport();
         }
 
         private void GenerateReport()
         {
-            ViewModel                    = new DailyReportViewModel(DateToReport);
-            ReportPlainText.Text         = ViewModel.ToPainText();
-            ReportHtml.HtmlText          = ViewModel.ToHtml();
-            SendTo.Text                  = EmailToDoctor;
+            ViewModel                  = new DailyReportViewModel(DateToReport);
+            ReportPlainText.Text       = ViewModel.ToPainText();
+            ReportHtml.HtmlText        = ViewModel.ToHtml();
+            SendTo.Text                = EmailToDoctor;
+            ReportDatePickedLabel.Text = DateToReport.ToShortDateString();
 
             var datesWIthData = new ObservableCollection<string>(ViewModel.DatesWithData);
 
@@ -52,6 +55,7 @@ namespace InsAndOuts.Views
             }
 
             ReportDatePicker.ItemsSource = datesWIthData;
+            ReportDatePicker.SelectedItem = DateToReport.ToShortDateString();
         }
 
         private async void SendReport_OnClicked(object    sender

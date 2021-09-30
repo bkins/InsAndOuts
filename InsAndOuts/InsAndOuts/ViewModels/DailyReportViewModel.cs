@@ -18,9 +18,7 @@ namespace InsAndOuts.ViewModels
         public DailyReportViewModel(DateTime dateToReportOn)
         {
             DatesWithData = new List<string>();
-
-            //Whens below are strings.  OrderBy is probably not doing what I want.
-            //BENDO: Convert Whens to dates, then OrderBy
+            
             var allMeals  = DataAccessLayer.GetAllMeals().OrderBy(field=>DateTime.Parse(field.When));
             var allStools = DataAccessLayer.GetAllStools().OrderBy(field => DateTime.Parse(field.When));
             var allPains  = DataAccessLayer.GetAllPain().OrderBy(field => DateTime.Parse(field.When));
@@ -31,7 +29,7 @@ namespace InsAndOuts.ViewModels
                                   , allMeals
                                   , allPains
                                   , allStools);
-
+                
             SetDatesWithDataList(allMeals
                                , allStools
                                , allPains);
@@ -110,7 +108,11 @@ namespace InsAndOuts.ViewModels
                                        "No" :
                                        "Yes";
 
-                report.AppendLine($"\t* {stool.StoolType.Split(':')[0]} ({DateTime.Parse(stool.When).ToShortTimeString()}):");
+                var stoolType = stool.StoolType.IsNullEmptyOrWhitespace() ?
+                                        "-Not specifiec-" :
+                                        stool.StoolType.Split(':')[0];
+                
+                report.AppendLine($"\t* {stoolType} ({DateTime.Parse(stool.When).ToShortTimeString()}):");
                 report.AppendLine($"\t\t{stool.DescriptionPainText.Replace(Environment.NewLine, $"{Environment.NewLine}\t\t")}");
                 report.AppendLine($"\t\tHas an photo: {hasPhoto}");
             }
@@ -142,22 +144,32 @@ namespace InsAndOuts.ViewModels
 
             foreach (var stool in Stools)
             {
-                report.AppendLine($"&emsp;<i>{stool.StoolType.Split(':')[0]} ({DateTime.Parse(stool.When).ToShortTimeString()}):</i>");
-                report.AppendLine($"&emsp;&emsp;{stool.DescriptionHtml}");
+                
+                var stoolType = stool.StoolType.IsNullEmptyOrWhitespace() ?
+                                        "-Not specifiec-" :
+                                        stool.StoolType.Split(':')[0];
+
+                report.AppendLine($"&emsp;<i>{stoolType} ({DateTime.Parse(stool.When).ToShortTimeString()}):</i>");
+
+                var description = stool.DescriptionHtml.Contains("<ul><li>") ?
+                                          stool.DescriptionHtml :
+                                          $"<ul><li>{stool.DescriptionHtml}</lil>";
+
+                report.AppendLine($"{description}");
 
                 var hasPhoto = stool.Image        == null 
                             || stool.Image.Length == 0 ?
                                        "No" :
-                                       "Yes";
+                                       $"Yes ({stool.ImageFileName})";
                 
-                report.AppendLine($"&emsp;Has an photo: {hasPhoto} ({stool.ImageFileName})");
+                report.AppendLine($"<li>Has an photo: {hasPhoto}</li></ul>");
             }
             
             report.AppendLine("<b>Pains:</b><br>");
 
             foreach (var pain in Pains)
             {
-                report.AppendLine($"&emsp;<i>{pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):</i>");
+                report.AppendLine($"&emsp;<i>Level: {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):</i>");
                 report.AppendLine($"&emsp;&emsp;{pain.DescriptionHtml}");
             }
 

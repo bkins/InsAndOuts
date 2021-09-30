@@ -61,6 +61,11 @@ namespace InsAndOuts.Data
             _database.InsertWithChildren(stool);
         }
 
+        public void AddStool(Stool stool)
+        {
+            _database.Insert(stool);
+        }
+
     #endregion
 
     #region Gets
