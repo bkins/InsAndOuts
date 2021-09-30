@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             
+             xmlns:richTextEditor="clr-namespace:Syncfusion.XForms.RichTextEditor;assembly=Syncfusion.SfRichTextEditor.XForms"
+             xmlns:picker="clr-namespace:Syncfusion.SfPicker.XForms;assembly=Syncfusion.SfPicker.XForms"
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:listCollection="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+             
+             x:Class="InsAndOuts.Views.StoolsView"
+
+             Title="Add New Stool"
+             >
+
+    <ContentPage.Content>
+        <StackLayout>
+
+            <Grid RowDefinitions="auto,3.5*,*,*,*,*"
+                  VerticalOptions="Fill"
+                  >
+
+                <Editor x:Name="DescriptionPlainTextEditor"
+                        Unfocused="DescriptionPlainTextEditor_OnUnfocused"
+                        Focused="DescriptionPlainTextEditor_OnFocused"
+                        IsVisible="False"
+                        Grid.Row="0"
+                        />
+
+                <richTextEditor:SfRichTextEditor x:Name="DescriptionHtmlRtEditor" 
+                                                 PlaceHolder="Describe the stool"
+
+                                                 Grid.Row="0"
+
+                                                 AutoSize="TextChanges"
+
+                                                 ToolbarPosition="Top"                                                 
+                                                 ToolbarOptions="Bold,FontColor,Italic,IncreaseIndent,DecreaseIndent,BulletList,Alignment"
+                                                 VerticalOptions="StartAndExpand"
+                                                 
+                                                 Unfocused="DescriptionHtmlRtEditor_OnUnfocused"
+                                                 Focused="DescriptionHtmlRtEditor_OnFocused"
+                                                 />
+                
+                <Image x:Name="ImageFromCamera"
+                       IsVisible="False"
+                       VerticalOptions="Start"
+                       Margin="0, 0, 0, 0"
+                       Grid.Row="1"
+                       Aspect="AspectFit"
+                       />
+
+                <Picker x:Name="StoolTypePicker"
+                        Title="Select Bristol Stool Type:"
+                        VerticalOptions="Start"
+                        SelectedIndexChanged="StoolTypePicker_OnSelectedIndexChanged"
+                        Grid.Row="2"
+                        >
+                    <Picker.Items>
+                        <x:String>Type 1: Separate hard lumps, like nuts (difficult to pass and can be black)</x:String>
+                        <x:String>Type 2: Sausage-shaped, but lumpy</x:String>
+                        <x:String>Type 3: Like a sausage but with cracks on its surface (can be black)</x:String>
+                        <x:String>Type 4: Like a sausage or snake, smooth and soft (average stool)</x:String>
+                        <x:String>Type 5: Soft blobs with clear cut edges</x:String>
+                        <x:String>Type 6: Fluffy pieces with ragged edges, a mushy stool (diarrhea)</x:String>
+                        <x:String>Type 7: Watery, no solid pieces, entirely liquid (diarrhea)</x:String>
+                    </Picker.Items>
+                </Picker>
+                <!--BENDO: Set the choices to include images.
+                    See https://www.syncfusion.com/kb/8589/how-to-customize-sfpicker-header-view
+                    Hint: Set the HeaderView
+                -->
+                <!--<picker:SfPicker x:Name="StoolTypePicker" 
+                                 HeaderText="Select a stool type..."
+                                 HeaderBackgroundColor="{DynamicResource PageBackgroundColor}"
+                                 HeaderTextColor="{DynamicResource PageForegroundColor}"
+                                 HeaderFontSize="Medium"
+                                 
+                                 VerticalOptions="Center" 
+                                 HorizontalOptions="Center" 
+                                 Grid.Row="2"
+                                 >
+                    <picker:SfPicker.ItemsSource>
+                        --><!--BENDO:  Move this to the database(?)--><!--
+                        <listCollection:List x:TypeArguments="x:String">
+                            <x:String>Type 1: Separate hard lumps, like nuts (difficult to pass and can be black)</x:String>
+                            <x:String>Type 2: Sausage-shaped, but lumpy</x:String>
+                            <x:String>Type 3: Like a sausage but with cracks on its surface (can be black)</x:String>
+                            <x:String>Type 4: Like a sausage or snake, smooth and soft (average stool)</x:String>
+                            <x:String>Type 5: Soft blobs with clear cut edges</x:String>
+                            <x:String>Type 6: Fluffy pieces with ragged edges, a mushy stool (diarrhea)</x:String>
+                            <x:String>Type 7: Watery, no solid pieces, entirely liquid (diarrhea)</x:String>
+                        </listCollection:List>
+                    </picker:SfPicker.ItemsSource>
+
+                </picker:SfPicker>-->
+                
+                <DatePicker x:Name="WhenDatePicker"
+                            Grid.Row="3"
+                            VerticalOptions="StartAndExpand"
+                            Unfocused="WhenDatePicker_OnUnfocused"
+                            Focused="WhenDatePicker_OnFocused"
+                            />
+
+                <TimePicker x:Name="WhenTimePicker"
+                            Grid.Row="4"
+                            VerticalOptions="StartAndExpand"
+                            Unfocused="WhenTimePicker_OnUnfocused"
+                            Focused="WhenTimePicker_OnFocused"
+                            />
+
+                <Image x:Name="TakePictureImage"
+                       Source="camera.png"
+                       HeightRequest="50"
+                       HorizontalOptions="End"
+                       Margin="0, 0, 5, 0"
+                       Grid.Row="5"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="TakePictureImage_Tapped"
+                            NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+
+                </Image>
+
+                <button:SfButton x:Name="SaveButton" 
+                                 Text="SAVE"
+                                 ImageAlignment="Bottom"
+                                 ShowIcon="False"
+                                 ImageSource="saved.png"
+                                 VerticalOptions="Start"
+                                 BackgroundColor="{StaticResource Primary}"
+                                 Margin="0,0,0,0"
+                                 Clicked="SaveButton_OnClicked"
+                                 Grid.Row="6"
+                                 />
+
+            </Grid>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

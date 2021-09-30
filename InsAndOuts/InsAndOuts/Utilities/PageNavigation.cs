@@ -10,7 +10,18 @@ namespace InsAndOuts.Utilities
     {
         public static async Task NavigateTo(string nameOfPage)
         {
-            await Navigate($"{nameOfPage}");
+            try
+            {
+                Navigate($"{nameOfPage}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                throw;
+            }
+
+            //await 
         }
 
         public static async Task NavigateTo(string nameOfPage
@@ -32,7 +43,17 @@ namespace InsAndOuts.Utilities
 
         private static async Task Navigate(string path)
         {
-            await Shell.Current.GoToAsync(path);
+            try
+            {
+                Shell.Current.GoToAsync(path);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                throw;
+            }
+            
         }
 
         public static async Task NavigateBackwards()

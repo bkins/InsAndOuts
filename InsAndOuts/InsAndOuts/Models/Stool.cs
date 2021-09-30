@@ -15,6 +15,13 @@ namespace InsAndOuts.Models
         public string ImageFileName { get; set; }
         public string StoolType     { get; set; }
 
+        public Stool()
+        {
+            StoolType     = string.Empty;
+            Image         = Array.Empty<byte>();
+            ImageFileName = string.Empty;
+        }
+
         //[ForeignKey(typeof(StoolType))]
         //public int StoolTypeId { get; set; }
 
