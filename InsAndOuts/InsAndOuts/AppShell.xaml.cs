@@ -6,7 +6,7 @@ using Xamarin.Forms;
 
 namespace InsAndOuts
 {
-    public partial class AppShell : Xamarin.Forms.Shell
+    public partial class AppShell
     {
         public AppShell()
         {
@@ -18,10 +18,6 @@ namespace InsAndOuts
             Routing.RegisterRoute(nameof(StoolsView),        typeof(StoolsView));
             Routing.RegisterRoute(nameof(DailyReportView),   typeof(DailyReportView));
         }
-
-        private async void OnMenuItemClicked(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync("//LoginPage");
-        }
+        
     }
 }

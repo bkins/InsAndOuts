@@ -16,12 +16,11 @@ using Xamarin.Forms.Xaml;
 namespace InsAndOuts.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class StoolsView : ContentPage, IDisposable
+    public partial class StoolsView : ContentPage
     {
         
         public  StoolViewModel ViewModel               { get; set; }
         private bool           LeftToTakePicture       { get; set; }
-        private double         SaveButtonInitialHeight { get; set; }
         
         public StoolsView()
         {
@@ -32,16 +31,8 @@ namespace InsAndOuts.Views
 
             DescriptionHtmlRtEditor.IsVisible    = Configuration.UseHtmlForEmailBody;
             DescriptionPlainTextEditor.IsVisible = ! DescriptionHtmlRtEditor.IsVisible;
-
-            SaveButtonInitialHeight = SaveButton.Height;
         }
         
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-
-        }
-
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
@@ -53,15 +44,14 @@ namespace InsAndOuts.Views
 
             ResetData();
         }
+
         private void ResetData()
         {
-            DescriptionPlainTextEditor.Text  = string.Empty;
-            //DescriptionHtmlRtEditor.Text     = string.Empty;
-            //DescriptionHtmlRtEditor.HtmlText = string.Empty;
-            StoolTypePicker.SelectedItem = null;
-            ImageFromCamera.Source       = new FileImageSource();
-            WhenDatePicker.Date          = DateTime.Today;
-            WhenTimePicker.Time          = DateTime.Now.TimeOfDay;
+            DescriptionPlainTextEditor.Text = string.Empty;
+            StoolTypePicker.SelectedItem    = null;
+            ImageFromCamera.Source          = new FileImageSource();
+            WhenDatePicker.Date             = DateTime.Today;
+            WhenTimePicker.Time             = DateTime.Now.TimeOfDay;
             
             SetSaveButtonNotSaved();
 
@@ -72,13 +62,11 @@ namespace InsAndOuts.Views
 
         private void UpdateViewTitle()
         {
-            //For now this will always be "Add New"
-            //However, the idea will be that I will add feature to update the stools and this will be the view I will use.
-            //BENDO: On release to user(s) remove the ID for the Title
+            
             var addUpdate = ViewModel.Stool.Id == 0 ?
                                     "Add New" :
                                     "Update";
-
+            //BENDO: On release to user(s) remove the ID for the Title
             Title = $"{addUpdate} Stool ({ViewModel.Stool.Id})";
         }
 
@@ -86,7 +74,6 @@ namespace InsAndOuts.Views
         {
             SaveButton.ShowIcon      = false;
             SaveButton.Text          = "SAVE";
-            SaveButton.HeightRequest = SaveButtonInitialHeight;
         }
         
         private void SetSaveButtonSaved(SfButton button)
@@ -112,14 +99,14 @@ namespace InsAndOuts.Views
                                                           , FocusEventArgs e)
         {
             ViewModel.Stool.DescriptionPainText = DescriptionPlainTextEditor.Text;
-            ViewModel.SaveStool();
+            //ViewModel.Save();
         }
 
         private void DescriptionHtmlRtEditor_OnUnfocused(object    sender
                                                        , EventArgs e)
         {
             ViewModel.Stool.DescriptionHtml = DescriptionHtmlRtEditor.HtmlText;
-            ViewModel.SaveStool();
+            //ViewModel.Save();
         }
 
         private void DescriptionHtmlRtEditor_OnFocused(object    sender
@@ -132,7 +119,7 @@ namespace InsAndOuts.Views
                                               , FocusEventArgs e)
         {
             ViewModel.Stool.When = GetSelectDateTimeFromPickers();
-            ViewModel.SaveStool();
+            //ViewModel.Save();
         }   
 
         private void WhenDatePicker_OnFocused(object         sender
@@ -145,7 +132,7 @@ namespace InsAndOuts.Views
                                               , FocusEventArgs e)
         {
             ViewModel.Stool.When = GetSelectDateTimeFromPickers();
-            ViewModel.SaveStool();
+            //ViewModel.Save();
         }
 
         private void WhenTimePicker_OnFocused(object         sender
@@ -160,24 +147,15 @@ namespace InsAndOuts.Views
             if (await ReadyToTakePicture())
                 return;
             
-                //try
-                //{
-                //    PictureFile = await GetImage();
-                //}
-                //catch (ObjectDisposedException disposedException)
-                //{
-                //    Console.WriteLine("Caught: {0}", disposedException.Message);
-                //}
-                //catch (Exception exception)
-                //{
-                //    Console.WriteLine(exception);
-
-                //    throw;
-                //}
             try
             {
                 var photo = await GetImage();
-                
+
+                if (await WasImageReturnedFromCamera(photo))
+                {
+                    return;
+                }
+
                 ImageFromCamera.Source = ImageSource.FromStream(() => photo.GetStream());
                 
                 using (var memory = new MemoryStream()) 
@@ -187,28 +165,6 @@ namespace InsAndOuts.Views
                     ViewModel.Stool.Image = memory.ToArray();
                 }
                 
-                //ImageFromCamera.Source = ImageSource.FromStream(() => GetImage().Result.GetStream());
-                //ViewModel.Stool.Image  = File.ReadAllBytes(ImageFromCamera.Source);
-                //using (var file = await GetImage())
-                //{
-                //    ImageFromCamera.Source = ImageSource.FromStream(() => GetImage().Result.GetStream());
-
-                //    //<User takes picture>
-                //    if (await WasImageReturnedFromCamera(file))
-                //        return;
-                    
-                //    ViewModel.Stool.Image = File.ReadAllBytes(file.Path);
-
-                //    //using (var fileStream = file.GetStream())
-                //    //{
-                //        if (ImageFromCamera.Source == null)
-                //        {
-                //            //Get picture
-                //            ImageFromCamera.Source = ImageSource.FromStream(() => file.GetStream());
-                //        }
-                //    //}
-                //}
-                
                 ImageFromCamera.IsVisible = true;
                 
                 ViewModel.Stool.ImageFileName = $"stool{ViewModel.Stool.Id}.jpg";
@@ -217,31 +173,24 @@ namespace InsAndOuts.Views
             catch (ObjectDisposedException disposedException)
             {
                 await DisplayAlert("ObjectDisposedException", disposedException.Message, "OK");
-
-                //throw;
             }
             catch (Exception exception)
             {
                 await DisplayAlert("Exception", exception.Message, "OK");
-
-                //throw;
             }
-            //Save
-            //ViewModel.SaveStool();
         }
         
         private async Task<bool> WasImageReturnedFromCamera(MediaFile file)
         {
-            if (file == null)
-            {
-                await DisplayAlert("No picture found"
-                                 , "Unable to get photo. Please try again"
-                                 , "OK");
+            if (file != null)
+                return false;
 
-                return true;
-            }
+            await DisplayAlert("No picture found"
+                             , "Unable to get photo. Please try again"
+                             , "OK");
 
-            return false;
+            return true;
+
         }
 
         private async Task<MediaFile> GetImage()
@@ -260,15 +209,15 @@ namespace InsAndOuts.Views
 
         private async Task<bool> ReadyToTakePicture()
         {
-            //Ensure a stool has been created first
-            if (ViewModel.Stool.Id == 0)
-            {
-                await DisplayAlert("Define the stool first."
-                                 , "Please enter at least a description first."
-                                 , "OK");
+            ////Ensure a stool has been created first
+            //if (ViewModel.Stool.Id == 0)
+            //{
+            //    await DisplayAlert("Define the stool first."
+            //                     , "Please enter at least a description first."
+            //                     , "OK");
 
-                return true;
-            }
+            //    return true;
+            //}
 
             //Open camera
             if (! CrossMedia.Current.IsCameraAvailable
@@ -293,7 +242,7 @@ namespace InsAndOuts.Views
         private void SaveButton_OnClicked(object    sender
                                         , EventArgs e)
         {
-            ViewModel.SaveStool();
+            ViewModel.Save();
             
             UpdateViewTitle();
 
@@ -307,11 +256,6 @@ namespace InsAndOuts.Views
                                                         , FocusEventArgs e)
         {
             SetSaveButtonNotSaved();
-        }
-
-        public void Dispose()
-        {
-            
         }
     }
 }

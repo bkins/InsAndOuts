@@ -16,7 +16,7 @@ namespace InsAndOuts.ViewModels
             Pains = DataAccessLayer.GetAllPain();
         }
 
-        public void SavePain()
+        public void Save()
         {
             if (Pain.Id == 0)
             {

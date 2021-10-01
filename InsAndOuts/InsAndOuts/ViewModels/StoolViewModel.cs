@@ -16,7 +16,7 @@ namespace InsAndOuts.ViewModels
             Stools = DataAccessLayer.GetAllStools();
         }
 
-        public void SaveStool()
+        public void Save()
         {
             if (Stool.Id == 0)
             {

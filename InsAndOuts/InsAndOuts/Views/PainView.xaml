@@ -1,21 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:rangeSlider="clr-namespace:Syncfusion.SfRangeSlider.XForms;assembly=Syncfusion.SfRangeSlider.XForms"
+xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+
+             xmlns:richTextEditor="clr-namespace:Syncfusion.XForms.RichTextEditor;assembly=Syncfusion.SfRichTextEditor.XForms"
+             xmlns:rangeSlider="clr-namespace:Syncfusion.SfRangeSlider.XForms;assembly=Syncfusion.SfRangeSlider.XForms"
+             
              x:Class="InsAndOuts.Views.PainView"
+             
              Title="Add New Pain"
              >
     <ContentPage.Content>
         <StackLayout>
 
-            <Editor x:Name="DescriptionEditor"
-                    Placeholder="Describe your pain"
-                    Unfocused="DescriptionEditor_OnUnfocused"
-            />
-            <!--I don't like how all events on the slide are fired as the user slides.  
-                I would like to save to the DB as soon as the user is done sliding, but I don't see how to do that.
-                For now I will just use the Picker-->
-            <!--<rangeSlider:SfRangeSlider x:Name="RangeSlider" 
+
+            <Editor x:Name="DescriptionPlainTextEditor"
+                    Placeholder="Describe the pain"
+                    Unfocused="DescriptionPlainTextEditor_OnUnfocused"
+                    Focused="DescriptionPlainTextEditor_OnFocused"
+                    IsVisible="False"
+                    />
+
+            <richTextEditor:SfRichTextEditor x:Name="DescriptionHtmlRtEditor" 
+                                             PlaceHolder="Describe the pain"
+
+                                             AutoSize="TextChanges"
+
+                                             ToolbarPosition="Top"                                                 
+                                             ToolbarOptions="Bold,FontColor,Italic,IncreaseIndent,DecreaseIndent,BulletList,Alignment"
+                                             VerticalOptions="StartAndExpand"
+                                                 
+                                             Unfocused="DescriptionHtmlRtEditor_OnUnfocused"
+                                             Focused="DescriptionHtmlRtEditor_OnFocused"
+                                             />
+
+            <rangeSlider:SfRangeSlider x:Name="RangeSlider" 
                                        Orientation="Horizontal"
                                        Minimum="0"
                                        Maximum="10"
@@ -24,40 +43,37 @@
                                        StepFrequency="1"
                                        ShowCustomLabel="True"
                                        ShowRange="False"
+                                       ThumbTouchUp="RangeSlider_OnThumbTouchUp"
+                                       ThumbTouchDown="RangeSlider_OnThumbTouchDown"
                                        >
                 <rangeSlider:SfRangeSlider.CustomLabels>
-                        <rangeSlider:Items Label="None" Value="0"/>
-                        <rangeSlider:Items Label="Mild" Value="2"/>
-                        <rangeSlider:Items Label="Moderate" Value="5"/>
-                        <rangeSlider:Items Label="Severe" Value="9"/>
+                    <rangeSlider:Items Label="None" Value="0"/>
+                    <rangeSlider:Items Label="Mild" Value="3"/>
+                    <rangeSlider:Items Label="Moderate" Value="6"/>
+                    <rangeSlider:Items Label="Severe" Value="9"/>
                 </rangeSlider:SfRangeSlider.CustomLabels>
-            </rangeSlider:SfRangeSlider>-->
+            </rangeSlider:SfRangeSlider>
 
-            <Picker x:Name="PainLevelPicker"
-                    Title="Rate your pain (0 = No Pain; 10 = Worse Possible Pain)"
-                    SelectedIndexChanged="PainLevelPicker_OnSelectedIndexChanged"
-            >
-                <Picker.Items>
-                    <x:String>0</x:String>
-                    <x:String>1</x:String>
-                    <x:String>2</x:String>
-                    <x:String>3</x:String>
-                    <x:String>4</x:String>
-                    <x:String>5</x:String>
-                    <x:String>6</x:String>
-                    <x:String>7</x:String>
-                    <x:String>8</x:String>
-                    <x:String>9</x:String>
-                    <x:String>10</x:String>
-                </Picker.Items>
-
-            </Picker>
             <DatePicker x:Name="WhenDatePicker"
                         Unfocused="WhenDatePicker_OnUnfocused"
-            />
+                        Focused="WhenDatePicker_OnFocused"
+                        />
+
             <TimePicker x:Name="WhenTimePicker"
                         Unfocused="WhenTimePicker_OnUnfocused"
-            />
+                        Focused="WhenTimePicker_OnFocused"
+                        />
+            
+            <button:SfButton x:Name="SaveButton" 
+                             Text="SAVE"
+                             ImageAlignment="Right"
+                             ShowIcon="False"
+                             ImageSource="saved.png"
+                             VerticalOptions="Start"
+                             BackgroundColor="{StaticResource Primary}"
+                             Margin="0,0,0,25"
+                             Clicked="SaveButton_OnClicked"
+                             />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

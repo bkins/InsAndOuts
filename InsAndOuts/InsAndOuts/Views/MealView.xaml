@@ -46,7 +46,7 @@
             
             <button:SfButton x:Name="SaveButton" 
                              Text="SAVE"
-                             ImageAlignment="Bottom"
+                             ImageAlignment="Right"
                              ShowIcon="False"
                              ImageSource="saved.png"
                              VerticalOptions="Center"

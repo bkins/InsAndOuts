@@ -101,7 +101,7 @@ namespace InsAndOuts.Views
         private void SaveButton_OnClicked(object    sender
                                         , EventArgs e)
         {
-            ViewModel.SaveMeal();
+            ViewModel.Save();
 
             if (sender is SfButton button)
                 SetSaveButtonSaved(button);
