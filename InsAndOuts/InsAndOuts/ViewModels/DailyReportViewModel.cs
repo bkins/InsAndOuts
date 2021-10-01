@@ -126,7 +126,7 @@ namespace InsAndOuts.ViewModels
 
             return report.ToString();
         }
-
+        
         public string ToHtml()
         {
             var report = new StringBuilder();
@@ -136,35 +136,56 @@ namespace InsAndOuts.ViewModels
             foreach (var meal in Meals)
             {
                 report.AppendLine($"&emsp;<i>{meal.Name} ({DateTime.Parse(meal.When).ToShortTimeString()}):</i>");
-                report.AppendLine(meal.DescriptionHtml);
+                
+                var description = meal.DescriptionHtml.Contains("<ul><li>") ?
+                                          meal.DescriptionHtml :
+                                          $"<ul><li>{meal.DescriptionHtml}</lil>";
+
+                report.AppendLine($"{description}");
             }
 
             report.AppendLine("<b>Stools:</b><br>");
 
             foreach (var stool in Stools)
             {
-                report.AppendLine($"&emsp;<i>{stool.StoolType.Split(':')[0]} ({DateTime.Parse(stool.When).ToShortTimeString()}):</i>");
-                report.AppendLine($"&emsp;&emsp;{stool.DescriptionHtml}");
+                
+                var stoolType = stool.StoolType.IsNullEmptyOrWhitespace() ?
+                                        "-Not specifiec-" :
+                                        stool.StoolType.Split(':')[0];
+
+                report.AppendLine($"&emsp;<i>{stoolType} ({DateTime.Parse(stool.When).ToShortTimeString()}):</i>");
+
+                var description = stool.DescriptionHtml.Contains("<ul><li>") ?
+                                          stool.DescriptionHtml :
+                                          $"<ul><li>{stool.DescriptionHtml}</lil>";
+
+                report.AppendLine($"{description}");
 
                 var hasPhoto = stool.Image        == null 
                             || stool.Image.Length == 0 ?
                                        "No" :
-                                       "Yes";
+                                       $"Yes ({stool.ImageFileName})";
                 
-                report.AppendLine($"&emsp;Has an photo: {hasPhoto} ({stool.ImageFileName})");
+                report.AppendLine($"<li>Has an photo: {hasPhoto}</li></ul>");
             }
             
             report.AppendLine("<b>Pains:</b><br>");
 
             foreach (var pain in Pains)
             {
-                report.AppendLine($"&emsp;<i>{pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):</i>");
-                report.AppendLine($"&emsp;&emsp;{pain.DescriptionHtml}");
+                report.AppendLine($"&emsp;<i>Level: {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):</i>");
+                
+                var description = pain.DescriptionHtml.Contains("<ul><li>") ?
+                                          pain.DescriptionHtml :
+                                          $"<ul><li>{pain.DescriptionHtml}</lil>";
+
+                report.AppendLine($"{description}");
+
             }
 
             return report.ToString();
         }
-        
+
 
 
         private string GetShortDateFromString(string date)
