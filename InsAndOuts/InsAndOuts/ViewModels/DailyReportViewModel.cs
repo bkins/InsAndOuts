@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using InsAndOuts.Models;
 using InsAndOuts.Utilities;
@@ -137,36 +138,29 @@ namespace InsAndOuts.ViewModels
             {
                 report.AppendLine($"&emsp;<i>{meal.Name} ({DateTime.Parse(meal.When).ToShortTimeString()}):</i>");
                 
-                var description = meal.DescriptionHtml.Contains("<ul><li>") ?
-                                          meal.DescriptionHtml :
-                                          $"<ul><li>{meal.DescriptionHtml}</lil>";
+                var description = FormatDescriptionForHtml(meal.DescriptionHtml);
 
-                report.AppendLine($"{description}");
+                report.AppendLine($"&emsp;{description}");
             }
 
             report.AppendLine("<b>Stools:</b><br>");
 
             foreach (var stool in Stools)
             {
-                
                 var stoolType = stool.StoolType.IsNullEmptyOrWhitespace() ?
-                                        "-Not specifiec-" :
+                                        "-Not specified-" :
                                         stool.StoolType.Split(':')[0];
 
                 report.AppendLine($"&emsp;<i>{stoolType} ({DateTime.Parse(stool.When).ToShortTimeString()}):</i>");
-
-                var description = stool.DescriptionHtml.Contains("<ul><li>") ?
-                                          stool.DescriptionHtml :
-                                          $"<ul><li>{stool.DescriptionHtml}</lil>";
-
-                report.AppendLine($"{description}");
 
                 var hasPhoto = stool.Image        == null 
                             || stool.Image.Length == 0 ?
                                        "No" :
                                        $"Yes ({stool.ImageFileName})";
                 
-                report.AppendLine($"<li>Has an photo: {hasPhoto}</li></ul>");
+                var description = $"{FormatDescriptionForHtml(stool.DescriptionHtml)}<li>Has an photo: {hasPhoto}</li></ul>";
+
+                report.AppendLine(description);
             }
             
             report.AppendLine("<b>Pains:</b><br>");
@@ -175,18 +169,29 @@ namespace InsAndOuts.ViewModels
             {
                 report.AppendLine($"&emsp;<i>Level: {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):</i>");
                 
-                var description = pain.DescriptionHtml.Contains("<ul><li>") ?
-                                          pain.DescriptionHtml :
-                                          $"<ul><li>{pain.DescriptionHtml}</lil>";
-
+                var description = $"{FormatDescriptionForHtml(pain.DescriptionHtml)}</ul>";
+                
                 report.AppendLine($"{description}");
-
             }
 
             return report.ToString();
         }
 
+        private static string FormatDescriptionForHtml(string description)
+        {
+            description = description
+                         .Replace("<p>",  "")
+                         .Replace("</p>", "");
 
+            if (description.IsNullEmptyOrWhitespace())
+            {
+                return "<ul>";
+            }
+
+            return description.Contains("<ul><li>") ?
+                           description :
+                           $"<ul><li>{description}</li>";
+        }
 
         private string GetShortDateFromString(string date)
         {

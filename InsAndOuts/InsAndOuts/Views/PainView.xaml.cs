@@ -22,12 +22,16 @@ namespace InsAndOuts.Views
         public PainView()
         {
             InitializeComponent();
-            ResetData();
+
+            ViewModel = new PainViewModel();
 
             DescriptionHtmlRtEditor.AlignLeft();
 
             DescriptionHtmlRtEditor.IsVisible    = Configuration.UseHtmlForEmailBody;
             DescriptionPlainTextEditor.IsVisible = ! DescriptionHtmlRtEditor.IsVisible;
+            
+            WhenDatePicker.Date = DateTime.Today;
+            WhenTimePicker.Time = DateTime.Now.TimeOfDay;
 
         }
         
@@ -65,10 +69,21 @@ namespace InsAndOuts.Views
 
         private void SetSaveButtonNotSaved()
         {
-            SaveButton.ShowIcon      = false;
-            SaveButton.Text          = "SAVE";
+            if (NoRecordsChanged())
+                return;
+
+            SaveButton.ShowIcon = false;
+            SaveButton.Text     = "SAVE";
         }
-        
+
+        private bool NoRecordsChanged()
+        {
+            return ViewModel.Pain.DescriptionHtml     == DescriptionHtmlRtEditor.HtmlText
+                && ViewModel.Pain.DescriptionPainText == DescriptionPlainTextEditor.Text
+                && ViewModel.Pain.Level               == (int)RangeSlider.Value
+                && ViewModel.Pain.When                == GetSelectDateTimeFromPickers();
+        }
+
         private void SetSaveButtonSaved(SfButton button)
         {
             button.ShowIcon = true;
@@ -87,30 +102,6 @@ namespace InsAndOuts.Views
         {
             RangeSlider.Focus();
             ViewModel.Pain.Level = (int)RangeSlider.Value;
-        }
-        
-        private void WhenDatePicker_OnUnfocused(object         sender
-                                              , FocusEventArgs e)
-        {
-            ViewModel.Pain.When = GetSelectDateTimeFromPickers();
-        }
-
-        private void WhenTimePicker_OnUnfocused(object         sender
-                                              , FocusEventArgs e)
-        {
-            ViewModel.Pain.When = GetSelectDateTimeFromPickers();
-        }
-
-        private void DescriptionPlainTextEditor_OnUnfocused(object         sender
-                                                          , FocusEventArgs e)
-        {
-            ViewModel.Pain.DescriptionPainText = DescriptionPlainTextEditor.Text;
-        }
-
-        private void DescriptionHtmlRtEditor_OnUnfocused(object    sender
-                                                       , EventArgs e)
-        {
-            ViewModel.Pain.DescriptionHtml = DescriptionHtmlRtEditor.HtmlText;
         }
         
         private void DescriptionPlainTextEditor_OnFocused(object         sender
@@ -146,18 +137,20 @@ namespace InsAndOuts.Views
         private void SaveButton_OnClicked(object    sender
                                         , EventArgs e)
         {
-            //The RichTextEditor doesn't seem to lose focus when going from it to the slider.
-            //So the description is never set to the Pain object in the viewmodel
-            //Unless you select either the Date or Time pickers
-            ViewModel.Pain.DescriptionHtml = DescriptionHtmlRtEditor.HtmlText;
-            
-            //BENDO: Since I am not implementing silent save in this app, would it make more sense to not have all the assignments in the
-            //Unfocused events, and simply assign the values here and then call ViewModel.Save()???
+            ViewModel.Pain.When                = GetSelectDateTimeFromPickers();
+            ViewModel.Pain.DescriptionPainText = DescriptionPlainTextEditor.Text;
+            ViewModel.Pain.DescriptionHtml     = DescriptionHtmlRtEditor.HtmlText;
+
+            if (ViewModel.Pain.DescriptionPainText.IsNullEmptyOrWhitespace()
+            && ViewModel.Pain.DescriptionHtml.HasValue())
+            {
+                ViewModel.Pain.DescriptionPainText = DescriptionHtmlRtEditor.Text;
+            }
+
             ViewModel.Save();
             
             UpdateViewTitle();
-
-            //BENDO: Do I need this 'if'?  Seems pointless
+            
             if (sender is SfButton button)
             {
                 SetSaveButtonSaved(button);

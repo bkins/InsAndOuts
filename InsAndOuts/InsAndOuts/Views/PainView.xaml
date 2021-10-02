@@ -16,7 +16,6 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
 
             <Editor x:Name="DescriptionPlainTextEditor"
                     Placeholder="Describe the pain"
-                    Unfocused="DescriptionPlainTextEditor_OnUnfocused"
                     Focused="DescriptionPlainTextEditor_OnFocused"
                     IsVisible="False"
                     />
@@ -30,7 +29,6 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
                                              ToolbarOptions="Bold,FontColor,Italic,IncreaseIndent,DecreaseIndent,BulletList,Alignment"
                                              VerticalOptions="StartAndExpand"
                                                  
-                                             Unfocused="DescriptionHtmlRtEditor_OnUnfocused"
                                              Focused="DescriptionHtmlRtEditor_OnFocused"
                                              />
 
@@ -55,12 +53,10 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
             </rangeSlider:SfRangeSlider>
 
             <DatePicker x:Name="WhenDatePicker"
-                        Unfocused="WhenDatePicker_OnUnfocused"
                         Focused="WhenDatePicker_OnFocused"
                         />
 
             <TimePicker x:Name="WhenTimePicker"
-                        Unfocused="WhenTimePicker_OnUnfocused"
                         Focused="WhenTimePicker_OnFocused"
                         />
             
