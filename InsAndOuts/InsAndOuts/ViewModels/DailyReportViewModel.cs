@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using InsAndOuts.Models;
 using InsAndOuts.Utilities;
@@ -19,9 +20,12 @@ namespace InsAndOuts.ViewModels
         {
             DatesWithData = new List<string>();
             
-            var allMeals  = DataAccessLayer.GetAllMeals().OrderBy(field=>DateTime.Parse(field.When));
-            var allStools = DataAccessLayer.GetAllStools().OrderBy(field => DateTime.Parse(field.When));
-            var allPains  = DataAccessLayer.GetAllPain().OrderBy(field => DateTime.Parse(field.When));
+            var allMeals  = DataAccessLayer.GetAllMeals()
+                                           .OrderBy(field => DateTime.Parse(field.When));
+            var allStools = DataAccessLayer.GetAllStools()
+                                           .OrderBy(field => DateTime.Parse(field.When));
+            var allPains  = DataAccessLayer.GetAllPain()
+                                           .OrderBy(field => DateTime.Parse(field.When));
 
             var filterDate = dateToReportOn.ToShortDateString();
             
@@ -29,7 +33,7 @@ namespace InsAndOuts.ViewModels
                                   , allMeals
                                   , allPains
                                   , allStools);
-                
+
             SetDatesWithDataList(allMeals
                                , allStools
                                , allPains);
@@ -108,11 +112,7 @@ namespace InsAndOuts.ViewModels
                                        "No" :
                                        "Yes";
 
-                var stoolType = stool.StoolType.IsNullEmptyOrWhitespace() ?
-                                        "-Not specifiec-" :
-                                        stool.StoolType.Split(':')[0];
-                
-                report.AppendLine($"\t* {stoolType} ({DateTime.Parse(stool.When).ToShortTimeString()}):");
+                report.AppendLine($"\t* {stool.StoolType.Split(':')[0]} ({DateTime.Parse(stool.When).ToShortTimeString()}):");
                 report.AppendLine($"\t\t{stool.DescriptionPainText.Replace(Environment.NewLine, $"{Environment.NewLine}\t\t")}");
                 report.AppendLine($"\t\tHas an photo: {hasPhoto}");
             }
@@ -127,7 +127,7 @@ namespace InsAndOuts.ViewModels
 
             return report.ToString();
         }
-
+        
         public string ToHtml()
         {
             var report = new StringBuilder();
@@ -137,32 +137,30 @@ namespace InsAndOuts.ViewModels
             foreach (var meal in Meals)
             {
                 report.AppendLine($"&emsp;<i>{meal.Name} ({DateTime.Parse(meal.When).ToShortTimeString()}):</i>");
-                report.AppendLine(meal.DescriptionHtml);
+                
+                var description = FormatDescriptionForHtml(meal.DescriptionHtml);
+
+                report.AppendLine($"&emsp;{description}");
             }
 
             report.AppendLine("<b>Stools:</b><br>");
 
             foreach (var stool in Stools)
             {
-                
                 var stoolType = stool.StoolType.IsNullEmptyOrWhitespace() ?
-                                        "-Not specifiec-" :
+                                        "-Not specified-" :
                                         stool.StoolType.Split(':')[0];
 
                 report.AppendLine($"&emsp;<i>{stoolType} ({DateTime.Parse(stool.When).ToShortTimeString()}):</i>");
-
-                var description = stool.DescriptionHtml.Contains("<ul><li>") ?
-                                          stool.DescriptionHtml :
-                                          $"<ul><li>{stool.DescriptionHtml}</lil>";
-
-                report.AppendLine($"{description}");
 
                 var hasPhoto = stool.Image        == null 
                             || stool.Image.Length == 0 ?
                                        "No" :
                                        $"Yes ({stool.ImageFileName})";
                 
-                report.AppendLine($"<li>Has an photo: {hasPhoto}</li></ul>");
+                var description = $"{FormatDescriptionForHtml(stool.DescriptionHtml)}<li>Has an photo: {hasPhoto}</li></ul>";
+
+                report.AppendLine(description);
             }
             
             report.AppendLine("<b>Pains:</b><br>");
@@ -170,19 +168,34 @@ namespace InsAndOuts.ViewModels
             foreach (var pain in Pains)
             {
                 report.AppendLine($"&emsp;<i>Level: {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):</i>");
-                report.AppendLine($"&emsp;&emsp;{pain.DescriptionHtml}");
+                
+                var description = $"{FormatDescriptionForHtml(pain.DescriptionHtml)}</ul>";
+                
+                report.AppendLine($"{description}");
             }
 
             return report.ToString();
         }
-        
 
+        private static string FormatDescriptionForHtml(string description)
+        {
+            description = description
+                         .Replace("<p>",  "")
+                         .Replace("</p>", "");
+
+            if (description.IsNullEmptyOrWhitespace())
+            {
+                return "<ul>";
+            }
+
+            return description.Contains("<ul><li>") ?
+                           description :
+                           $"<ul><li>{description}</li>";
+        }
 
         private string GetShortDateFromString(string date)
         {
-            var returnDate = new DateTime();
-
-            if (DateTime.TryParse(date, out returnDate))
+            if (DateTime.TryParse(date, out var returnDate))
             {
                 return returnDate.ToShortDateString();
             }

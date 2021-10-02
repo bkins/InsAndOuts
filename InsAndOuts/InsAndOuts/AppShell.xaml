@@ -2,29 +2,31 @@
 <Shell xmlns="http://xamarin.com/schemas/2014/forms" 
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:InsAndOuts.Views"
-       Title="InsAndOuts"
-       x:Class="InsAndOuts.AppShell">
+       Title="Ins And Outs"
+       x:Class="InsAndOuts.AppShell"
+       >
 
-    <!--
-        The overall app visual hierarchy is defined here, along with navigation.
-    
-        https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/
-    -->
-    
     <TabBar>
-        <ShellContent Title="Home"
+        <ShellContent x:Name="HomeTabBarButton"
+                      Title="Home"
                       Icon="icon_feed.png"
                       ContentTemplate="{DataTemplate views:HomePage}"
                       />
-        <ShellContent Title="Meal"
+
+        <ShellContent x:Name="MealTabBarButton"
+                      Title="Meal"
                       Icon="silverware.png"
                       ContentTemplate="{DataTemplate views:MealView}"
                       />
-        <ShellContent Title="Stool"
+
+        <ShellContent x:Name="StoolTabBarButton"
+                      Title="Stool"
                       Icon="stool.png"
                       ContentTemplate="{DataTemplate views:StoolsView}"
                       />
-        <ShellContent Title="Pain"
+
+        <ShellContent x:Name="PainTabBarButton"
+                      Title="Pain"
                       Icon="pain.png"
                       ContentTemplate="{DataTemplate views:PainView}"
                       />
@@ -136,9 +138,7 @@
         content you can do so by calling 
         await Shell.Current.GoToAsync("//LoginPage");
     -->
-    <TabBar>
-        <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate views:HomePage}" />
-    </TabBar>
+    
 
     <!-- Optional Templates 
     // These may be provided inline as below or as separate classes.

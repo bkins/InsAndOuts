@@ -15,7 +15,7 @@ namespace InsAndOuts.ViewModels
             Meals = DataAccessLayer.GetAllMeals();
         }
 
-        public void SaveMeal()
+        public void Save()
         {
             var mealId = 0;
 
