@@ -134,5 +134,11 @@ namespace InsAndOuts.Views
             App.Database.AddMeal(dayBeforeYesterdaysLunch);
             App.Database.AddMeal(dayBeforeYesterdaysDinner);
         }
+
+        private async void BrowseDataButton_OnClicked(object    sender
+                                              , EventArgs e)
+        {
+            await PageNavigation.NavigateTo(nameof(ManageDataView));
+        }
     }
 }

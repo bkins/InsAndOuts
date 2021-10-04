@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using InsAndOuts.Models;
 
@@ -13,6 +14,20 @@ namespace InsAndOuts.ViewModels
         {
             Meal = new Meal();
             Meals = DataAccessLayer.GetAllMeals();
+        }
+
+        public MealsViewModel(string searchText)
+        {
+            var searchTerms = searchText.Split(new[] { " - " }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (searchTerms.Length < 2)
+            {
+                return;
+            }
+
+            Meal = DataAccessLayer.GetAllMeals()
+                                  .FirstOrDefault(field => field.When == searchTerms[0] 
+                                                        && field.Name == searchTerms[1]);
         }
 
         public void Save()

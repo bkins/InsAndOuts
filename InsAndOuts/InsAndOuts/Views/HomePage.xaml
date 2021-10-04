@@ -18,12 +18,16 @@
                     Text="Report"
                     Clicked="ReportButton_OnClicked"
                     />
+
             <Button x:Name="BrowseDataButton"
                     Text="Browse Data"
+                    Clicked="BrowseDataButton_OnClicked"
                     />
+
             <Button x:Name="TendsAnalysisReportsButton"
                     Text="Tends/Analysis/Reports"
                     />
+
             <Button x:Name="AboutButton"
                     Text="About"
                     />

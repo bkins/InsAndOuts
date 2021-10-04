@@ -17,5 +17,9 @@ namespace InsAndOuts.Models
             Level = 0;
         }
 
+        public override string ToString()
+        {
+            return $"{When} - Level: {Level}";
+        }
     }
 }

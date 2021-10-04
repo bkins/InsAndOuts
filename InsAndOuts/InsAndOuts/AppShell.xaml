@@ -5,12 +5,13 @@
        Title="Ins And Outs"
        x:Class="InsAndOuts.AppShell"
        >
-
+    
     <TabBar>
         <ShellContent x:Name="HomeTabBarButton"
                       Title="Home"
                       Icon="icon_feed.png"
                       ContentTemplate="{DataTemplate views:HomePage}"
+                      
                       />
 
         <ShellContent x:Name="MealTabBarButton"

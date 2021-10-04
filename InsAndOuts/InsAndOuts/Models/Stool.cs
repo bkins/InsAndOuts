@@ -10,7 +10,7 @@ namespace InsAndOuts.Models
     public class Stool : BaseModel
     {
         [PrimaryKey, AutoIncrement]
-        public int Id               { get; set; }
+        public int    Id            { get; set; }
         public byte[] Image         { get; set; }
         public string ImageFileName { get; set; }
         public string StoolType     { get; set; }
@@ -28,5 +28,14 @@ namespace InsAndOuts.Models
         //[OneToOne]
         //public StoolType StoolType { get; set; }
 
+        public override string ToString()
+        {
+            if (StoolType.Contains(":"))
+            {
+                return $"{When} - {StoolType.Split(':')[0]}";    
+            }
+
+            return When;
+        }
     }
 }

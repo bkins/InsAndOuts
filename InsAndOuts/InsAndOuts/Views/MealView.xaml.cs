@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using InsAndOuts.Models;
 using InsAndOuts.Utilities;
 using InsAndOuts.ViewModels;
@@ -15,10 +16,34 @@ using Xamarin.Forms.Xaml;
 
 namespace InsAndOuts.Views
 {
+    [QueryProperty(nameof(ViewMode)
+                 , nameof(ViewMode))]
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MealView : ContentPage
+    public partial class MealView : ContentPage, IQueryAttributable
     {
-        public MealsViewModel ViewModel { get; set; }
+        public string          ViewMode        { get; set; }
+        public MealsViewModel  ViewModel       { get; set; }
+        public SearchViewModel SearchViewModel { get; set; }
+
+        private bool EditMode { get; set; }
+
+        public void ApplyQueryAttributes(IDictionary<string, string> query)
+        {
+            ViewMode = HttpUtility.UrlDecode(query[nameof(ViewMode)]);
+            
+            if (ViewMode != null 
+             && ViewMode.Equals("EDIT"
+                              , StringComparison.CurrentCultureIgnoreCase))
+            {
+                EditMode               = true;
+
+                SearchPicker.IsVisible = true;
+                SearchViewModel        = new SearchViewModel();
+
+                SearchPicker.ItemsSource = SearchViewModel.SearchableMeals;
+                SearchPicker.Focus();
+            }
+        }
 
         public MealView()
         {
@@ -32,17 +57,13 @@ namespace InsAndOuts.Views
             ViewModel = new MealsViewModel();
             
             DescriptionRtf.AlignLeft();
-
-            DescriptionRtf.IsVisible    = Configuration.UseHtmlForEmailBody;
-            DescriptionEditor.IsVisible = ! DescriptionRtf.IsVisible;
-
+            
             ResetData();
         }
 
         private void ResetData()
         {
             NameEntry.Text          = string.Empty;
-            DescriptionEditor.Text  = string.Empty;
             DescriptionRtf.Text     = string.Empty;
             DescriptionRtf.HtmlText = string.Empty;
             WhenDatePicker.Date     = DateTime.Today;
@@ -50,48 +71,7 @@ namespace InsAndOuts.Views
             
             ViewModel              = new MealsViewModel();
         }
-
-        private void NameEntry_OnUnfocused(object         sender
-                                         , FocusEventArgs e)
-        {
-            ViewModel.Meal.Name = NameEntry.Text;
-        }
         
-        private void DescriptionEditor_OnUnfocused(object         sender
-                                                 , FocusEventArgs e)
-        {
-            ViewModel.Meal.DescriptionPainText = DescriptionEditor.Text;
-
-            if (DescriptionEditor.Text != DescriptionRtf.Text)
-            {
-                DescriptionRtf.Text     = DescriptionEditor.Text;
-                DescriptionRtf.HtmlText = DescriptionEditor.Text.Replace(Environment.NewLine
-                                                                       , "<br>");
-
-                ViewModel.Meal.DescriptionPainText = DescriptionEditor.Text;
-                ViewModel.Meal.DescriptionHtml     = DescriptionRtf.HtmlText;
-
-            }
-        }
-
-        private void DescriptionRtf_OnUnfocused(object    sender
-                                              , EventArgs e)
-        {
-            ViewModel.Meal.DescriptionPainText = DescriptionRtf.Text;
-            ViewModel.Meal.DescriptionHtml     = DescriptionRtf.HtmlText;
-        }
-        private void WhenDatePicker_OnUnfocused(object         sender
-                                                  , FocusEventArgs e)
-        {
-            ViewModel.Meal.When = GetSelectDateTimeFromPickers();
-        }
-
-        private void WhenTimePicker_OnUnfocused(object         sender
-                                              , FocusEventArgs e)
-        {
-            ViewModel.Meal.When = GetSelectDateTimeFromPickers();
-        }
-
         private string GetSelectDateTimeFromPickers()
         {
             var dateTimeToSave = $"{WhenDatePicker.Date.ToShortDateString()} {WhenTimePicker.Time.ToString("g", CultureInfo.CreateSpecificCulture("en-US"))}";
@@ -101,26 +81,39 @@ namespace InsAndOuts.Views
         private void SaveButton_OnClicked(object    sender
                                         , EventArgs e)
         {
+            if (NameEntry.Text.Contains("-"))
+            {
+                DisplayAlert("Invalid character"
+                           , $"You cannot have hyphens ( - ) in the name of the meal.{Environment.NewLine}Meal not save."
+                           , "OK");
+                return;
+            }
+            ViewModel.Meal.Name                = NameEntry.Text;
+            ViewModel.Meal.DescriptionPainText = DescriptionRtf.Text;
+            ViewModel.Meal.DescriptionHtml     = DescriptionRtf.HtmlText;
+            ViewModel.Meal.When                = GetSelectDateTimeFromPickers();
+            
             ViewModel.Save();
+
+            if (EditMode)
+            {
+                SearchViewModel = new SearchViewModel();
+
+                SearchPicker.ItemsSource = SearchViewModel.SearchableMeals;
+            }
 
             if (sender is SfButton button)
                 SetSaveButtonSaved(button);
 
             ResetData();
         }
-
+        
         private void NameEntry_OnFocused(object         sender
                                        , FocusEventArgs e)
         {
             SetSaveButtonNotSaved();
         }
-
-        private void DescriptionEditor_OnFocused(object         sender
-                                               , FocusEventArgs e)
-        {
-            SetSaveButtonNotSaved();
-        }
-
+        
         private void DescriptionRtf_OnFocused(object    sender
                                             , EventArgs e)
         {
@@ -149,6 +142,32 @@ namespace InsAndOuts.Views
         {
             button.ShowIcon = true;
             button.Text     = "SAVED";
+        }
+
+        private void SearchPicker_OnSelectedIndexChanged(object    sender
+                                                       , EventArgs e)
+        {
+            var picker = sender as Picker ?? new Picker();
+            
+            if (picker.SelectedItem == null)
+            {
+                return;
+            }
+
+            ViewModel               = new MealsViewModel(picker.SelectedItem.ToString());
+
+            if (ViewModel.Meal == null)
+            {
+                DisplayAlert("Meal not found"
+                           , "Something went wrong while retrieving the meal."
+                           , "OK");
+                return;
+            }
+
+            NameEntry.Text          = ViewModel.Meal.Name;
+            DescriptionRtf.HtmlText = ViewModel.Meal.DescriptionHtml;
+            WhenDatePicker.Date     = ViewModel.Meal.WhenToDateTime();
+            WhenTimePicker.Time     = ViewModel.Meal.WhenToTimeSpan();
         }
     }
 

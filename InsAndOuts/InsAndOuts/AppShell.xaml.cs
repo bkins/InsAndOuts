@@ -17,6 +17,8 @@ namespace InsAndOuts
             Routing.RegisterRoute(nameof(PainView),          typeof(PainView));
             Routing.RegisterRoute(nameof(StoolsView),        typeof(StoolsView));
             Routing.RegisterRoute(nameof(DailyReportView),   typeof(DailyReportView));
+            Routing.RegisterRoute(nameof(ManageDataView),    typeof(ManageDataView));
+            Routing.RegisterRoute(nameof(SearchView),        typeof(SearchView));
         }
         
     }
