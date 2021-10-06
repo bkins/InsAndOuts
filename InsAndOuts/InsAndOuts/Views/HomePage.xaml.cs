@@ -21,6 +21,14 @@ namespace InsAndOuts.Views
             InitializeComponent();
         }
         
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            BackgroundImageSource = Utilities.Configuration.BackgroundImage;
+
+        } 
+
         private async void TestEmail_OnClicked(object    sender
                                              , EventArgs e)
         {
@@ -139,6 +147,12 @@ namespace InsAndOuts.Views
                                               , EventArgs e)
         {
             await PageNavigation.NavigateTo(nameof(ManageDataView));
+        }
+
+        private async void AboutButton_OnClicked(object    sender
+                                         , EventArgs e)
+        {
+            await PageNavigation.NavigateTo(nameof(AboutView));
         }
     }
 }

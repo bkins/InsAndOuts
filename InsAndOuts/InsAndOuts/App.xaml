@@ -12,12 +12,12 @@
             
             <Style x:Key="EntryStyle" 
                    TargetType="Entry">
-                <Setter Property="Keyboard" Value="{x:Static utilities:GlobalKeyboards.SuggestionsWithWordCapitalization}" />
+                <Setter Property="Keyboard" Value="{x:DynamicResource utilities:GlobalKeyboards.SuggestionsWithWordCapitalization}" />
             </Style>
             
             <Style x:Key="EditorStyle" 
                    TargetType="Editor">
-                <Setter Property="Keyboard" Value="{x:Static utilities:GlobalKeyboards.SuggestionsWithSentenceCapitalization}" />
+                <Setter Property="Keyboard" Value="{x:DynamicResource utilities:GlobalKeyboards.SuggestionsWithSentenceCapitalization}" />
             </Style>
             
             <Color x:Key="PrimaryBackColor">#2196F3</Color>
@@ -63,8 +63,12 @@
                         Value="{StaticResource PrimaryUnselectedLightForeColor}" />
             </Style>
 
-
             <Color x:Key="Primary">#2196F3</Color>
+            
+            <Color x:Key="OriginalPrimary">#2196F3</Color>
+
+            <Color x:Key="ZoeColor">Violet</Color>
+
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="White"></Setter>
                 <Setter Property="VisualStateManager.VisualStateGroups">
@@ -72,7 +76,7 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
                                 </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="Disabled">

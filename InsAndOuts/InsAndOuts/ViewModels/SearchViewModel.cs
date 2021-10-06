@@ -27,7 +27,7 @@ namespace InsAndOuts.ViewModels
 
         public List<string> BuildStoolsList()
         {
-            var stools = DataAccessLayer.GetAllMeals();
+            var stools = DataAccessLayer.GetAllStools();
 
             return stools.Select(stool => stool.ToString())
                          .ToList();
@@ -35,7 +35,7 @@ namespace InsAndOuts.ViewModels
         
         public List<string> BuildPainsList()
         {
-            var pains = DataAccessLayer.GetAllMeals();
+            var pains = DataAccessLayer.GetAllPain();
 
             return pains.Select(pain => pain.ToString())
                         .ToList();

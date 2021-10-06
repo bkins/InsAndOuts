@@ -13,12 +13,11 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
     <ContentPage.Content>
         <StackLayout>
 
-
-            <Editor x:Name="DescriptionPlainTextEditor"
-                    Placeholder="Describe the pain"
-                    Focused="DescriptionPlainTextEditor_OnFocused"
+            <Picker x:Name="SearchPicker"
+                    Title="Select a pain to edit"
                     IsVisible="False"
-                    />
+                    SelectedIndexChanged="SearchPicker_OnSelectedIndexChanged"
+            />
 
             <richTextEditor:SfRichTextEditor x:Name="DescriptionHtmlRtEditor" 
                                              PlaceHolder="Describe the pain"
@@ -66,7 +65,7 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
                              ShowIcon="False"
                              ImageSource="saved.png"
                              VerticalOptions="Start"
-                             BackgroundColor="{StaticResource Primary}"
+                             BackgroundColor="{DynamicResource Primary}"
                              Margin="0,0,0,25"
                              Clicked="SaveButton_OnClicked"
                              />

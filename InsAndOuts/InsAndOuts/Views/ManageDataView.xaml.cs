@@ -18,21 +18,27 @@ namespace InsAndOuts.Views
         }
 
         private async void EditMeals_OnClicked(object    sender
-                                        , EventArgs e)
+                                             , EventArgs e)
         {
-            await PageNavigation.NavigateTo(nameof(MealView), nameof(MealView.ViewMode), "EDIT");
+            await PageNavigation.NavigateTo(nameof(MealView)
+                                          , nameof(MealView.ViewMode)
+                                          , "EDIT");
         }
 
-        private void EditStools_OnClicked(object    sender
-                                         , EventArgs e)
+        private async void EditStools_OnClicked(object    sender
+                                              , EventArgs e)
         {
-            
+            await PageNavigation.NavigateTo(nameof(StoolsView)
+                                          , nameof(StoolsView.ViewMode)
+                                          , "EDIT");
         }
 
-        private void EditPains_OnClicked(object    sender
-                                        , EventArgs e)
+        private async void EditPains_OnClicked(object    sender
+                                             , EventArgs e)
         {
-            
+            await PageNavigation.NavigateTo(nameof(PainView)
+                                          , nameof(PainView.ViewMode)
+                                          , "EDIT");
         }
     }
 }

@@ -70,8 +70,19 @@ namespace InsAndOuts.Views
             WhenTimePicker.Time     = DateTime.Now.TimeOfDay;
             
             ViewModel              = new MealsViewModel();
+            UpdateViewTitle();
         }
         
+        private void UpdateViewTitle()
+        {
+            
+            var addUpdate = ViewModel.Meal.Id == 0 ?
+                                    "Add New" :
+                                    "Update";
+            //BENDO: On release to user(s) remove the ID for the Title
+            Title = $"{addUpdate} Meal ({ViewModel.Meal.Id})";
+        }
+
         private string GetSelectDateTimeFromPickers()
         {
             var dateTimeToSave = $"{WhenDatePicker.Date.ToShortDateString()} {WhenTimePicker.Time.ToString("g", CultureInfo.CreateSpecificCulture("en-US"))}";
@@ -168,6 +179,8 @@ namespace InsAndOuts.Views
             DescriptionRtf.HtmlText = ViewModel.Meal.DescriptionHtml;
             WhenDatePicker.Date     = ViewModel.Meal.WhenToDateTime();
             WhenTimePicker.Time     = ViewModel.Meal.WhenToTimeSpan();
+
+            UpdateViewTitle();
         }
     }
 

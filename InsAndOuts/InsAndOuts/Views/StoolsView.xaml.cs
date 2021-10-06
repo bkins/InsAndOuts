@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using InsAndOuts.Utilities;
 using InsAndOuts.ViewModels;
 using Plugin.Media;
@@ -15,22 +16,41 @@ using Xamarin.Forms.Xaml;
 
 namespace InsAndOuts.Views
 {
+    [QueryProperty(nameof(ViewMode)
+                 , nameof(ViewMode))]
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class StoolsView : ContentPage
-    {
-        
-        public  StoolViewModel ViewModel               { get; set; }
-        private bool           LeftToTakePicture       { get; set; }
-        
+    public partial class StoolsView : ContentPage, IQueryAttributable
+    {   
+        public  string          ViewMode          { get; set; }
+        public  StoolViewModel  ViewModel         { get; set; }
+        private bool            LeftToTakePicture { get; set; }
+        public  SearchViewModel SearchViewModel   { get; set; }
+
+        private bool EditMode { get; set; }
+
+        public void ApplyQueryAttributes(IDictionary<string, string> query)
+        {
+            ViewMode = HttpUtility.UrlDecode(query[nameof(ViewMode)]);
+            
+            if (ViewMode != null 
+             && ViewMode.Equals("EDIT"
+                              , StringComparison.CurrentCultureIgnoreCase))
+            {
+                EditMode = true;
+
+                SearchPicker.IsVisible = true;
+                SearchViewModel        = new SearchViewModel();
+
+                SearchPicker.ItemsSource = SearchViewModel.SearchableStools;
+                SearchPicker.Focus();
+            }
+        }
         public StoolsView()
         {
             InitializeComponent();
             ResetData();
 
             DescriptionHtmlRtEditor.AlignLeft();
-
-            DescriptionHtmlRtEditor.IsVisible    = Configuration.UseHtmlForEmailBody;
-            DescriptionPlainTextEditor.IsVisible = ! DescriptionHtmlRtEditor.IsVisible;
         }
         
         protected override void OnDisappearing()
@@ -47,7 +67,6 @@ namespace InsAndOuts.Views
 
         private void ResetData()
         {
-            DescriptionPlainTextEditor.Text = string.Empty;
             StoolTypePicker.SelectedItem    = null;
             ImageFromCamera.Source          = new FileImageSource();
             WhenDatePicker.Date             = DateTime.Today;
@@ -94,47 +113,19 @@ namespace InsAndOuts.Views
 
             ViewModel.Stool.StoolType = picker.SelectedItem.ToString();
         }
-
-        private void DescriptionPlainTextEditor_OnUnfocused(object         sender
-                                                          , FocusEventArgs e)
-        {
-            ViewModel.Stool.DescriptionPainText = DescriptionPlainTextEditor.Text;
-            //ViewModel.Save();
-        }
-
-        private void DescriptionHtmlRtEditor_OnUnfocused(object    sender
-                                                       , EventArgs e)
-        {
-            ViewModel.Stool.DescriptionHtml = DescriptionHtmlRtEditor.HtmlText;
-            //ViewModel.Save();
-        }
-
+        
         private void DescriptionHtmlRtEditor_OnFocused(object    sender
                                                      , EventArgs e)
         {
             SetSaveButtonNotSaved();
         }
 
-        private void WhenDatePicker_OnUnfocused(object         sender
-                                              , FocusEventArgs e)
-        {
-            ViewModel.Stool.When = GetSelectDateTimeFromPickers();
-            //ViewModel.Save();
-        }   
-
         private void WhenDatePicker_OnFocused(object         sender
                                             , FocusEventArgs e)
         {
             SetSaveButtonNotSaved();
         }
-
-        private void WhenTimePicker_OnUnfocused(object         sender
-                                              , FocusEventArgs e)
-        {
-            ViewModel.Stool.When = GetSelectDateTimeFromPickers();
-            //ViewModel.Save();
-        }
-
+        
         private void WhenTimePicker_OnFocused(object         sender
                                             , FocusEventArgs e)
         {
@@ -209,16 +200,6 @@ namespace InsAndOuts.Views
 
         private async Task<bool> ReadyToTakePicture()
         {
-            ////Ensure a stool has been created first
-            //if (ViewModel.Stool.Id == 0)
-            //{
-            //    await DisplayAlert("Define the stool first."
-            //                     , "Please enter at least a description first."
-            //                     , "OK");
-
-            //    return true;
-            //}
-
             //Open camera
             if (! CrossMedia.Current.IsCameraAvailable
              || ! CrossMedia.Current.IsTakePhotoSupported)
@@ -242,20 +223,60 @@ namespace InsAndOuts.Views
         private void SaveButton_OnClicked(object    sender
                                         , EventArgs e)
         {
+            ViewModel.Stool.DescriptionPainText = DescriptionHtmlRtEditor.Text;
+            ViewModel.Stool.DescriptionHtml     = DescriptionHtmlRtEditor.HtmlText;
+            //StoolType set on Unfocus of the slider control
+            //Image and ImageFile set in the tapped event of the camera icon
+            ViewModel.Stool.When                = GetSelectDateTimeFromPickers();
+
             ViewModel.Save();
             
+            if (EditMode)
+            {
+                SearchViewModel = new SearchViewModel();
+
+                SearchPicker.ItemsSource = SearchViewModel.SearchableStools;
+            }
+
             UpdateViewTitle();
 
             if (sender is SfButton button)
                 SetSaveButtonSaved(button);
-
-            //ResetData();
         }
-
-        private void DescriptionPlainTextEditor_OnFocused(object         sender
-                                                        , FocusEventArgs e)
+        
+        private void SearchPicker_OnSelectedIndexChanged(object    sender
+                                                       , EventArgs e)
         {
-            SetSaveButtonNotSaved();
+            var picker = sender as Picker ?? new Picker();
+            
+            if (picker.SelectedItem == null)
+            {
+                return;
+            }
+
+            ViewModel = new StoolViewModel(picker.SelectedItem.ToString());
+
+            if (ViewModel.Stool == null)
+            {
+                DisplayAlert("Stool not found"
+                           , "Something went wrong while retrieving the stool."
+                           , "OK");
+                return;
+            }
+            
+            DescriptionHtmlRtEditor.HtmlText = ViewModel.Stool.DescriptionHtml;
+
+            if (ViewModel.Stool.Image.Length > 0)
+            {
+                var imageStream = new MemoryStream(ViewModel.Stool.Image);
+                ImageFromCamera.Source = ImageSource.FromStream(() => imageStream);
+            }
+            
+            StoolTypePicker.SelectedItem = ViewModel.Stool.StoolType;
+            WhenDatePicker.Date          = ViewModel.Stool.WhenToDateTime();
+            WhenTimePicker.Time          = ViewModel.Stool.WhenToTimeSpan();
+            
+            UpdateViewTitle();
         }
     }
 }

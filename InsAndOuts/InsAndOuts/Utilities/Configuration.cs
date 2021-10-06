@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace InsAndOuts.Utilities
 {
@@ -24,5 +25,22 @@ namespace InsAndOuts.Utilities
                                  , value);
         }
 
+        public static string BackgroundImage
+        {
+            get => Preferences.Get(nameof(BackgroundImage)
+                                 , string.Empty);
+            set => Preferences.Set(nameof(BackgroundImage)
+                                 , value);
+        }
+
+        public static string ZoeColor
+        {
+            get => Preferences.Get(nameof(ZoeColor)
+                                 , "OriginalPrimary");
+            set => Preferences.Set(nameof(ZoeColor)
+                                 , value);
+        }
+
     }
+    
 }

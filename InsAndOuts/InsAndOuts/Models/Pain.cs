@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using InsAndOuts.Utilities;
 using SQLite;
 
 namespace InsAndOuts.Models
@@ -20,6 +21,22 @@ namespace InsAndOuts.Models
         public override string ToString()
         {
             return $"{When} - Level: {Level}";
+        }
+        
+        public DateTime WhenToDateTime()
+        {
+            return DateTime.Parse(When);
+        }
+
+        public TimeSpan WhenToTimeSpan()
+        {
+            if (When.IsNullEmptyOrWhitespace())
+            {
+                return new TimeSpan();
+            }
+
+            var time = When.Split(' ')[1];
+            return TimeSpan.Parse(time);
         }
     }
 }

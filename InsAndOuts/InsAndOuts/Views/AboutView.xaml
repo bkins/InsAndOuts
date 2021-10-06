@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InsAndOuts.Views.AboutView"
+             Title="About">
+    <!-- Layout children in two rows -->
+    <Grid RowDefinitions="Auto,*">
+        <!--BackgroundColor="{OnPlatform iOS=LightSlateGray, Android=#2196F3}"-->
+        <Image x:Name="AppImage"
+               Source="crohns.ico"
+               BackgroundColor="{DynamicResource Primary}"
+               VerticalOptions="Center"
+               HeightRequest="64" 
+               />
+
+        <StackLayout Grid.Row="1"
+                     Margin="20"
+                     Spacing="20"
+                     >
+
+            <Label FontSize="22"
+                   >
+
+                <Label.FormattedText>
+                    <FormattedString>
+                        <FormattedString.Spans>
+                            <Span x:Name="AppNameSpan"
+                                  Text="Ins And Outs, and Oohs!"
+                                  FontAttributes="Bold"
+                                  FontSize="22" 
+                                  />
+                            <Span x:Name="VersionNumberSpan"
+                                  Text=" v1.0" 
+                                  />
+                        </FormattedString.Spans>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label Text="This app is to help track meals, stools, and pains.  Including the ability to send a daily report to your doctor."
+                       FontSize="Subtitle"
+                       />
+
+            <Grid ColumnDefinitions="*"
+                  RowDefinitions="*,*,*"
+                  >
+
+                    <Button x:Name="ForZoeButton"
+                            Text="For Zoe ☮️"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            FontSize="Large"
+                            TextColor="Blue"
+                            BackgroundColor="Transparent"
+                            VerticalOptions="CenterAndExpand"
+                            HorizontalOptions="CenterAndExpand"
+                            Clicked="ForZoeButton_OnClicked"
+                            />
+
+                    <Button x:Name="CreatorButton"
+                            Text="Creator: Ben Hopkins
+                            (BenHop@gmail.com)"
+
+                            Grid.Row="1"
+                            Grid.Column="0"
+
+                            TextColor="Blue"
+                            BackgroundColor="Transparent"
+                            VerticalOptions="CenterAndExpand"
+                            />
+                    
+                    <Button x:Name="AssociationWithButton"
+                            Text="In Association with
+                            www.MoralCoding.org"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            TextColor="Blue"
+                            BackgroundColor="Transparent"
+                            VerticalOptions="CenterAndExpand"
+                            />
+                    
+            </Grid>
+
+        </StackLayout>
+    </Grid>
+</ContentPage>
+
+<!--<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InsAndOuts.Views.AboutView">
+    
+        <Grid RowDefinitions="auto"
+                      BackgroundColor="{OnPlatform iOS=LightSlateGray, Android=#2196F3}"
+                >
+                <Image Source="crohns.png"
+                       
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       HeightRequest="64" 
+                       Aspect="AspectFit"
+                />
+            </Grid>
+        <StackLayout>
+            
+            
+            <Label Text="To do: Set the the app name, brief description, contact info, nod to MoralCoding, 'For Zoe', Version/Build number"
+                   VerticalOptions="CenterAndExpand" 
+                   HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+</ContentPage>-->

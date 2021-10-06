@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using InsAndOuts.Utilities;
 using InsAndOuts.ViewModels;
 using Syncfusion.SfRangeSlider.XForms;
@@ -14,25 +15,40 @@ using Xamarin.Forms.Xaml;
 
 namespace InsAndOuts.Views
 {
+    [QueryProperty(nameof(ViewMode)
+                 , nameof(ViewMode))]
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PainView : ContentPage
+    public partial class PainView : ContentPage, IQueryAttributable
     {
-        public PainViewModel ViewModel { get; set; }
+        public  string          ViewMode          { get; set; }
+        public  SearchViewModel SearchViewModel   { get; set; }
+        public  PainViewModel   ViewModel         { get; set; }
+        
+        private bool EditMode { get; set; }
+
+        public void ApplyQueryAttributes(IDictionary<string, string> query)
+        {
+            ViewMode = HttpUtility.UrlDecode(query[nameof(ViewMode)]);
+            
+            if (ViewMode != null 
+             && ViewMode.Equals("EDIT"
+                              , StringComparison.CurrentCultureIgnoreCase))
+            {
+                EditMode = true;
+
+                SearchPicker.IsVisible = true;
+                SearchViewModel        = new SearchViewModel();
+
+                SearchPicker.ItemsSource = SearchViewModel.SearchablePains;
+                SearchPicker.Focus();
+            }
+        }
 
         public PainView()
         {
             InitializeComponent();
-
-            ViewModel = new PainViewModel();
-
-            DescriptionHtmlRtEditor.AlignLeft();
-
-            DescriptionHtmlRtEditor.IsVisible    = Configuration.UseHtmlForEmailBody;
-            DescriptionPlainTextEditor.IsVisible = ! DescriptionHtmlRtEditor.IsVisible;
             
-            WhenDatePicker.Date = DateTime.Today;
-            WhenTimePicker.Time = DateTime.Now.TimeOfDay;
-
+            ResetData();
         }
         
         protected override void OnDisappearing()
@@ -44,7 +60,6 @@ namespace InsAndOuts.Views
 
         private void ResetData()
         {
-            DescriptionPlainTextEditor.Text = string.Empty;
             WhenDatePicker.Date             = DateTime.Today;
             WhenTimePicker.Time             = DateTime.Now.TimeOfDay;
             
@@ -57,14 +72,11 @@ namespace InsAndOuts.Views
         
         private void UpdateViewTitle()
         {
-            //For now this will always be "Add New"
-            //However, the idea will be that I will add feature to update the stools and this will be the view I will use.
-            //BENDO: On release to user(s) remove the ID for the Title
             var addUpdate = ViewModel.Pain.Id == 0 ?
                                     "Add New" :
                                     "Update";
 
-            Title = $"{addUpdate} Stool ({ViewModel.Pain.Id})";
+            Title = $"{addUpdate} Pain ({ViewModel.Pain.Id})";
         }
 
         private void SetSaveButtonNotSaved()
@@ -78,10 +90,10 @@ namespace InsAndOuts.Views
 
         private bool NoRecordsChanged()
         {
-            return ViewModel.Pain.DescriptionHtml     == DescriptionHtmlRtEditor.HtmlText
-                && ViewModel.Pain.DescriptionPainText == DescriptionPlainTextEditor.Text
-                && ViewModel.Pain.Level               == (int)RangeSlider.Value
-                && ViewModel.Pain.When                == GetSelectDateTimeFromPickers();
+            return DescriptionHtmlRtEditor.HtmlText == null
+                || ViewModel.Pain.DescriptionHtml   == DescriptionHtmlRtEditor.HtmlText
+                && ViewModel.Pain.Level             == (int)RangeSlider.Value
+                && ViewModel.Pain.When              == GetSelectDateTimeFromPickers();
         }
 
         private void SetSaveButtonSaved(SfButton button)
@@ -104,12 +116,6 @@ namespace InsAndOuts.Views
             ViewModel.Pain.Level = (int)RangeSlider.Value;
         }
         
-        private void DescriptionPlainTextEditor_OnFocused(object         sender
-                                                        , FocusEventArgs e)
-        {
-            SetSaveButtonNotSaved();
-        }
-
         private void DescriptionHtmlRtEditor_OnFocused(object    sender
                                                      , EventArgs e)
         {
@@ -138,7 +144,7 @@ namespace InsAndOuts.Views
                                         , EventArgs e)
         {
             ViewModel.Pain.When                = GetSelectDateTimeFromPickers();
-            ViewModel.Pain.DescriptionPainText = DescriptionPlainTextEditor.Text;
+            ViewModel.Pain.DescriptionPainText = DescriptionHtmlRtEditor.Text;
             ViewModel.Pain.DescriptionHtml     = DescriptionHtmlRtEditor.HtmlText;
 
             if (ViewModel.Pain.DescriptionPainText.IsNullEmptyOrWhitespace()
@@ -155,6 +161,35 @@ namespace InsAndOuts.Views
             {
                 SetSaveButtonSaved(button);
             }
+        }
+
+        private void SearchPicker_OnSelectedIndexChanged(object    sender
+                                                       , EventArgs e)
+        {
+            var picker = sender as Picker ?? new Picker();
+            
+            if (picker.SelectedItem == null)
+            {
+                return;
+            }
+
+            ViewModel = new PainViewModel(picker.SelectedItem.ToString());
+
+            if (ViewModel.Pain == null)
+            {
+                DisplayAlert("Pain not found"
+                           , "Something went wrong while retrieving the pain."
+                           , "OK");
+                return;
+            }
+            
+            DescriptionHtmlRtEditor.HtmlText = ViewModel.Pain.DescriptionHtml;
+            
+            RangeSlider.Value   = ViewModel.Pain.Level;
+            WhenDatePicker.Date = ViewModel.Pain.WhenToDateTime();
+            WhenTimePicker.Time = ViewModel.Pain.WhenToTimeSpan();
+
+            UpdateViewTitle();
         }
     }
 }

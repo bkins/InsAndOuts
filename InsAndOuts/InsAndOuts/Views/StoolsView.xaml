@@ -14,22 +14,24 @@
 
     <ContentPage.Content>
         <StackLayout>
-
-            <Grid RowDefinitions="auto,3.5*,*,*,*,*"
+            
+            <Grid RowDefinitions="*,auto,3.5*,*,*,*,*"
                   VerticalOptions="Fill"
                   >
 
-                <Editor x:Name="DescriptionPlainTextEditor"
-                        Unfocused="DescriptionPlainTextEditor_OnUnfocused"
-                        Focused="DescriptionPlainTextEditor_OnFocused"
-                        IsVisible="False"
+                <Picker x:Name="SearchPicker"
+                        Title="Select a stool to edit"
+
                         Grid.Row="0"
-                        />
+
+                        IsVisible="False"
+                        SelectedIndexChanged="SearchPicker_OnSelectedIndexChanged"
+                />
 
                 <richTextEditor:SfRichTextEditor x:Name="DescriptionHtmlRtEditor" 
                                                  PlaceHolder="Describe the stool"
 
-                                                 Grid.Row="0"
+                                                 Grid.Row="1"
 
                                                  AutoSize="TextChanges"
 
@@ -37,7 +39,6 @@
                                                  ToolbarOptions="Bold,FontColor,Italic,IncreaseIndent,DecreaseIndent,BulletList,Alignment"
                                                  VerticalOptions="StartAndExpand"
                                                  
-                                                 Unfocused="DescriptionHtmlRtEditor_OnUnfocused"
                                                  Focused="DescriptionHtmlRtEditor_OnFocused"
                                                  />
                 
@@ -45,7 +46,9 @@
                        IsVisible="False"
                        VerticalOptions="Start"
                        Margin="0, 0, 0, 0"
-                       Grid.Row="1"
+
+                       Grid.Row="2"
+                       
                        Aspect="AspectFit"
                        />
 
@@ -53,7 +56,7 @@
                         Title="Select Bristol Stool Type:"
                         VerticalOptions="Start"
                         SelectedIndexChanged="StoolTypePicker_OnSelectedIndexChanged"
-                        Grid.Row="2"
+                        Grid.Row="3"
                         >
                     <Picker.Items>
                         <x:String>Type 1: Separate hard lumps, like nuts (difficult to pass and can be black)</x:String>
@@ -95,16 +98,14 @@
                 </picker:SfPicker>-->
                 
                 <DatePicker x:Name="WhenDatePicker"
-                            Grid.Row="3"
+                            Grid.Row="4"
                             VerticalOptions="StartAndExpand"
-                            Unfocused="WhenDatePicker_OnUnfocused"
                             Focused="WhenDatePicker_OnFocused"
                             />
 
                 <TimePicker x:Name="WhenTimePicker"
-                            Grid.Row="4"
+                            Grid.Row="5"
                             VerticalOptions="StartAndExpand"
-                            Unfocused="WhenTimePicker_OnUnfocused"
                             Focused="WhenTimePicker_OnFocused"
                             />
 
@@ -113,7 +114,7 @@
                        HeightRequest="50"
                        HorizontalOptions="End"
                        Margin="0, 0, 5, 0"
-                       Grid.Row="5"
+                       Grid.Row="6"
                        >
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer
@@ -129,10 +130,10 @@
                                  ShowIcon="False"
                                  ImageSource="saved.png"
                                  VerticalOptions="Start"
-                                 BackgroundColor="{StaticResource Primary}"
+                                 BackgroundColor="{DynamicResource Primary}"
                                  Margin="0,0,0,0"
                                  Clicked="SaveButton_OnClicked"
-                                 Grid.Row="6"
+                                 Grid.Row="7"
                                  />
 
             </Grid>

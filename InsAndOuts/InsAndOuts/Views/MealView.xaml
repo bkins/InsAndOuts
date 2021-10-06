@@ -24,12 +24,6 @@
                    Focused="NameEntry_OnFocused"
                    />
 
-            <!--<Editor x:Name="DescriptionEditor"
-                    Placeholder="What did you eat"
-                    Focused="DescriptionEditor_OnFocused"
-                    IsVisible="False"
-                    />-->
-
             <richTextEditor:SfRichTextEditor x:Name="DescriptionRtf"
                                              PlaceHolder="What did you eat"
                                              AutoSize="TextChanges"
@@ -54,7 +48,7 @@
                              ShowIcon="False"
                              ImageSource="saved.png"
                              VerticalOptions="Center"
-                             BackgroundColor="{StaticResource Primary}"
+                             BackgroundColor="{DynamicResource Primary}"
                              Margin="0,0,0,25"
                              Clicked="SaveButton_OnClicked"
                              />

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="InsAndOuts.Views.HomePage"
              Title="Home">
+             <!--BackgroundImageSource="love.jpg"-->
     <ContentPage.ToolbarItems >
 
         <ToolbarItem x:Name="Configuration"
@@ -11,7 +12,8 @@
                      />
 
     </ContentPage.ToolbarItems>
-    <ContentPage.Content>
+    <ContentPage.Content
+        >
         <StackLayout>
             
             <Button x:Name="ReportButton"
@@ -30,6 +32,7 @@
 
             <Button x:Name="AboutButton"
                     Text="About"
+                    Clicked="AboutButton_OnClicked"
                     />
             <Button x:Name="LoadTestData"
                     Text="LoadTestData"

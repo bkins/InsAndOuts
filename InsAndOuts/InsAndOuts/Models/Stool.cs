@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using InsAndOuts.Utilities;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 
@@ -36,6 +37,22 @@ namespace InsAndOuts.Models
             }
 
             return When;
+        }
+
+        public DateTime WhenToDateTime()
+        {
+            return DateTime.Parse(When);
+        }
+
+        public TimeSpan WhenToTimeSpan()
+        {
+            if (When.IsNullEmptyOrWhitespace())
+            {
+                return new TimeSpan();
+            }
+
+            var time = When.Split(' ')[1];
+            return TimeSpan.Parse(time);
         }
     }
 }
