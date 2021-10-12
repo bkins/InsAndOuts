@@ -17,23 +17,25 @@
         <StackLayout>
             
             <Button x:Name="ReportButton"
-                    Text="Report"
+                    Text="Daily Report"
                     Clicked="ReportButton_OnClicked"
                     />
 
-            <Button x:Name="BrowseDataButton"
-                    Text="Browse Data"
+            <Button x:Name="EditDataButton"
+                    Text="Edit Data"
                     Clicked="BrowseDataButton_OnClicked"
                     />
 
-            <Button x:Name="TendsAnalysisReportsButton"
-                    Text="Tends/Analysis/Reports"
+            <Button x:Name="ChartsAndReportsButton"
+                    Text="Charts &amp; Reports"
+                    Clicked="TendsAnalysisReportsButton_OnClicked"
                     />
 
             <Button x:Name="AboutButton"
                     Text="About"
                     Clicked="AboutButton_OnClicked"
                     />
+
             <Button x:Name="LoadTestData"
                     Text="LoadTestData"
                     Clicked="LoadTestData_OnClicked"

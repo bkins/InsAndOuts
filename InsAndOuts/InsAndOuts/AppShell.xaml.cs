@@ -20,6 +20,7 @@ namespace InsAndOuts
             Routing.RegisterRoute(nameof(ManageDataView),    typeof(ManageDataView));
             Routing.RegisterRoute(nameof(SearchView),        typeof(SearchView));
             Routing.RegisterRoute(nameof(AboutView),         typeof(AboutView));
+            Routing.RegisterRoute(nameof(ReportsView),       typeof(ReportsView));
         }
         
     }

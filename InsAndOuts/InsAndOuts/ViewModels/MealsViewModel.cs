@@ -43,5 +43,10 @@ namespace InsAndOuts.ViewModels
                 DataAccessLayer.UpdateMeal(Meal);
             }
         }
+
+        public void Delete()
+        {
+            var deletedMealId = DataAccessLayer.DeleteMeal(Meal);
+        }
     }
 }

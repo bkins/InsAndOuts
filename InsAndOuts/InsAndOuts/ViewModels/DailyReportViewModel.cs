@@ -97,13 +97,21 @@ namespace InsAndOuts.ViewModels
             var report = new StringBuilder();
 
             report.AppendLine("Meals:");
+
             foreach (var meal in Meals)
             {
-                report.AppendLine($"\t* {meal.Name} ({DateTime.Parse(meal.When).ToShortTimeString()}):");
-                report.AppendLine($"\t\t{meal.DescriptionPainText}");
+                report.AppendLine("");
+                report.AppendLine($"* {meal.Name} ({DateTime.Parse(meal.When).ToShortTimeString()}):");
+
+                if (meal.DescriptionPainText.HasValue())
+                {
+                    report.AppendLine($"  {meal.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                }
             }
 
+            report.AppendLine("");
             report.AppendLine("Stools:");
+            report.AppendLine("");
 
             foreach (var stool in Stools)
             {
@@ -112,17 +120,28 @@ namespace InsAndOuts.ViewModels
                                        "No" :
                                        "Yes";
 
-                report.AppendLine($"\t* {stool.StoolType.Split(':')[0]} ({DateTime.Parse(stool.When).ToShortTimeString()}):");
-                report.AppendLine($"\t\t{stool.DescriptionPainText.Replace(Environment.NewLine, $"{Environment.NewLine}\t\t")}");
-                report.AppendLine($"\t\tHas an photo: {hasPhoto}");
+                report.AppendLine($"* {stool.StoolType.Split(':')[0]} ({DateTime.Parse(stool.When).ToShortTimeString()}):");
+
+                if (stool.DescriptionPainText.HasValue())
+                {
+                    report.AppendLine($"  {stool.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                }
+                        
+                report.AppendLine($"  Has an photo: {hasPhoto}");
+                report.AppendLine("");
             }
 
             report.AppendLine("Pains:");
+            report.AppendLine("");
 
             foreach (var pain in Pains)
             {
-                report.AppendLine($"\t* {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):");
-                report.AppendLine($"\t\t{pain.DescriptionPainText}");
+                report.AppendLine($"* {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):");
+
+                if (pain.DescriptionPainText.HasValue())
+                {
+                    report.AppendLine($"  {pain.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                }
             }
 
             return report.ToString();

@@ -25,11 +25,12 @@ namespace InsAndOuts.Views
         public MealsViewModel  ViewModel       { get; set; }
         public SearchViewModel SearchViewModel { get; set; }
 
-        private bool EditMode { get; set; }
+        private bool EditMode  { get; set; }
+        public bool IsLoading { get; set; }
 
         public void ApplyQueryAttributes(IDictionary<string, string> query)
         {
-            ViewMode = HttpUtility.UrlDecode(query[nameof(ViewMode)]);
+            ViewMode  = HttpUtility.UrlDecode(query[nameof(ViewMode)]);
             
             if (ViewMode != null 
              && ViewMode.Equals("EDIT"
@@ -37,17 +38,20 @@ namespace InsAndOuts.Views
             {
                 EditMode               = true;
 
-                SearchPicker.IsVisible = true;
                 SearchViewModel        = new SearchViewModel();
 
                 SearchPicker.ItemsSource = SearchViewModel.SearchableMeals;
                 SearchPicker.Focus();
             }
+
+            SearchPicker.IsVisible    = EditMode;
         }
 
         public MealView()
         {
             InitializeComponent();
+
+            IsLoading = true;
         }
 
         protected override void OnAppearing()
@@ -59,7 +63,10 @@ namespace InsAndOuts.Views
             DescriptionRtf.AlignLeft();
             
             ResetData();
+            
         }
+
+        
 
         private void ResetData()
         {
@@ -158,14 +165,14 @@ namespace InsAndOuts.Views
         private void SearchPicker_OnSelectedIndexChanged(object    sender
                                                        , EventArgs e)
         {
-            var picker = sender as Picker ?? new Picker();
-            
-            if (picker.SelectedItem == null)
+            if (SearchPicker.SelectedItem == null
+                || IsLoading)
             {
+                IsLoading = false;
                 return;
             }
 
-            ViewModel               = new MealsViewModel(picker.SelectedItem.ToString());
+            ViewModel = new MealsViewModel(SearchPicker.SelectedItem.ToString());
 
             if (ViewModel.Meal == null)
             {
@@ -181,6 +188,25 @@ namespace InsAndOuts.Views
             WhenTimePicker.Time     = ViewModel.Meal.WhenToTimeSpan();
 
             UpdateViewTitle();
+            SearchPicker.IsVisible = false;
+            
+        }
+
+        private async void DeleteMealToolbarItem_OnClicked(object    sender
+                                                   , EventArgs e)
+        {
+            if (! EditMode
+             || ViewModel          == null
+             || ViewModel.Meal?.Id == 0)
+                return;
+
+            ViewModel.Delete();
+            await PageNavigation.NavigateBackwards();
+        }
+        
+        private void SaveButton_OnSizeChanged(object    sender
+                                            , EventArgs e)
+        {
         }
     }
 

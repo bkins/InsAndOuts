@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using InsAndOuts.Services;
 using InsAndOuts.Utilities;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -18,6 +20,9 @@ namespace InsAndOuts.Views
         public AboutView()
         {
             InitializeComponent();
+
+            VersionNumberSpan.Text = $" v{VersionTracking.CurrentVersion}";
+            BuildNumberSpan.Text   = $" ({VersionTracking.CurrentBuild})";
         }
 
         private void Email_Tapped(object    sender
@@ -29,6 +34,7 @@ namespace InsAndOuts.Views
         private void ForZoeButton_OnClicked(object    sender
                                           , EventArgs e)
         {
+            //HappyMushrooms image found here: https://drewbrophyart.com/products/happy-mushroom?variant=39880460075166
             Configuration.BackgroundImage = Configuration.BackgroundImage.IsNullEmptyOrWhitespace() ?
                                                     "HappyMushrooms.jpg" :
                                                     string.Empty;

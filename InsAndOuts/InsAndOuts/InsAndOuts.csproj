@@ -11,6 +11,7 @@
     <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
     <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="19.2.0.62" />
     <PackageReference Include="Syncfusion.Xamarin.SfAutoComplete" Version="19.2.0.62" />
+    <PackageReference Include="Syncfusion.Xamarin.SfChart" Version="19.2.0.62" />
     <PackageReference Include="Syncfusion.Xamarin.SfPicker" Version="19.2.0.62" />
     <PackageReference Include="Syncfusion.Xamarin.SfRangeSlider" Version="19.2.0.62" />
     <PackageReference Include="Syncfusion.Xamarin.SfRichTextEditor" Version="19.2.0.62" />
@@ -21,8 +22,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Mono.Android">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Professional\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v11.0\Mono.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="Windows.Foundation.UniversalApiContract">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Windows Kits\10\References\10.0.19041.0\Windows.Foundation.UniversalApiContract\10.0.0.0\Windows.Foundation.UniversalApiContract.winmd</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Views\ManageDataView.xaml.cs">
       <DependentUpon>ManageDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ReportsView.xaml.cs">
+      <DependentUpon>ReportsView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -46,6 +59,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\PainView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ReportsView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\SearchView.xaml">

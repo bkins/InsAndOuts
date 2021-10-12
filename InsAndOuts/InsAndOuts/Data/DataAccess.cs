@@ -71,5 +71,10 @@ namespace InsAndOuts.Data
             return Database.GetAllStools()
                            .ToList();
         }
+
+        public int DeleteMeal(Meal meal)
+        {
+            return Database.DeleteMeal(ref meal);
+        }
     }
 }

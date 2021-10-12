@@ -138,6 +138,9 @@
     <PackageReference Include="Syncfusion.Xamarin.SfAutoComplete">
       <Version>19.2.0.62</Version>
     </PackageReference>
+    <PackageReference Include="Syncfusion.Xamarin.SfChart">
+      <Version>19.2.0.62</Version>
+    </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfPicker">
       <Version>19.2.0.62</Version>
     </PackageReference>

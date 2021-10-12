@@ -5,9 +5,9 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="InsAndOuts.Views.AboutView"
              Title="About">
-    <!-- Layout children in two rows -->
+    
     <Grid RowDefinitions="Auto,*">
-        <!--BackgroundColor="{OnPlatform iOS=LightSlateGray, Android=#2196F3}"-->
+       
         <Image x:Name="AppImage"
                Source="crohns.ico"
                BackgroundColor="{DynamicResource Primary}"
@@ -26,14 +26,17 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
                 <Label.FormattedText>
                     <FormattedString>
                         <FormattedString.Spans>
+                            
                             <Span x:Name="AppNameSpan"
                                   Text="Ins And Outs, and Oohs!"
                                   FontAttributes="Bold"
                                   FontSize="22" 
-                                  />
+                            />
                             <Span x:Name="VersionNumberSpan"
-                                  Text=" v1.0" 
                                   />
+                            <Span x:Name="BuildNumberSpan"
+                                  />
+
                         </FormattedString.Spans>
                     </FormattedString>
                 </Label.FormattedText>

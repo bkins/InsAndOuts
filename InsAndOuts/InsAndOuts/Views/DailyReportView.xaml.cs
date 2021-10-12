@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,9 @@ namespace InsAndOuts.Views
         {
             InitializeComponent();
 
-            DateToReport = DateTime.Today;
+            DateToReport         = DateTime.Today;
+
+            ToggleHtmlAndPainTextReport(Configuration.UseHtmlForEmailBody);
 
             GenerateReport();
         }
@@ -84,18 +87,22 @@ namespace InsAndOuts.Views
             
             EmailBodyFormat emailFormat;
             string          body;
+            
+            //if (HtmlSwitch.IsToggled 
+            // && Device.RuntimePlatform != Device.UWP)
+            //{
 
-            if (HtmlSwitch.IsToggled 
-             && Device.RuntimePlatform != Device.UWP)
-            {
-                emailFormat = EmailBodyFormat.Html;
-                body        = ViewModel.ToHtml();
-            }
-            else
-            {
-                emailFormat = EmailBodyFormat.PlainText;
-                body        = ViewModel.ToPainText();
-            }
+            //    emailFormat = EmailBodyFormat.Html;
+            //    body        = ViewModel.ToHtml();
+            //}
+            //else
+            //{
+            //    emailFormat = EmailBodyFormat.PlainText;
+            //    body        = ViewModel.ToPainText();
+            //}
+            
+            emailFormat = EmailBodyFormat.PlainText;
+            body        = ViewModel.ToPainText();
 
             var emailer = new Emailer
                           {
@@ -109,20 +116,36 @@ namespace InsAndOuts.Views
                                   , body
                                   , listOfAttachments);
         }
-
-        private static List<EmailAttachment> GetListOfEmailAttachments(List<Stool> stoolsWithImages)
+        
+        private List<EmailAttachment> GetListOfEmailAttachments(List<Stool> stoolsWithImages)
         {
             var listOfAttachments = new List<EmailAttachment>();
-            
-            foreach (var stoolWithImage in stoolsWithImages)
+
+            try
             {
-                System.IO.File.WriteAllBytes($@".\attachments\{stoolWithImage.ImageFileName}"
-                                           , stoolWithImage.Image);
+                foreach (var stoolWithImage in stoolsWithImages)
+                {
+                    var attachmentFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                                                        , stoolWithImage.ImageFileName);
 
-                var attachment = new EmailAttachment($@".\attachments\{stoolWithImage.ImageFileName}"
-                                                   , "image/jpg");
+                    File.WriteAllBytes(attachmentFilePath
+                                     , stoolWithImage.Image);
+                    
+                    var attachment = new EmailAttachment(attachmentFilePath
+                                                       , "image/jpg");
 
-                listOfAttachments.Add(attachment);
+                    listOfAttachments.Add(attachment);
+                }
+            }
+            catch (Exception e)
+            {
+                DisplayAlert("Error!"
+                           , $"{e.Message}{Environment.NewLine}{e.StackTrace}", "OK");
+
+                //BENDO: implement error logging and reporting of errors
+                //Log the error
+                //Ask user if they would like to email the error report (Stack Trace) to Developer
+                //Consider implementing a page for managing error logs/reports
             }
 
             return listOfAttachments;
@@ -131,10 +154,14 @@ namespace InsAndOuts.Views
         private void HtmlSwitch_OnToggled(object           sender
                                         , ToggledEventArgs e)
         {
-            ReportHtml.IsVisible      = HtmlSwitch.IsToggled;
-            ReportPlainText.IsVisible = ! ReportHtml.IsVisible;
+            ToggleHtmlAndPainTextReport(HtmlSwitch.IsToggled);
         }
 
+        private void ToggleHtmlAndPainTextReport(bool showHtml)
+        {
+            ReportHtml.IsVisible      = showHtml;
+            ReportPlainText.IsVisible = ! showHtml;
+        }
        
         private void ReportDatePicker_OnOkButtonClicked(object                    sender
                                                       , SelectionChangedEventArgs e)

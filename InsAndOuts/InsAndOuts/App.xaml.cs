@@ -22,6 +22,8 @@ namespace InsAndOuts
             
             InitializeComponent();
 
+            Xamarin.Essentials.VersionTracking.Track();
+
             DependencyService.Register<MockDataStore>();
             MainPage = new AppShell();
         }

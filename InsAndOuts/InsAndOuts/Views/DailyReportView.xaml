@@ -63,7 +63,7 @@
                        />
 
                 <Switch x:Name="HtmlSwitch"
-                        IsToggled="True"
+                        IsToggled="False"
                         HorizontalOptions="Start"
                         VerticalOptions="Start"
                         Grid.Column="1"
