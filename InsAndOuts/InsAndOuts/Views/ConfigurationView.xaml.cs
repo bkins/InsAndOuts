@@ -174,16 +174,25 @@ namespace InsAndOuts.Views
 
             var todaysStool = new Stool(randomNumber.Next(1, 7))
                               {
-                                  When = $"{today} {DateTime.Now.AddHours(randomNumber.Next(0, 24)).ToShortTimeString()}"
+                                  DescriptionHtml     = "See image"
+                                , DescriptionPainText = "See image"
+                                , When                = $"{today} {DateTime.Now.AddHours(randomNumber.Next(0, 24)).ToShortTimeString()}"
                               };
+
             var yesterdaysStool = new Stool(randomNumber.Next(1, 7))
                                   {
-                                      When = $"{yesterday} {DateTime.Now.AddHours(randomNumber.Next(0, 24)).ToShortTimeString()}"
+                                      DescriptionHtml     = "See image"
+                                    , DescriptionPainText = "See image"
+                                    , When                = $"{yesterday} {DateTime.Now.AddHours(randomNumber.Next(0, 24)).ToShortTimeString()}"
                                   };
+
             var dayBeforeYesterdaysStool = new Stool(randomNumber.Next(1, 7))
                                            {
-                                               When = $"{dayBeforeYesterday} {DateTime.Now.AddHours(randomNumber.Next(0, 24)).ToShortTimeString()}"
+                                               DescriptionHtml     = "See image"
+                                             , DescriptionPainText = "See image"
+                                             , When                = $"{dayBeforeYesterday} {DateTime.Now.AddHours(randomNumber.Next(0, 24)).ToShortTimeString()}"
                                            };
+
             App.Database.AddStool(todaysStool);
             App.Database.AddStool(yesterdaysStool);
             App.Database.AddStool(dayBeforeYesterdaysStool);

@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InsAndOuts.Views.Credits"
+             Shell.TabBarIsVisible="False"
+             Title="Image Credits"
+             >
+    <ContentPage.Content>
+        <StackLayout>
+            
+            <Grid ColumnDefinitions="0.20*,*"
+                  RowDefinitions="*,*">
+                
+                <Image Source="icon.png"
+                       Grid.Column="0"
+                       Grid.Row="0"
+                       VerticalOptions="Start"
+                       Aspect="AspectFit"
+                       />
+
+                <Label Grid.Column="1"
+                       Grid.Row="0"
+                       VerticalOptions="Start">
+                    
+                    <Label.FormattedText>
+
+                        <FormattedString>
+                            
+                            <Span Text="Freepik (https://www.freepik.com)"
+                                  TextColor="Blue"
+                                  TextDecorations="Underline"
+                                  >
+
+                                <Span.GestureRecognizers>
+
+                                    <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                          CommandParameter="https://www.freepik.com" 
+                                                          />
+
+                                </Span.GestureRecognizers>
+
+                            </Span>
+                            
+                        </FormattedString>
+
+                    </Label.FormattedText>
+
+                </Label>
+                <!--HappyMushrooms image found here: https://drewbrophyart.com/products/happy-mushroom?variant=39880460075166-->
+                
+                <Image Source="HappyMushrooms.jpg"
+                       Grid.Column="0"
+                       Grid.Row="1"
+                       VerticalOptions="Start"
+                       Aspect="AspectFit"
+                />
+
+                <Label Grid.Column="1"
+                       Grid.Row="1"
+                       VerticalOptions="Start">
+                    
+                    <Label.FormattedText>
+
+                        <FormattedString>
+                            
+                            <Span Text="Drewbrophyart.com (https://drewbrophyart.com/products/happy-mushroom?variant=39880460075166)"
+                                  TextColor="Blue"
+                                  TextDecorations="Underline"
+                            >
+
+                                <Span.GestureRecognizers>
+
+                                    <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                          CommandParameter="https://drewbrophyart.com/products/happy-mushroom?variant=39880460075166" 
+                                    />
+
+                                </Span.GestureRecognizers>
+
+                            </Span>
+                            
+                        </FormattedString>
+
+                    </Label.FormattedText>
+
+                </Label>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -46,5 +46,13 @@ namespace InsAndOuts.ViewModels
                 DataAccessLayer.UpdatePain(Pain);
             }
         }
+
+        public void Delete()
+        {
+            if (Pain.Id != 0)
+            {
+                DataAccessLayer.DeletePain(Pain);
+            }
+        }
     }
 }

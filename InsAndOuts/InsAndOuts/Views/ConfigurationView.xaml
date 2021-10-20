@@ -5,6 +5,7 @@
              xmlns:viewmodels="clr-namespace:InsAndOuts.ViewModels;assembly=InsAndOuts"
              xmlns:views="clr-namespace:InsAndOuts.Views;assembly=InsAndOuts"
              x:DataType="views:ConfigurationView"
+             Shell.TabBarIsVisible="False"
              
              Title="Settings"
              >
@@ -50,10 +51,10 @@
                         Unfocused="EmailToDoctorEditor_OnUnfocused"
                         />
 
-                <Button x:Name="DoneButton"
+                <!--<Button x:Name="DoneButton"
                         Text="Done"
                         Clicked="DoneButton_OnClicked"
-                        />
+                        />-->
 
             </StackLayout>
             

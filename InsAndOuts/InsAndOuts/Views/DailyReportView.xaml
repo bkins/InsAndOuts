@@ -9,6 +9,7 @@
              x:Class="InsAndOuts.Views.DailyReportView"
              x:DataType="views:DailyReportView"
              x:Name="DailyReportViewName"
+             Shell.TabBarIsVisible="False"
              Title="Report to Doctor"
              >
 

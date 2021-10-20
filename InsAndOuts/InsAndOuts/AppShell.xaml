@@ -6,7 +6,7 @@
        x:Class="InsAndOuts.AppShell"
        >
     
-    <TabBar>
+    <TabBar >
         <ShellContent x:Name="HomeTabBarButton"
                       Title="Home"
                       Icon="icon_feed.png"

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace InsAndOuts.Utilities
@@ -24,5 +25,17 @@ namespace InsAndOuts.Utilities
             return ! IsNullEmptyOrWhitespace(value);
         }
 
+        public static string ToTitleCase(this string value
+                                       , bool        force = false)
+        {
+            var ti = new CultureInfo("en-US"
+                                   , false).TextInfo;
+
+            if (force)
+            {
+                value = value?.ToLower();
+            }
+            return ti.ToTitleCase(value);
+        }
     }
 }

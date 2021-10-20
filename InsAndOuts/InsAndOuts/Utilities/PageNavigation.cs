@@ -45,7 +45,7 @@ namespace InsAndOuts.Utilities
         {
             try
             {
-                Shell.Current.GoToAsync(path);
+                await Shell.Current.GoToAsync(path);
             }
             catch (Exception e)
             {

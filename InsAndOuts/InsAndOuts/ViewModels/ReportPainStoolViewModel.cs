@@ -11,19 +11,23 @@ namespace InsAndOuts.ViewModels
     public class ReportPainStoolViewModel : ViewModelBase
     {
         //Chart data
-        public List<Pain>                      Pains                     { get; set; }
-        public List<Stool>                     StoolTypes                { get; set; }
-        public List<string>                    AvailableDateStrings      { get; set; }
-        public List<DateTime>                  AvailableDateTimes        { get; set; }
-        public ObservableCollection<ChartItem> PainPercentages           { get; set; }
-        public ObservableCollection<ChartItem> StoolTypePercentages      { get; set; }
-        public ObservableCollection<ChartItem> NumberOfStoolByDayOfWeek  { get; set; }
-        public ObservableCollection<ChartItem> NumberOfStoolsByHourGroup { get; set; }
+        public List<Pain>                      Pains                        { get; set; }
+        public List<Stool>                     StoolTypes                   { get; set; }
+        public List<string>                    AvailableDateStrings         { get; set; }
+        public List<DateTime>                  AvailableDateTimes           { get; set; }
+        public ObservableCollection<ChartItem> PainPercentages              { get; set; }
+        public ObservableCollection<ChartItem> StoolTypePercentages         { get; set; }
+        public ObservableCollection<ChartItem> NumberOfStoolByDayOfWeek     { get; set; }
+        public ObservableCollection<ChartItem> NumberOfStoolsByHourGroup    { get; set; }
+        public ObservableCollection<ChartItem> AverageStoolTypesByHourGroup { get; set; }
+        public ObservableCollection<ChartItem> NumberOfPainsByHourGroup     { get; set; }
+        public ObservableCollection<ChartItem> AveragePainsByHourGroup      { get; set; }
+
 
         //Chart metadata
         public string ChartTitle { get; set; }
 
-        private List<Range> HourRanges { get; }
+        private List<Range> HourRanges => GetHourRanges();
 
         public ReportPainStoolViewModel()
         {
@@ -36,14 +40,15 @@ namespace InsAndOuts.ViewModels
             SetAvailablePainDateLists();
             SetAvailableStoolTypeLists();
 
-            PainPercentages      = GetPainPercentages();
-            StoolTypePercentages = GetStoolTypePercentages();
+            PainPercentages              = GetPainPercentages();
+            StoolTypePercentages         = GetStoolTypePercentages();
+            NumberOfStoolByDayOfWeek     = GetNumberOfStoolByDayOfWeek();
 
-            NumberOfStoolByDayOfWeek = GetNumberOfStoolByDayOfWeek();
-            
-            HourRanges = GetHourRanges();
+            NumberOfStoolsByHourGroup    = GetNumberOfStoolsByHourGroup();
+            AverageStoolTypesByHourGroup = GetAverageStoolTypesByHourGroup();
 
-            NumberOfStoolsByHourGroup = GetNumberOfStoolsByHourGroup();
+            NumberOfPainsByHourGroup     = GetNumberOfPainsByHourGroup();
+            AveragePainsByHourGroup      = GetAveragePainsByHourGroup();
         }
 
         private static List<Range> GetHourRanges()
@@ -83,6 +88,94 @@ namespace InsAndOuts.ViewModels
                    };
         }
 
+        private ObservableCollection<ChartItem> GetAveragePainsByHourGroup()
+        {
+            var collectWithSumsByGrouping = GetSumOfPainLevelsByHourGroup();
+
+            if (collectWithSumsByGrouping == null)
+            {
+                return new ObservableCollection<ChartItem>();
+            }
+
+            var collectionWithCountsByGrouping = NumberOfPainsByHourGroup;
+
+            return CalculateAverageBasedOnSumsAndCountsByHourGroup(collectionWithCountsByGrouping
+                                                                 , collectWithSumsByGrouping);
+        }
+
+        private ObservableCollection<ChartItem> CalculateAverageBasedOnSumsAndCountsByHourGroup(ObservableCollection<ChartItem> collectionWithCountsByGrouping
+                                                                                              , ObservableCollection<ChartItem> collectionWithSumsByGrouping)
+        {
+            var listForChart = new List<ChartItem>();
+
+            foreach (var chartItem in collectionWithCountsByGrouping)
+            {
+                var    currentValue = collectionWithSumsByGrouping.FirstOrDefault(fields => fields.Label == chartItem.Label);
+                double chartListValue;
+
+                if (chartItem.Value == 0
+                 || currentValue    == null)
+                {
+                    chartListValue = 0D;
+                }
+                else
+                {
+                    chartListValue = currentValue.Value / chartItem.Value;
+                }
+
+                listForChart.Add(new ChartItem
+                                 {
+                                     Label = chartItem.Label
+                                   , Value = chartListValue
+                                 });
+            }
+            
+            return ArrangeListForChart(listForChart);
+        }
+
+        private ObservableCollection<ChartItem> GetSumOfStoolTypesByHourGroup()
+        {
+            var averageStoolTypesByHour = StoolTypes.GroupBy(fields => fields.WhenDateTime.ToString("HH"))
+                                                    .Select(group => new ChartItem
+                                                                     {
+                                                                         Label                = group.Key
+                                                                       , Value                = group.Sum(fields => fields.StoolTypeNumber)
+                                                                       , LabelUnderlyingValue = int.Parse(group.Key)
+                                                                     })
+                                                    .ToList();
+            
+            return ArrangeListForChart(averageStoolTypesByHour);
+        }
+        
+        private ObservableCollection<ChartItem> GetSumOfPainLevelsByHourGroup()
+        {
+            var averagePainLevelsByHour = Pains.GroupBy(fields => fields.WhenDateTime.ToString("HH"))
+                                               .Select(group => new ChartItem
+                                                                {
+                                                                    Label                = group.Key
+                                                                  , Value                = group.Sum(fields => fields.Level)
+                                                                  , LabelUnderlyingValue = int.Parse(group.Key)
+                                                                })
+                                               .ToList();
+            
+            return ArrangeListForChart(averagePainLevelsByHour);
+        }
+
+        private ObservableCollection<ChartItem> GetAverageStoolTypesByHourGroup()
+        {
+            var collectionWithSumsByGrouping = GetSumOfStoolTypesByHourGroup();
+
+            if (collectionWithSumsByGrouping == null)
+            {
+                return new ObservableCollection<ChartItem>();
+            }
+
+            var collectionWithCountsByGrouping = NumberOfStoolsByHourGroup;
+
+            return CalculateAverageBasedOnSumsAndCountsByHourGroup(collectionWithCountsByGrouping
+                                                                 , collectionWithSumsByGrouping);
+        }
+
         private ObservableCollection<ChartItem> GetNumberOfStoolsByHourGroup()
         {
             //Has count by each hour
@@ -91,33 +184,55 @@ namespace InsAndOuts.ViewModels
                                                               {
                                                                   Label = group.Key
                                                                 , Value = group.Count()
+                                                                , LabelUnderlyingValue = int.Parse(group.Key)
                                                               })
                                              .ToList();
+            
+            return ArrangeListForChart(stoolTypesByHour);
+        }
 
-            var numberOfStoolByHourGroup = new List<ChartItem>();
+        private ObservableCollection<ChartItem> ArrangeListForChart(List<ChartItem> groupByList)
+        {
+            var valuesByHourGroup = new List<ChartItem>();
 
-            foreach (var stoolsInAnHour in stoolTypesByHour)
+            foreach (var valueInAnHour in groupByList)
             {
-                foreach (var hourRange in HourRanges.Where(hourRange => int.Parse(stoolsInAnHour.Label) >= hourRange.Minimum
-                                                                    &&  int.Parse(stoolsInAnHour.Label) <= hourRange.Maximum))
+                foreach (var hourRange in HourRanges.Where(hourRange => valueInAnHour.LabelUnderlyingValue >= hourRange.Minimum 
+                                                                     && valueInAnHour.LabelUnderlyingValue <= hourRange.Maximum))
                 {
-                    if (numberOfStoolByHourGroup.Any(field=>field.Label ==hourRange.Title))
+                    if (valuesByHourGroup.Any(field => field.Label == hourRange.Title))
                     {
-                        numberOfStoolByHourGroup.First(field=>field.Label ==hourRange.Title).Value += stoolsInAnHour.Value;
+                        valuesByHourGroup.First(field => field.Label == hourRange.Title)
+                                             .Value += valueInAnHour.Value;
                     }
                     else
                     {
-                        numberOfStoolByHourGroup.Add(new ChartItem
-                                                     {
-                                                         Label                = hourRange.Title
-                                                       , Value                = stoolsInAnHour.Value
-                                                       , LabelUnderlyingValue = hourRange.Minimum
-                                                     });
+                        valuesByHourGroup.Add(new ChartItem
+                                              {
+                                                  Label                = hourRange.Title
+                                                , Value                = valueInAnHour.Value
+                                                , LabelUnderlyingValue = hourRange.Minimum
+                                              });
                     }
                 }
             }
 
-            return new ObservableCollection<ChartItem>(new ObservableCollection<ChartItem>(numberOfStoolByHourGroup).OrderBy(fields=>fields.LabelUnderlyingValue));
+            return new ObservableCollection<ChartItem>(new ObservableCollection<ChartItem>(valuesByHourGroup).OrderBy(fields => fields.LabelUnderlyingValue));
+        }
+
+        
+        private ObservableCollection<ChartItem> GetNumberOfPainsByHourGroup()
+        {
+            var painsLevelsByHour = Pains.GroupBy(fields => fields.WhenDateTime.ToString("HH"))
+                                         .Select(group => new ChartItem
+                                                          {
+                                                              Label = group.Key
+                                                            , Value = group.Count()
+                                                            , LabelUnderlyingValue = int.Parse(group.Key)
+                                                          })
+                                         .ToList();
+            
+            return ArrangeListForChart(painsLevelsByHour);
         }
 
         private ObservableCollection<ChartItem> GetNumberOfStoolByDayOfWeek()

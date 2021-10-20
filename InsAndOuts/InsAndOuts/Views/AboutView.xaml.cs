@@ -45,5 +45,11 @@ namespace InsAndOuts.Views
             
             Application.Current.Resources["Primary"] = Application.Current.Resources[Configuration.ZoeColor];
         }
+
+        private async void Credits_OnClicked(object    sender
+                                           , EventArgs e)
+        {
+            await PageNavigation.NavigateTo(nameof(Credits));
+        }
     }
 }

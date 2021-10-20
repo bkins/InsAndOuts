@@ -20,6 +20,11 @@
                 <Setter Property="Keyboard" Value="{x:DynamicResource utilities:GlobalKeyboards.SuggestionsWithSentenceCapitalization}" />
             </Style>
             
+            <Style x:Key="BoxViewStyle"
+                   TargetType="BoxView">
+                <Setter Property="BackgroundColor" Value="LightGray"/>
+            </Style>
+
             <Color x:Key="PrimaryBackColor">#2196F3</Color>
             <Color x:Key="PrimaryForeColor">White</Color>
             <Color x:Key="PrimaryUnselectedLightForeColor">AntiqueWhite</Color>
@@ -62,7 +67,7 @@
                 <Setter Property="Shell.TabBarUnselectedColor"
                         Value="{StaticResource PrimaryUnselectedLightForeColor}" />
             </Style>
-
+            
             <Color x:Key="Primary">#2196F3</Color>
             
             <Color x:Key="OriginalPrimary">#2196F3</Color>

@@ -13,6 +13,7 @@ using Syncfusion.XForms.Buttons;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using SelectionChangedEventArgs = Syncfusion.SfPicker.XForms.SelectionChangedEventArgs;
 
 namespace InsAndOuts.Views
 {
@@ -26,7 +27,6 @@ namespace InsAndOuts.Views
         public SearchViewModel SearchViewModel { get; set; }
 
         private bool EditMode  { get; set; }
-        public bool IsLoading { get; set; }
 
         public void ApplyQueryAttributes(IDictionary<string, string> query)
         {
@@ -44,18 +44,24 @@ namespace InsAndOuts.Views
                 SearchPicker.Focus();
             }
 
-            SearchPicker.IsVisible    = EditMode;
+            SelectToolbarItem.IsEnabled = EditMode;
+            DeleteToolbarItem.IsEnabled = EditMode;
+            
+            ToggleControlsEnabled();
+
+            UpdateViewTitle();
         }
 
         public MealView()
         {
+            //1
             InitializeComponent();
-
-            IsLoading = true;
+            
         }
 
         protected override void OnAppearing()
         {
+            //3
             base.OnAppearing();
             
             ViewModel = new MealsViewModel();
@@ -63,7 +69,8 @@ namespace InsAndOuts.Views
             DescriptionRtf.AlignLeft();
             
             ResetData();
-            
+
+            SearchPicker.IsVisible = EditMode;
         }
 
         
@@ -83,11 +90,7 @@ namespace InsAndOuts.Views
         private void UpdateViewTitle()
         {
             
-            var addUpdate = ViewModel.Meal.Id == 0 ?
-                                    "Add New" :
-                                    "Update";
-            //BENDO: On release to user(s) remove the ID for the Title
-            Title = $"{addUpdate} Meal ({ViewModel.Meal.Id})";
+            Title = $"{ViewMode.ToTitleCase(force: true)} Meal";
         }
 
         private string GetSelectDateTimeFromPickers()
@@ -161,16 +164,28 @@ namespace InsAndOuts.Views
             button.ShowIcon = true;
             button.Text     = "SAVED";
         }
-
-        private void SearchPicker_OnSelectedIndexChanged(object    sender
-                                                       , EventArgs e)
+        
+        private async void DeleteToolbarItem_OnClicked(object    sender
+                                                   , EventArgs e)
         {
-            if (SearchPicker.SelectedItem == null
-                || IsLoading)
-            {
-                IsLoading = false;
+            if (! EditMode
+             || ViewModel          == null
+             || ViewModel.Meal?.Id == 0)
                 return;
-            }
+
+            ViewModel.Delete();
+            await PageNavigation.NavigateBackwards();
+        }
+
+        private void SearchPicker_OnOkButtonClicked(object                    sender
+                                                  , SelectionChangedEventArgs e)
+        {
+            //if (SearchPicker.SelectedItem == null
+            // || IsLoading)
+            //{
+            //    IsLoading = false;
+            //    return;
+            //}
 
             ViewModel = new MealsViewModel(SearchPicker.SelectedItem.ToString());
 
@@ -182,31 +197,39 @@ namespace InsAndOuts.Views
                 return;
             }
 
-            NameEntry.Text          = ViewModel.Meal.Name;
-            DescriptionRtf.HtmlText = ViewModel.Meal.DescriptionHtml;
-            WhenDatePicker.Date     = ViewModel.Meal.WhenToDateTime();
-            WhenTimePicker.Time     = ViewModel.Meal.WhenToTimeSpan();
+            NameEntry.Text           = ViewModel.Meal.Name;
+            DescriptionRtf.HtmlText  = ViewModel.Meal.DescriptionHtml;
+            WhenDatePicker.Date      = ViewModel.Meal.WhenToDateTime();
+            WhenTimePicker.Time      = ViewModel.Meal.WhenToTimeSpan();
 
-            UpdateViewTitle();
-            SearchPicker.IsVisible = false;
-            
+            ToggleControlsEnabled();
+
+            SearchPicker.IsVisible   = false;
         }
 
-        private async void DeleteMealToolbarItem_OnClicked(object    sender
+        private void SearchPicker_OnCancelButtonClicked(object                    sender
+                                                      , SelectionChangedEventArgs e)
+        {
+            ToggleControlsEnabled();
+
+            SearchPicker.IsVisible = false;
+        }
+
+        private void SelectToolbarItem_OnClicked(object    sender
                                                    , EventArgs e)
         {
-            if (! EditMode
-             || ViewModel          == null
-             || ViewModel.Meal?.Id == 0)
-                return;
+            ToggleControlsEnabled();
 
-            ViewModel.Delete();
-            await PageNavigation.NavigateBackwards();
+            SearchPicker.IsVisible   = true;
         }
-        
-        private void SaveButton_OnSizeChanged(object    sender
-                                            , EventArgs e)
+
+        private void ToggleControlsEnabled()
         {
+            SaveButton.IsEnabled     = ! SaveButton.IsEnabled;
+            WhenDatePicker.IsEnabled = ! WhenDatePicker.IsEnabled;
+            WhenTimePicker.IsEnabled = ! WhenTimePicker.IsEnabled;
+            DescriptionRtf.IsEnabled = ! DescriptionRtf.IsEnabled;
+            NameEntry.IsEnabled      = ! NameEntry.IsEnabled;
         }
     }
 

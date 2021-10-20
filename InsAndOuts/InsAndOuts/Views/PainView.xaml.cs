@@ -12,6 +12,7 @@ using Syncfusion.SfRangeSlider.XForms;
 using Syncfusion.XForms.Buttons;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using SelectionChangedEventArgs = Syncfusion.SfPicker.XForms.SelectionChangedEventArgs;
 
 namespace InsAndOuts.Views
 {
@@ -42,15 +43,28 @@ namespace InsAndOuts.Views
                 SearchPicker.ItemsSource = SearchViewModel.SearchablePains;
                 SearchPicker.Focus();
             }
+            
+            SelectToolbarItem.IsEnabled = EditMode;
+            DeleteToolbarItem.IsEnabled = EditMode;
+            
+            ToggleControlsEnabled();
+
+            UpdateViewTitle();
         }
 
         public PainView()
         {
             InitializeComponent();
             
-            ResetData();
         }
-        
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            
+            SearchPicker.IsVisible = EditMode;
+        }
+
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
@@ -72,11 +86,7 @@ namespace InsAndOuts.Views
         
         private void UpdateViewTitle()
         {
-            var addUpdate = ViewModel.Pain.Id == 0 ?
-                                    "Add New" :
-                                    "Update";
-
-            Title = $"{addUpdate} Pain ({ViewModel.Pain.Id})";
+            Title = $"{ViewMode.ToTitleCase(force: true)} Pain";
         }
 
         private void SetSaveButtonNotSaved()
@@ -155,25 +165,18 @@ namespace InsAndOuts.Views
 
             ViewModel.Save();
             
-            UpdateViewTitle();
-            
             if (sender is SfButton button)
             {
                 SetSaveButtonSaved(button);
             }
-        }
-
-        private void SearchPicker_OnSelectedIndexChanged(object    sender
-                                                       , EventArgs e)
-        {
-            var picker = sender as Picker ?? new Picker();
             
-            if (picker.SelectedItem == null)
-            {
-                return;
-            }
-
-            ViewModel = new PainViewModel(picker.SelectedItem.ToString());
+            ResetData();
+        }
+        
+        private void SearchPicker_OnOkButtonClicked(object                    sender
+                                                  , SelectionChangedEventArgs e)
+        {
+            ViewModel = new PainViewModel(SearchPicker.SelectedItem.ToString());
 
             if (ViewModel.Pain == null)
             {
@@ -184,12 +187,49 @@ namespace InsAndOuts.Views
             }
             
             DescriptionHtmlRtEditor.HtmlText = ViewModel.Pain.DescriptionHtml;
+            RangeSlider.Value                = ViewModel.Pain.Level;
+            WhenDatePicker.Date              = ViewModel.Pain.WhenToDateTime();
+            WhenTimePicker.Time              = ViewModel.Pain.WhenToTimeSpan();
             
-            RangeSlider.Value   = ViewModel.Pain.Level;
-            WhenDatePicker.Date = ViewModel.Pain.WhenToDateTime();
-            WhenTimePicker.Time = ViewModel.Pain.WhenToTimeSpan();
+            ToggleControlsEnabled();
 
-            UpdateViewTitle();
+            SearchPicker.IsVisible = false;
+        }
+
+        private void SearchPicker_OnCancelButtonClicked(object                    sender
+                                                      , SelectionChangedEventArgs e)
+        {
+            ToggleControlsEnabled();
+
+            SearchPicker.IsVisible = false;
+        }
+
+        private void SelectToolbarItem_OnClicked(object    sender
+                                                   , EventArgs e)
+        {
+            ToggleControlsEnabled();
+
+            SearchPicker.IsVisible = true;
+        }
+
+        private async void DeleteToolbarItem_OnClicked(object    sender
+                                                   , EventArgs e)
+        {
+            if (! EditMode
+             || ViewModel          == null
+             || ViewModel.Pain?.Id == 0)
+                return;
+
+            ViewModel.Delete();
+            await PageNavigation.NavigateBackwards();
+        }
+        
+        private void ToggleControlsEnabled()
+        {
+            SaveButton.IsEnabled              = ! SaveButton.IsEnabled;
+            WhenDatePicker.IsEnabled          = ! WhenDatePicker.IsEnabled;
+            WhenTimePicker.IsEnabled          = ! WhenTimePicker.IsEnabled;
+            DescriptionHtmlRtEditor.IsEnabled = ! DescriptionHtmlRtEditor.IsEnabled;
         }
     }
 }

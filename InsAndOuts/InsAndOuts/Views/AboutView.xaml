@@ -1,15 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="InsAndOuts.Views.AboutView"
+             Shell.TabBarIsVisible="False"
              Title="About">
     
     <Grid RowDefinitions="Auto,*">
        
         <Image x:Name="AppImage"
-               Source="crohns.ico"
+               Source="icon.ico"
                BackgroundColor="{DynamicResource Primary}"
                VerticalOptions="Center"
                HeightRequest="64" 
@@ -82,6 +83,12 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
                             BackgroundColor="Transparent"
                             VerticalOptions="CenterAndExpand"
                             />
+                    <Button x:Name="Credits"
+                            Text="Credits"
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            VerticalOptions="Center"
+                            Clicked="Credits_OnClicked"/>
                     
             </Grid>
 

@@ -1,22 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:picker="clr-namespace:Syncfusion.SfPicker.XForms;assembly=Syncfusion.SfPicker.XForms"
+             xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 
              xmlns:richTextEditor="clr-namespace:Syncfusion.XForms.RichTextEditor;assembly=Syncfusion.SfRichTextEditor.XForms"
              xmlns:rangeSlider="clr-namespace:Syncfusion.SfRangeSlider.XForms;assembly=Syncfusion.SfRangeSlider.XForms"
              
              x:Class="InsAndOuts.Views.PainView"
+             Shell.TabBarIsVisible="False"
              
              Title="Add New Pain"
              >
+    
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem x:Name="SelectToolbarItem"
+                     Text="Select meal"
+                     IconImageSource="search.png"
+                     Clicked="SelectToolbarItem_OnClicked"
+        />
+
+        <ToolbarItem x:Name="DeleteToolbarItem"
+                     Text="Delete Meal"
+                     IconImageSource="Delete.png"
+                     Clicked="DeleteToolbarItem_OnClicked" 
+        />
+
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
         <StackLayout>
 
-            <Picker x:Name="SearchPicker"
+            <!--<Picker x:Name="SearchPicker"
                     Title="Select a pain to edit"
                     IsVisible="False"
                     SelectedIndexChanged="SearchPicker_OnSelectedIndexChanged"
+            />-->
+            
+            <picker:SfPicker x:Name="SearchPicker"
+                             VerticalOptions="CenterAndExpand" 
+                             HorizontalOptions="CenterAndExpand" 
+                             HeaderText="Select a pain to edit" 
+                             ShowFooter="True"
+                             OkButtonClicked="SearchPicker_OnOkButtonClicked"
+                             CancelButtonClicked="SearchPicker_OnCancelButtonClicked"
             />
 
             <richTextEditor:SfRichTextEditor x:Name="DescriptionHtmlRtEditor" 
@@ -58,7 +87,7 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
             <TimePicker x:Name="WhenTimePicker"
                         Focused="WhenTimePicker_OnFocused"
                         />
-            
+
             <button:SfButton x:Name="SaveButton" 
                              Text="SAVE"
                              ImageAlignment="Right"

@@ -42,5 +42,13 @@ namespace InsAndOuts.ViewModels
                 DataAccessLayer.UpdateStool(Stool);
             }
         }
+
+        public void Delete()
+        {
+            if (Stool.Id != 0)
+            {
+                DataAccessLayer.DeleteStool(Stool);
+            }
+        }
     }
 }

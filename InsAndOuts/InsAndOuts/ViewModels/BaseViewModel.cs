@@ -17,7 +17,7 @@ namespace InsAndOuts.ViewModels
             get => _dataAccess = _dataAccess ?? new DataAccess(App.Database);
             set => _dataAccess = value;
         }
-    
+        
         public event PropertyChangedEventHandler PropertyChanged;
     
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

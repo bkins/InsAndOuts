@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using InsAndOuts.Services;
 using InsAndOuts.Utilities;
 using InsAndOuts.ViewModels;
 using Plugin.Media;
@@ -13,6 +14,7 @@ using Plugin.Media.Abstractions;
 using Syncfusion.XForms.Buttons;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using SelectionChangedEventArgs = Syncfusion.SfPicker.XForms.SelectionChangedEventArgs;
 
 namespace InsAndOuts.Views
 {
@@ -44,15 +46,35 @@ namespace InsAndOuts.Views
                 SearchPicker.ItemsSource = SearchViewModel.SearchableStools;
                 SearchPicker.Focus();
             }
+            
+            SelectToolbarItem.IsEnabled = EditMode;
+            DeleteToolbarItem.IsEnabled = EditMode;
+            
+            ToggleControlsEnabled();
+
+            UpdateViewTitle();
         }
+
         public StoolsView()
         {
             InitializeComponent();
-            ResetData();
 
             DescriptionHtmlRtEditor.AlignLeft();
         }
-        
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            
+            ViewModel              = new StoolViewModel();
+
+            SearchPicker.IsVisible = EditMode;
+
+            if (PageCommunication.Instance.IntegerValue != 0)
+            {
+                SelectedStoolTypeLabel.Text = $"Type {PageCommunication.Instance.IntegerValue}: {PageCommunication.Instance.StringValue}";
+            }
+        }
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
@@ -67,10 +89,11 @@ namespace InsAndOuts.Views
 
         private void ResetData()
         {
-            StoolTypePicker.SelectedItem    = null;
-            ImageFromCamera.Source          = new FileImageSource();
-            WhenDatePicker.Date             = DateTime.Today;
-            WhenTimePicker.Time             = DateTime.Now.TimeOfDay;
+            //StoolTypePicker.SelectedItem    = null;
+            SelectedStoolTypeLabel.Text = "Select Bristol Stool Type:";
+            ImageFromCamera.Source      = new FileImageSource();
+            WhenDatePicker.Date         = DateTime.Today;
+            WhenTimePicker.Time         = DateTime.Now.TimeOfDay;
             
             SetSaveButtonNotSaved();
 
@@ -81,12 +104,7 @@ namespace InsAndOuts.Views
 
         private void UpdateViewTitle()
         {
-            
-            var addUpdate = ViewModel.Stool.Id == 0 ?
-                                    "Add New" :
-                                    "Update";
-            //BENDO: On release to user(s) remove the ID for the Title
-            Title = $"{addUpdate} Stool ({ViewModel.Stool.Id})";
+            Title = $"{ViewMode.ToTitleCase(force: true)} Stool";
         }
 
         private void SetSaveButtonNotSaved()
@@ -237,24 +255,19 @@ namespace InsAndOuts.Views
 
                 SearchPicker.ItemsSource = SearchViewModel.SearchableStools;
             }
-
-            UpdateViewTitle();
-
+            
             if (sender is SfButton button)
                 SetSaveButtonSaved(button);
+
+            ResetData();
         }
         
-        private void SearchPicker_OnSelectedIndexChanged(object    sender
-                                                       , EventArgs e)
-        {
-            var picker = sender as Picker ?? new Picker();
-            
-            if (picker.SelectedItem == null)
-            {
-                return;
-            }
+        
 
-            ViewModel = new StoolViewModel(picker.SelectedItem.ToString());
+        private void SearchPicker_OnOkButtonClicked(object                    sender
+                                                  , SelectionChangedEventArgs e)
+        {
+            ViewModel = new StoolViewModel(SearchPicker.SelectedItem.ToString());
 
             if (ViewModel.Stool == null)
             {
@@ -272,11 +285,50 @@ namespace InsAndOuts.Views
                 ImageFromCamera.Source = ImageSource.FromStream(() => imageStream);
             }
             
-            StoolTypePicker.SelectedItem = ViewModel.Stool.StoolType;
-            WhenDatePicker.Date          = ViewModel.Stool.WhenToDateTime();
-            WhenTimePicker.Time          = ViewModel.Stool.WhenToTimeSpan();
+            //StoolTypePicker.SelectedItem = ViewModel.Stool.StoolType;
+            SelectedStoolTypeLabel.Text = ViewModel.Stool.StoolType;
+            WhenDatePicker.Date         = ViewModel.Stool.WhenToDateTime();
+            WhenTimePicker.Time         = ViewModel.Stool.WhenToTimeSpan();
             
-            UpdateViewTitle();
+            ToggleControlsEnabled();
+
+            SearchPicker.IsVisible = false;
+        }
+
+        private void SearchPicker_OnCancelButtonClicked(object                    sender
+                                                      , SelectionChangedEventArgs e)
+        {
+            ToggleControlsEnabled();
+
+            SearchPicker.IsVisible = false;
+        }
+
+        private void SelectToolbarItem_OnClicked(object    sender
+                                               , EventArgs e)
+        {
+            ToggleControlsEnabled();
+
+            SearchPicker.IsVisible = true;
+        }
+
+        private void DeleteToolbarItem_OnClicked(object    sender
+                                               , EventArgs e)
+        {
+            ViewModel.Delete();
+        }
+        
+        private void ToggleControlsEnabled()
+        {
+            SaveButton.IsEnabled              = ! SaveButton.IsEnabled;
+            WhenDatePicker.IsEnabled          = ! WhenDatePicker.IsEnabled;
+            WhenTimePicker.IsEnabled          = ! WhenTimePicker.IsEnabled;
+            DescriptionHtmlRtEditor.IsEnabled = ! DescriptionHtmlRtEditor.IsEnabled;
+        }
+
+        private async void SelectedStoolTypeLabel_Tapped(object    sender
+                                                 , EventArgs e)
+        {
+            await PageNavigation.NavigateTo(nameof(PopUpPickerView));
         }
     }
 }

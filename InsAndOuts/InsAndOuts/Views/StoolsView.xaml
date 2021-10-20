@@ -8,38 +8,63 @@
              xmlns:listCollection="clr-namespace:System.Collections.Generic;assembly=mscorlib"
              
              x:Class="InsAndOuts.Views.StoolsView"
+             Shell.TabBarIsVisible="False"
 
              Title="Add New Stool"
              >
 
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem x:Name="SelectToolbarItem"
+                     Text="Select stool"
+                     IconImageSource="search.png"
+                     Clicked="SelectToolbarItem_OnClicked"
+        />
+
+        <ToolbarItem x:Name="DeleteToolbarItem"
+                     Text="Delete stool"
+                     IconImageSource="Delete.png"
+                     Clicked="DeleteToolbarItem_OnClicked" 
+        />
+
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
         <StackLayout>
             
-            <Grid RowDefinitions="*,auto,3.5*,*,*,*,*"
+            <picker:SfPicker x:Name="SearchPicker"
+                             VerticalOptions="CenterAndExpand" 
+                             HorizontalOptions="CenterAndExpand" 
+                             HeaderText="Select a meal to edit" 
+                             ShowFooter="True"
+                             OkButtonClicked="SearchPicker_OnOkButtonClicked"
+                             CancelButtonClicked="SearchPicker_OnCancelButtonClicked"
+            />
+
+            <Grid RowDefinitions="auto,3.5*,*,*,*,*,*"
                   VerticalOptions="Fill"
                   >
 
-                <Picker x:Name="SearchPicker"
+                <!--<Picker x:Name="SearchPicker"
                         Title="Select a stool to edit"
 
                         Grid.Row="0"
 
                         IsVisible="False"
                         SelectedIndexChanged="SearchPicker_OnSelectedIndexChanged"
-                />
+                />-->
 
                 <richTextEditor:SfRichTextEditor x:Name="DescriptionHtmlRtEditor" 
                                                  PlaceHolder="Describe the stool"
-
-                                                 Grid.Row="1"
-
                                                  AutoSize="TextChanges"
-
+                                                 Margin="0,0,0,-15"
                                                  ToolbarPosition="Top"                                                 
                                                  ToolbarOptions="Bold,FontColor,Italic,IncreaseIndent,DecreaseIndent,BulletList,Alignment"
-                                                 VerticalOptions="StartAndExpand"
+                                                 VerticalOptions="FillAndExpand"
                                                  
                                                  Focused="DescriptionHtmlRtEditor_OnFocused"
+                                                 Grid.Row="0"
+
                                                  />
                 
                 <Image x:Name="ImageFromCamera"
@@ -47,16 +72,26 @@
                        VerticalOptions="Start"
                        Margin="0, 0, 0, 0"
 
-                       Grid.Row="2"
+                       Grid.Row="1"
                        
                        Aspect="AspectFit"
                        />
 
-                <Picker x:Name="StoolTypePicker"
+                <Label x:Name="SelectedStoolTypeLabel"
+                       Text="Select Bristol Stool Type:"
+                       Grid.Row="2">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="SelectedStoolTypeLabel_Tapped"
+                            NumberOfTapsRequired="1" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <!--<Picker x:Name="StoolTypePicker"
                         Title="Select Bristol Stool Type:"
                         VerticalOptions="Start"
+                        Margin="0,0,0,0"
                         SelectedIndexChanged="StoolTypePicker_OnSelectedIndexChanged"
-                        Grid.Row="3"
+                        Grid.Row="2"
                         >
                     <Picker.Items>
                         <x:String>Type 1: Separate hard lumps, like nuts (difficult to pass and can be black)</x:String>
@@ -67,7 +102,7 @@
                         <x:String>Type 6: Fluffy pieces with ragged edges, a mushy stool (diarrhea)</x:String>
                         <x:String>Type 7: Watery, no solid pieces, entirely liquid (diarrhea)</x:String>
                     </Picker.Items>
-                </Picker>
+                </Picker-->
                 <!--BENDO: Set the choices to include images.
                     See https://www.syncfusion.com/kb/8589/how-to-customize-sfpicker-header-view
                     Hint: Set the HeaderView
@@ -98,13 +133,13 @@
                 </picker:SfPicker>-->
                 
                 <DatePicker x:Name="WhenDatePicker"
-                            Grid.Row="4"
+                            Grid.Row="3"
                             VerticalOptions="StartAndExpand"
                             Focused="WhenDatePicker_OnFocused"
                             />
 
                 <TimePicker x:Name="WhenTimePicker"
-                            Grid.Row="5"
+                            Grid.Row="4"
                             VerticalOptions="StartAndExpand"
                             Focused="WhenTimePicker_OnFocused"
                             />
@@ -114,7 +149,7 @@
                        HeightRequest="50"
                        HorizontalOptions="End"
                        Margin="0, 0, 5, 0"
-                       Grid.Row="6"
+                       Grid.Row="5"
                        >
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer
@@ -133,7 +168,7 @@
                                  BackgroundColor="{DynamicResource Primary}"
                                  Margin="0,0,0,0"
                                  Clicked="SaveButton_OnClicked"
-                                 Grid.Row="7"
+                                 Grid.Row="6"
                                  />
 
             </Grid>
