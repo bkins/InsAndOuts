@@ -1,3 +1,4 @@
+using Syncfusion.SfChart.XForms.iOS.Renderers;
 using Syncfusion.SfPicker.XForms.iOS;
 using Syncfusion.XForms.iOS.Buttons;
 using Syncfusion.SfAutoComplete.XForms.iOS;
@@ -27,12 +28,16 @@ namespace InsAndOuts.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-global::Xamarin.Forms.Forms.Init();
-SfPickerRenderer.Init();
-SfButtonRenderer.Init();
-SfAutoCompleteRenderer.Init();
-SfRichTextEditorRenderer.Init();
-SfRangeSliderRenderer.Init();
+            Rg.Plugins.Popup.Popup.Init();
+
+            global::Xamarin.Forms.Forms.Init();
+            SfRadioButtonRenderer.Init();
+            SfChartRenderer.Init();
+            SfPickerRenderer.Init();
+            SfButtonRenderer.Init();
+            SfAutoCompleteRenderer.Init();
+            SfRichTextEditorRenderer.Init();
+            SfRangeSliderRenderer.Init();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

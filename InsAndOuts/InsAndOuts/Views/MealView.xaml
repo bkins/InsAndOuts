@@ -1,56 +1,84 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:picker="clr-namespace:Syncfusion.SfPicker.XForms;assembly=Syncfusion.SfPicker.XForms"
+             xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=mscorlib"
              xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             xmlns:richTextEditor="clr-namespace:Syncfusion.XForms.RichTextEditor;assembly=Syncfusion.SfRichTextEditor.XForms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+
+             xmlns:richTextEditor="clr-namespace:Syncfusion.XForms.RichTextEditor;assembly=Syncfusion.SfRichTextEditor.XForms"
+             
              x:Class="InsAndOuts.Views.MealView"
+             Shell.TabBarIsVisible="False"
+             
              Title="Add New Meal"
-            >
+             >
+
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem x:Name="SelectToolbarItem"
+                     Text="Select meal"
+                     IconImageSource="search.png"
+                     Clicked="SelectToolbarItem_OnClicked"
+                     />
+
+        <ToolbarItem x:Name="DeleteToolbarItem"
+                     Text="Delete Meal"
+                     IconImageSource="Delete.png"
+                     Clicked="DeleteToolbarItem_OnClicked" 
+                     />
+
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
+
         <StackLayout>
+            <!--
+            <Picker x:Name="SearchPicker"
+                    Title="Select a meal to edit"
+                    IsVisible="False"
+                    SelectedIndexChanged="SearchPicker_OnSelectedIndexChanged"
+                    />
+            -->
+
+            <picker:SfPicker x:Name="SearchPicker"
+                             VerticalOptions="CenterAndExpand" 
+                             HorizontalOptions="CenterAndExpand" 
+                             HeaderText="Select a meal to edit" 
+                             ShowFooter="True"
+                             OkButtonClicked="SearchPicker_OnOkButtonClicked"
+                             CancelButtonClicked="SearchPicker_OnCancelButtonClicked"
+                             />
 
             <Entry x:Name="NameEntry"
                    Placeholder="Name of meal"
-                   Unfocused="NameEntry_OnUnfocused"
                    Focused="NameEntry_OnFocused"
                    />
-
-            <Editor x:Name="DescriptionEditor"
-                    Placeholder="What did you eat"
-                    Unfocused="DescriptionEditor_OnUnfocused"
-                    Focused="DescriptionEditor_OnFocused"
-                    IsVisible="False"
-                    />
 
             <richTextEditor:SfRichTextEditor x:Name="DescriptionRtf"
                                              PlaceHolder="What did you eat"
                                              AutoSize="TextChanges"
                                              ToolbarOptions="Bold,FontColor,Italic,IncreaseIndent,DecreaseIndent,BulletList,Alignment"
                                              VerticalOptions="FillAndExpand"
-                                             Unfocused="DescriptionRtf_OnUnfocused"
                                              Focused="DescriptionRtf_OnFocused"
-                                             IsVisible="True"
                                              ToolbarPosition="Top"
 
                                              />
 
             <DatePicker x:Name="WhenDatePicker"
-                        Unfocused="WhenDatePicker_OnUnfocused"
                         Focused="WhenDatePicker_OnFocused"
                         />
 
             <TimePicker x:Name="WhenTimePicker"
-                        Unfocused="WhenTimePicker_OnUnfocused"
                         Focused="WhenTimePicker_OnFocused"
                         />
-            
+
             <button:SfButton x:Name="SaveButton" 
                              Text="SAVE"
                              ImageAlignment="Right"
                              ShowIcon="False"
                              ImageSource="saved.png"
                              VerticalOptions="Center"
-                             BackgroundColor="{StaticResource Primary}"
+                             BackgroundColor="{DynamicResource Primary}"
                              Margin="0,0,0,25"
                              Clicked="SaveButton_OnClicked"
                              />

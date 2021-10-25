@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using InsAndOuts.Services;
 using InsAndOuts.Utilities;
 using InsAndOuts.ViewModels;
 using Xamarin.Essentials;
@@ -135,6 +136,20 @@ namespace InsAndOuts.Views
                                             , ToggledEventArgs e)
         {
             MiddleStackLayout.IsVisible = AdvancedSwitch.IsToggled;
+        }
+
+        private async void LoadTestData_OnClicked(object    sender
+                                          , EventArgs e)
+        {
+            var addDemoData = await DisplayAlert("Add Demo Data?"
+                                               , $"This will add data to any currently entered data.{Environment.NewLine} It is not recommended to perform this action if you have already added on your own data.{Environment.NewLine}Would like to add this demo data?"
+                                               , "Yes"
+                                               , "No");
+            if (addDemoData)
+            {
+                var demoData = new DemoData(App.Database);
+                demoData.AddCompleteSetOfDataRandomized();
+            }
         }
     }
 }

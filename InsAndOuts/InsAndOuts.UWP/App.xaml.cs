@@ -1,3 +1,4 @@
+using Syncfusion.SfChart.XForms.UWP;
 using Syncfusion.SfPicker.XForms.UWP;
 using Syncfusion.XForms.UWP.Buttons;
 using Syncfusion.SfAutoComplete.XForms.UWP;
@@ -64,6 +65,8 @@ namespace InsAndOuts.UWP
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 global::Xamarin.Forms.Forms.SetFlags("Shell_UWP_Experimental");
 List<Assembly> assembliesToInclude = new List<Assembly>();
+assembliesToInclude.Add(typeof(SfRadioButtonRenderer).GetTypeInfo().Assembly);
+assembliesToInclude.Add(typeof(SfChartRenderer).GetTypeInfo().Assembly);
 assembliesToInclude.Add(typeof(SfPickerRenderer).GetTypeInfo().Assembly);
 assembliesToInclude.Add(typeof(SfButtonRenderer).GetTypeInfo().Assembly);
 assembliesToInclude.Add(typeof(SfAutoCompleteRenderer).GetTypeInfo().Assembly);

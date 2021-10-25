@@ -10,11 +10,14 @@ namespace InsAndOuts.Models
 {
     public class BaseModel : INotifyPropertyChanged
     {
-        public string Name                { get; set; }
-        public string DescriptionPainText { get; set; }
-        public string DescriptionHtml     { get; set; }
-        public string When                { get; set; }
-        
+        public string   Name                { get; set; }
+        public string   DescriptionPainText { get; set; }
+        public string   DescriptionHtml     { get; set; }
+        public string   When                { get; set; }
+        public DateTime WhenDateTime        => DateTime.Parse(When);
+        public string   WhenShortTime       => WhenDateTime.ToShortTimeString();
+        public double   WhenOaDate          => WhenDateTime.ToOADate();
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public BaseModel()

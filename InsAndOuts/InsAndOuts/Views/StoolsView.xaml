@@ -8,50 +8,88 @@
              xmlns:listCollection="clr-namespace:System.Collections.Generic;assembly=mscorlib"
              
              x:Class="InsAndOuts.Views.StoolsView"
+             Shell.TabBarIsVisible="False"
 
              Title="Add New Stool"
              >
 
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem x:Name="SelectToolbarItem"
+                     Text="Select stool"
+                     IconImageSource="search.png"
+                     Clicked="SelectToolbarItem_OnClicked"
+        />
+
+        <ToolbarItem x:Name="DeleteToolbarItem"
+                     Text="Delete stool"
+                     IconImageSource="Delete.png"
+                     Clicked="DeleteToolbarItem_OnClicked" 
+        />
+
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
         <StackLayout>
+            
+            <picker:SfPicker x:Name="SearchPicker"
+                             VerticalOptions="CenterAndExpand" 
+                             HorizontalOptions="CenterAndExpand" 
+                             HeaderText="Select a meal to edit" 
+                             ShowFooter="True"
+                             OkButtonClicked="SearchPicker_OnOkButtonClicked"
+                             CancelButtonClicked="SearchPicker_OnCancelButtonClicked"
+            />
 
-            <Grid RowDefinitions="auto,3.5*,*,*,*,*"
+            <Grid RowDefinitions="auto,3.5*,*,*,*,*,*"
                   VerticalOptions="Fill"
                   >
 
-                <Editor x:Name="DescriptionPlainTextEditor"
-                        Unfocused="DescriptionPlainTextEditor_OnUnfocused"
-                        Focused="DescriptionPlainTextEditor_OnFocused"
-                        IsVisible="False"
+                <!--<Picker x:Name="SearchPicker"
+                        Title="Select a stool to edit"
+
                         Grid.Row="0"
-                        />
+
+                        IsVisible="False"
+                        SelectedIndexChanged="SearchPicker_OnSelectedIndexChanged"
+                />-->
 
                 <richTextEditor:SfRichTextEditor x:Name="DescriptionHtmlRtEditor" 
                                                  PlaceHolder="Describe the stool"
-
-                                                 Grid.Row="0"
-
                                                  AutoSize="TextChanges"
-
+                                                 Margin="0,0,0,-15"
                                                  ToolbarPosition="Top"                                                 
                                                  ToolbarOptions="Bold,FontColor,Italic,IncreaseIndent,DecreaseIndent,BulletList,Alignment"
-                                                 VerticalOptions="StartAndExpand"
+                                                 VerticalOptions="FillAndExpand"
                                                  
-                                                 Unfocused="DescriptionHtmlRtEditor_OnUnfocused"
                                                  Focused="DescriptionHtmlRtEditor_OnFocused"
+                                                 Grid.Row="0"
+
                                                  />
                 
                 <Image x:Name="ImageFromCamera"
                        IsVisible="False"
                        VerticalOptions="Start"
                        Margin="0, 0, 0, 0"
+
                        Grid.Row="1"
+                       
                        Aspect="AspectFit"
                        />
 
-                <Picker x:Name="StoolTypePicker"
+                <Label x:Name="SelectedStoolTypeLabel"
+                       Text="Select Bristol Stool Type:"
+                       Grid.Row="2">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="SelectedStoolTypeLabel_Tapped"
+                            NumberOfTapsRequired="1" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <!--<Picker x:Name="StoolTypePicker"
                         Title="Select Bristol Stool Type:"
                         VerticalOptions="Start"
+                        Margin="0,0,0,0"
                         SelectedIndexChanged="StoolTypePicker_OnSelectedIndexChanged"
                         Grid.Row="2"
                         >
@@ -64,7 +102,7 @@
                         <x:String>Type 6: Fluffy pieces with ragged edges, a mushy stool (diarrhea)</x:String>
                         <x:String>Type 7: Watery, no solid pieces, entirely liquid (diarrhea)</x:String>
                     </Picker.Items>
-                </Picker>
+                </Picker-->
                 <!--BENDO: Set the choices to include images.
                     See https://www.syncfusion.com/kb/8589/how-to-customize-sfpicker-header-view
                     Hint: Set the HeaderView
@@ -97,14 +135,12 @@
                 <DatePicker x:Name="WhenDatePicker"
                             Grid.Row="3"
                             VerticalOptions="StartAndExpand"
-                            Unfocused="WhenDatePicker_OnUnfocused"
                             Focused="WhenDatePicker_OnFocused"
                             />
 
                 <TimePicker x:Name="WhenTimePicker"
                             Grid.Row="4"
                             VerticalOptions="StartAndExpand"
-                            Unfocused="WhenTimePicker_OnUnfocused"
                             Focused="WhenTimePicker_OnFocused"
                             />
 
@@ -129,7 +165,7 @@
                                  ShowIcon="False"
                                  ImageSource="saved.png"
                                  VerticalOptions="Start"
-                                 BackgroundColor="{StaticResource Primary}"
+                                 BackgroundColor="{DynamicResource Primary}"
                                  Margin="0,0,0,0"
                                  Clicked="SaveButton_OnClicked"
                                  Grid.Row="6"

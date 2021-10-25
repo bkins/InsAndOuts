@@ -1,0 +1,606 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:radiogroup="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:chart="clr-namespace:Syncfusion.SfChart.XForms;assembly=Syncfusion.SfChart.XForms"
+             xmlns:viewmodel="clr-namespace:InsAndOuts.ViewModels;assembly=InsAndOuts"
+             x:Class="InsAndOuts.Views.ReportsView"
+             Shell.TabBarIsVisible="False"
+             >
+    <ContentPage.ToolbarItems >
+
+        <ToolbarItem x:Name="ShareToolbarItem"
+                     IconImageSource="shareSmall.png"
+                     Clicked="ShareToolbarItem_OnClicked"
+        />
+
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout.Resources>
+                
+                <ResourceDictionary>
+                
+                    <DataTemplate x:Key="ToolTipTemplate">
+                        
+                        <StackLayout BackgroundColor="#404041">
+                            
+                            <StackLayout.Padding>
+                                <OnPlatform x:TypeArguments="Thickness" 
+                                            WinPhone="3,3,3,3" />
+                            </StackLayout.Padding>
+
+                            <Label Text="{Binding Label}" 
+                                   HorizontalTextAlignment="Center" 
+                                   VerticalTextAlignment="Center"
+                                   TextColor="White" 
+                                   FontAttributes="Bold" 
+                                   FontFamily="Helvetica"
+                                   Margin="{OnPlatform Default='0', WPF='0,4,0,0'}" 
+                                   FontSize="12" 
+                                   />
+                            <BoxView Color="White" 
+                                     HeightRequest="0.75" 
+                                     VerticalOptions="FillAndExpand"
+                                     Margin="{OnPlatform Default='0', WPF='4,0,4,0'}" 
+                                     HorizontalOptions="FillAndExpand" 
+                                     />
+                            <StackLayout Orientation="Horizontal" 
+                                         VerticalOptions="FillAndExpand"
+                                         BackgroundColor="#404041" 
+                                         Spacing="0" 
+                                         Padding="3" 
+                                         Margin="0"
+                                         >
+                                <Label Text="Count: " 
+                                       VerticalTextAlignment="Center"
+                                       HorizontalOptions="StartAndExpand" 
+                                       TextColor="#CCCCCC" 
+                                       FontAttributes="Bold"
+                                       FontFamily="Helvetica" FontSize="12"
+                                       Margin="{OnPlatform Default='0', WPF='3,0,0,0'}" 
+                                       />
+                                <Label Text="{Binding Value}" 
+                                       VerticalTextAlignment="Center"
+                                       HorizontalOptions="EndAndExpand" 
+                                       TextColor="White" FontAttributes="Bold"
+                                       FontFamily="Helvetica" 
+                                       Margin="{OnPlatform Default='0', WPF='0,0,3,0'}"
+                                       FontSize="12" 
+                                       />
+                            </StackLayout>
+                        </StackLayout>
+
+                    </DataTemplate>
+                    
+                    <DataTemplate x:Key="ToolTipTemplate2">
+                        
+                        <StackLayout BackgroundColor="#404041">
+                            
+                            <StackLayout.Padding>
+                                <OnPlatform x:TypeArguments="Thickness" 
+                                            WinPhone="3,3,3,3" />
+                            </StackLayout.Padding>
+
+                            <Label Text="{Binding Label}" 
+                                   HorizontalTextAlignment="Center" 
+                                   VerticalTextAlignment="Center"
+                                   TextColor="White" 
+                                   FontAttributes="Bold" 
+                                   FontFamily="Helvetica"
+                                   Margin="{OnPlatform Default='0', WPF='0,4,0,0'}" 
+                                   FontSize="12" 
+                                   />
+                            <BoxView Color="White" 
+                                     HeightRequest="0.75" 
+                                     VerticalOptions="FillAndExpand"
+                                     Margin="{OnPlatform Default='0', WPF='4,0,4,0'}" 
+                                     HorizontalOptions="FillAndExpand" 
+                                     />
+                            <StackLayout Orientation="Horizontal" 
+                                         VerticalOptions="FillAndExpand"
+                                         BackgroundColor="#404041" 
+                                         Spacing="0" 
+                                         Padding="3" 
+                                         Margin="0"
+                                         >
+                                <Label VerticalTextAlignment="Center"
+                                       HorizontalOptions="StartAndExpand" 
+                                       TextColor="#CCCCCC" 
+                                       FontAttributes="Bold"
+                                       FontFamily="Helvetica" 
+                                       FontSize="12"
+                                       Margin="{OnPlatform Default='0', WPF='3,0,0,0'}" 
+                                       >
+                                    <Label.Text>
+                                        Average: 
+                                    </Label.Text>
+                                </Label>
+                                <Label Text="{Binding Value}" 
+                                       VerticalTextAlignment="Center"
+                                       HorizontalOptions="EndAndExpand" 
+                                       TextColor="White" FontAttributes="Bold"
+                                       FontFamily="Helvetica" 
+                                       Margin="{OnPlatform Default='0', WPF='0,0,3,0'}"
+                                       FontSize="12" 
+                                       />
+                            </StackLayout>
+                        </StackLayout>
+
+                    </DataTemplate>
+
+                </ResourceDictionary>
+            </StackLayout.Resources>
+            
+            <Button x:Name="ShowReportsButton"
+                    Text="Select a report"
+                    IsVisible="False"
+                    Clicked="ShowReportsButton_OnClicked"
+                    />
+
+            <FlexLayout x:Name="ReportSelectionFlexLayout" 
+                        Wrap="Wrap" 
+                        AlignItems="Start" 
+                        AlignContent="Start"
+                        IsVisible="True"
+                        >
+                
+                <radiogroup:SfRadioButton x:Name="PainAndStoolRadioButton" 
+                                          Text="Stools &amp; Pains"
+                                          StateChanged="PainAndStoolRadioButton_OnStateChanged"
+                                          LineBreakMode="WordWrap"
+                                          />
+
+                <radiogroup:SfRadioButton x:Name="PainPercentagesRadioButton" 
+                                          Text="Pain Percentages"
+                                          StateChanged="PainPercentagesRadioButton_OnStateChanged"
+                                          />
+
+                <radiogroup:SfRadioButton x:Name="StoolTypePercentagesRadioButton" 
+                                          Text="Stool Type Percentages"
+                                          StateChanged="StoolTypePercentagesRadioButton_OnStateChanged"
+                                          />
+                
+                <radiogroup:SfRadioButton x:Name="StoolsByDayOfWeekRadioButton"
+                                          Text="Stools By Day Of Week"
+                                          StateChanged="StoolsByDayOfWeekRadioButton_OnStateChanged"
+                                          />
+
+                <radiogroup:SfRadioButton x:Name="PainsByDayOfWeekRadioButton"
+                                          Text="Pains By Day Of Week"
+                                          StateChanged="PainsByDayOfWeekRadioButton_OnStateChanged"
+                                          />
+
+                <radiogroup:SfRadioButton x:Name="StoolsByHourGroupRadioButton"
+                                          Text="Stools By Hour Group"
+                                          StateChanged="StoolsByHourGroupRadioButton_OnStateChanged"
+                                          />
+            
+                <radiogroup:SfRadioButton x:Name="PainsByHourGroupRadioButton"
+                                          Text="Pains By Hour Group"
+                                          StateChanged="PainsByHourGroupRadioButton_OnStateChanged"
+                                          />
+
+            </FlexLayout>
+            
+            <Picker x:Name="SearchPicker"
+                    HorizontalOptions="Start" 
+                    VerticalOptions="Start"
+
+                    Title="Select a date"
+
+                    IsVisible="{Binding StoolAndPainRadioButton.IsChecked}"
+                    SelectedIndexChanged="SearchPicker_OnSelectedIndexChanged"
+                    />
+
+            <chart:SfChart x:Name="PainAndStoolChart" 
+                               HorizontalOptions="FillAndExpand" 
+                               VerticalOptions="FillAndExpand"
+                               >
+
+                <chart:SfChart.BindingContext>
+                    <viewmodel:ReportPainStoolViewModel/>
+                </chart:SfChart.BindingContext>
+
+                <chart:SfChart.Legend>
+                    <chart:ChartLegend />
+                </chart:SfChart.Legend>
+
+                <chart:SfChart.Title>
+                    <chart:ChartTitle Text="Pains &amp; Stools" />
+                </chart:SfChart.Title>
+
+                <chart:SfChart.PrimaryAxis>
+
+                    <chart:DateTimeAxis x:Name="WhenDateTimeAxis"
+                                            >
+                    </chart:DateTimeAxis>
+
+                </chart:SfChart.PrimaryAxis>
+
+                <chart:SfChart.SecondaryAxis>
+                    <chart:NumericalAxis >
+
+                        <chart:NumericalAxis.Title>
+                            <chart:ChartAxisTitle Text="Pain Levels &amp; Stool Types" />
+                        </chart:NumericalAxis.Title>
+
+                    </chart:NumericalAxis>
+                </chart:SfChart.SecondaryAxis>
+
+                <chart:ColumnSeries x:Name="PainsColumnSeries"
+                                        EnableAnimation="True"
+                                        Label="Pains" 
+                                        ItemsSource="{Binding Pains}" 
+                                        YBindingPath="Level" 
+                                        XBindingPath="When" 
+                                        EnableTooltip="True" 
+                                        >
+
+                    <chart:ColumnSeries.TooltipTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Vertical">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="When:"/>
+                                    <Label Text="{Binding When}"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Level:" />
+                                    <Label Text="{Binding Level}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </DataTemplate>
+                    </chart:ColumnSeries.TooltipTemplate>
+
+                </chart:ColumnSeries>
+
+                <chart:ColumnSeries x:Name="StoolTypesNumberColumnSeries"
+                                        Label="Stool Types" 
+                                        ItemsSource="{Binding StoolTypes}" 
+                                        YBindingPath="StoolTypeNumber" 
+                                        XBindingPath="When" 
+                                        EnableTooltip="True" 
+                                        >
+
+                    <chart:ColumnSeries.TooltipTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Vertical">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="When:"
+                                               TextColor="AntiqueWhite"/>
+                                    <Label Text="{Binding When}"
+                                               TextColor="AntiqueWhite"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Type:"
+                                               TextColor="AntiqueWhite"/>
+                                    <Label Text="{Binding StoolTypeNumber}"
+                                               TextColor="AntiqueWhite"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </DataTemplate>
+                    </chart:ColumnSeries.TooltipTemplate>
+
+                </chart:ColumnSeries>
+
+                <chart:SfChart.ChartBehaviors>
+                    <chart:ChartTooltipBehavior Duration="10"/>
+                </chart:SfChart.ChartBehaviors>
+
+            </chart:SfChart>
+
+            <chart:SfChart x:Name="PieChart"
+                           HorizontalOptions="FillAndExpand" 
+                           VerticalOptions="FillAndExpand"
+                           >
+
+                <chart:SfChart.BindingContext>
+                    <viewmodel:ReportPainStoolViewModel/>
+                </chart:SfChart.BindingContext>
+
+                <chart:SfChart.Legend>
+                    <chart:ChartLegend />
+                </chart:SfChart.Legend>
+
+                <chart:SfChart.Title>
+                    <chart:ChartTitle Text="{Binding ChartTitle}" />
+                </chart:SfChart.Title>
+
+                <chart:SfChart.Series>
+
+                    <chart:PieSeries x:Name="PieSeries" 
+                                     EnableAnimation="True" 
+                                     ExplodeOnTouch="True" 
+                                     ItemsSource="{Binding PainPercentages}" 
+                                     XBindingPath="Label"
+                                     YBindingPath="Value" 
+                                     GroupMode="Percentage"
+                                     >
+
+                        <chart:PieSeries.ColorModel>
+                            <chart:ChartColorModel Palette="Metro"/>
+                        </chart:PieSeries.ColorModel>
+
+                        <chart:PieSeries.DataMarker>
+                            <chart:ChartDataMarker >
+                                
+                                <chart:ChartDataMarker.LabelStyle>
+
+                                    <chart:DataMarkerLabelStyle LabelPosition="Auto"/>
+
+                                </chart:ChartDataMarker.LabelStyle>
+
+                                <chart:ChartDataMarker.LabelTemplate>
+                                    <DataTemplate>
+                                        <StackLayout Orientation="Vertical"
+                                                     >
+
+                                            <!--<Label 
+                                                   Text="{Binding Label}"
+                                                   FontSize="12" 
+                                                   TextColor="White" 
+                                                   HorizontalOptions="End" 
+                                                   VerticalOptions="End"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"
+                                                   
+                                                   />-->
+
+                                            <Label 
+                                                   Text="{Binding Value, StringFormat='\{0\}%'}"
+                                                   FontSize="12" 
+                                                   TextColor="White"
+                                                    
+                                                   HorizontalOptions="EndAndExpand"  
+                                                   VerticalOptions="StartAndExpand"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"
+                                                   />
+
+                                        </StackLayout>
+                                    </DataTemplate>
+                                </chart:ChartDataMarker.LabelTemplate>
+
+                            </chart:ChartDataMarker>
+                        </chart:PieSeries.DataMarker>
+
+                    </chart:PieSeries>
+
+                </chart:SfChart.Series>
+
+            </chart:SfChart>
+
+            <chart:SfChart x:Name="ByDayOfWeekChart" 
+                           HorizontalOptions="FillAndExpand" 
+                           VerticalOptions="FillAndExpand"
+                           >
+
+                <chart:SfChart.BindingContext>
+                    <viewmodel:ReportPainStoolViewModel/>
+                </chart:SfChart.BindingContext>
+
+                <!--<chart:SfChart.Title>
+                    <chart:ChartTitle Text="Number of Stools by Day Of Week" />
+                </chart:SfChart.Title>-->
+
+                <chart:SfChart.PrimaryAxis>
+
+                    <chart:CategoryAxis EdgeLabelsDrawingMode="Shift" 
+                                        ShowMajorGridLines="false"
+                                        >
+
+                        <chart:CategoryAxis.Title>
+                            <chart:ChartAxisTitle Text="Day"/>
+                        </chart:CategoryAxis.Title>
+
+                    </chart:CategoryAxis>
+
+                </chart:SfChart.PrimaryAxis>
+
+                <chart:SfChart.SecondaryAxis >
+                    <chart:NumericalAxis IsVisible="false" 
+                                         EdgeLabelsDrawingMode="Shift" 
+                                         ShowMajorGridLines="false"
+                                         ShowMinorGridLines="false">
+                        <chart:NumericalAxis.MajorTickStyle>
+                            <chart:ChartAxisTickStyle TickSize="8" />
+                        </chart:NumericalAxis.MajorTickStyle>
+                    </chart:NumericalAxis>
+                </chart:SfChart.SecondaryAxis>
+                <!--ItemsSource="{Binding NumberOfStoolByDayOfWeek}"-->
+                <chart:SfChart.Series>
+                    <chart:BarSeries x:Name="NumberByDayOfWeekBarSeries" 
+                                      
+                                     XBindingPath="Label"
+                                     YBindingPath="Value" 
+                                     LegendIcon="SeriesType" 
+                                     Label="Stools" 
+                                     EnableTooltip="true"
+                                     EnableAnimation="True" 
+                                     TooltipTemplate="{StaticResource ToolTipTemplate}">
+                        <chart:BarSeries.DataMarker>
+                            <chart:ChartDataMarker ShowLabel="True">
+                                <chart:ChartDataMarker.LabelStyle>
+                                    <chart:DataMarkerLabelStyle LabelPosition="Inner" 
+                                                                FontSize="12" />
+                                </chart:ChartDataMarker.LabelStyle>
+                            </chart:ChartDataMarker>
+                        </chart:BarSeries.DataMarker>
+                    </chart:BarSeries>
+                    <!--ItemsSource="{Binding AverageStoolTypesByDayOfWeek}" -->
+                    <chart:BarSeries x:Name="AverageByDayOfWeekBarSeries" 
+                                     
+                                     XBindingPath="Label"
+                                     YBindingPath="Value" 
+                                     LegendIcon="SeriesType" 
+                                     Label="Stools" 
+                                     EnableTooltip="true"
+                                     EnableAnimation="True" 
+                                     TooltipTemplate="{StaticResource ToolTipTemplate2}">
+                        <chart:BarSeries.DataMarker>
+                            <chart:ChartDataMarker ShowLabel="True">
+                                <chart:ChartDataMarker.LabelStyle>
+                                    <chart:DataMarkerLabelStyle LabelPosition="Inner" 
+                                                                FontSize="12" />
+                                </chart:ChartDataMarker.LabelStyle>
+                            </chart:ChartDataMarker>
+                        </chart:BarSeries.DataMarker>
+                    </chart:BarSeries>
+
+
+                </chart:SfChart.Series>
+               
+                <!--<chart:ColumnSeries x:Name="StoolTypeColumnSeries"
+                                    EnableAnimation="True"
+                                    Label="Stools" 
+                                    ItemsSource="{Binding NumberOfStoolByDayOfWeek}" 
+                                    YBindingPath="Value" 
+                                    XBindingPath="Label" 
+                                    EnableTooltip="True" 
+                                    >
+
+                    <chart:ColumnSeries.TooltipTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Vertical">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Label:"/>
+                                    <Label Text="{Binding Label}"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Value:" />
+                                    <Label Text="{Binding Value}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </DataTemplate>
+                    </chart:ColumnSeries.TooltipTemplate>
+
+                </chart:ColumnSeries>-->
+
+                <chart:SfChart.ChartBehaviors>
+                    <chart:ChartTooltipBehavior Duration="10"/>
+                </chart:SfChart.ChartBehaviors>
+
+            </chart:SfChart>
+            
+            <chart:SfChart x:Name="ByHourGroupChart" 
+                           HorizontalOptions="FillAndExpand" 
+                           VerticalOptions="FillAndExpand"
+                           >
+
+                <chart:SfChart.BindingContext>
+                    <viewmodel:ReportPainStoolViewModel/>
+                </chart:SfChart.BindingContext>
+
+                <chart:SfChart.Title>
+                    <chart:ChartTitle Text="Averages &amp; Counts by Hour Groupings" />
+                </chart:SfChart.Title>
+
+                <chart:SfChart.PrimaryAxis>
+
+                    <chart:CategoryAxis EdgeLabelsDrawingMode="Shift" 
+                                        ShowMajorGridLines="false"
+                                        >
+
+                        <chart:CategoryAxis.Title>
+                            <chart:ChartAxisTitle Text="Hour Group"/>
+                        </chart:CategoryAxis.Title>
+
+                    </chart:CategoryAxis>
+
+                </chart:SfChart.PrimaryAxis>
+
+                <chart:SfChart.SecondaryAxis >
+                    <chart:NumericalAxis IsVisible="false" 
+                                         EdgeLabelsDrawingMode="Shift" 
+                                         ShowMajorGridLines="false"
+                                         ShowMinorGridLines="false">
+                        <chart:NumericalAxis.MajorTickStyle>
+                            <chart:ChartAxisTickStyle TickSize="8" />
+                        </chart:NumericalAxis.MajorTickStyle>
+                    </chart:NumericalAxis>
+                </chart:SfChart.SecondaryAxis>
+
+                <!--<chart:SfChart.Legend>
+                    <chart:ChartLegend ToggleSeriesVisibility="False" 
+                                       DockPosition="Bottom" 
+                                       IconWidth="14"
+                                       IconHeight="14" />
+                </chart:SfChart.Legend>-->
+                <!--Color="#404041"-->
+                <chart:SfChart.Series>
+                    <chart:BarSeries x:Name="CountByHourGroupBarSeries" 
+                                     XBindingPath="Label"
+                                     YBindingPath="Value" 
+                                     LegendIcon="SeriesType" 
+                                     Label="Count" 
+                                     EnableTooltip="true"
+                                     EnableAnimation="True" 
+                                     TooltipTemplate="{StaticResource ToolTipTemplate}"
+                                     >
+                        <chart:BarSeries.DataMarker>
+                            <chart:ChartDataMarker ShowLabel="True">
+                                <chart:ChartDataMarker.LabelStyle>
+                                    <chart:DataMarkerLabelStyle LabelPosition="Inner" 
+                                                                FontSize="12" />
+                                </chart:ChartDataMarker.LabelStyle>
+                            </chart:ChartDataMarker>
+                        </chart:BarSeries.DataMarker>
+                    </chart:BarSeries>
+                    <!--Color="DarkRed"-->
+                    <chart:BarSeries x:Name="AverageByHourGroupBarSeries" 
+                                     XBindingPath="Label"
+                                     YBindingPath="Value" 
+                                     LegendIcon="SeriesType" 
+                                     Label="Average" 
+                                     EnableTooltip="true"
+                                     EnableAnimation="True" 
+                                     TooltipTemplate="{StaticResource ToolTipTemplate2}"
+                                     >
+                        <chart:BarSeries.DataMarker>
+                            <chart:ChartDataMarker ShowLabel="True">
+                                <chart:ChartDataMarker.LabelStyle>
+                                    <chart:DataMarkerLabelStyle LabelPosition="Inner" 
+                                                                FontSize="12" />
+                                </chart:ChartDataMarker.LabelStyle>
+                            </chart:ChartDataMarker>
+                        </chart:BarSeries.DataMarker>
+                    </chart:BarSeries>
+                    
+                </chart:SfChart.Series>
+                
+                <!--<chart:ColumnSeries x:Name="StoolTypeColumnSeries"
+                                    EnableAnimation="True"
+                                    Label="Stools" 
+                                    ItemsSource="{Binding NumberOfStoolByDayOfWeek}" 
+                                    YBindingPath="Value" 
+                                    XBindingPath="Label" 
+                                    EnableTooltip="True" 
+                                    >
+
+                    <chart:ColumnSeries.TooltipTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Vertical">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Label:"/>
+                                    <Label Text="{Binding Label}"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Value:" />
+                                    <Label Text="{Binding Value}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </DataTemplate>
+                    </chart:ColumnSeries.TooltipTemplate>
+
+                </chart:ColumnSeries>-->
+
+                <chart:SfChart.ChartBehaviors>
+                    <chart:ChartTooltipBehavior Duration="10"/>
+                </chart:SfChart.ChartBehaviors>
+
+            </chart:SfChart>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

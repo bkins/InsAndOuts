@@ -1,8 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:abstractions="clr-namespace:ButtonCircle.FormsPlugin.Abstractions;assembly=ButtonCircle.FormsPlugin.Abstractions"
              x:Class="InsAndOuts.Views.HomePage"
-             Title="Home">
+             Shell.TabBarIsVisible="False"
+             
+             >
+    <!--BackgroundImageSource="love.jpg"-->
     <ContentPage.ToolbarItems >
 
         <ToolbarItem x:Name="Configuration"
@@ -11,27 +16,213 @@
                      />
 
     </ContentPage.ToolbarItems>
-    <ContentPage.Content>
+    <ContentPage.Content
+        >
         <StackLayout>
-            
-            <Button x:Name="ReportButton"
-                    Text="Report"
-                    Clicked="ReportButton_OnClicked"
-                    />
-            <Button x:Name="BrowseDataButton"
-                    Text="Browse Data"
-                    />
-            <Button x:Name="TendsAnalysisReportsButton"
-                    Text="Tends/Analysis/Reports"
-                    />
-            <Button x:Name="AboutButton"
-                    Text="About"
-                    />
-            <Button x:Name="LoadTestData"
-                    Text="LoadTestData"
-                    Clicked="LoadTestData_OnClicked"
-                    />
 
+            <Grid ColumnDefinitions="*, *, *, *, *, *"
+                  RowDefinitions="Auto, *"
+                  BackgroundColor="{DynamicResource Primary}"
+                  Margin="0, 0, 0, 0"
+                  >
+                <!--left, top, right, and bottom-->
+                <!--Headers-->
+                <Label x:Name="MealsLabel"
+                       Text="Meals"
+                       FontAttributes="Bold"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="CenterAndExpand"
+                       BackgroundColor="{DynamicResource Primary}"
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       />
+
+                <BoxView WidthRequest="1" 
+                         HorizontalOptions="Start"  
+                         Background="DarkSlateGray"
+                         Grid.Column="2"
+                         Grid.RowSpan="2"
+                         />
+            
+                <Label x:Name="StoolLabel"
+                       Text="Stools"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       BackgroundColor="{DynamicResource Primary}"
+                       Grid.Row="0"
+                       Grid.Column="2"
+                       Grid.ColumnSpan="2"
+                       />
+                
+                <BoxView WidthRequest="1"  
+                         HorizontalOptions="Start" 
+                         Background="DarkSlateGray"
+                         Grid.Column="4"
+                         Grid.RowSpan="2"
+                         />
+
+                <Label x:Name="PainsLabel"
+                       Text="Pains"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       BackgroundColor="{DynamicResource Primary}"
+                       Grid.Row="0"
+                       Grid.Column="4"
+                       Grid.ColumnSpan="2"
+                       />
+
+                <!--Add/Edit Buttons-->
+                <button:SfButton x:Name="AddMealButton"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 BackgroundColor="{DynamicResource Primary}"
+                                 Grid.Row="1"
+                                 Grid.Column="0"
+                                 Clicked="AddMealButton_OnClicked"
+                                 >
+                    <button:SfButton.Content>
+                        <Image Source="addSmall.png" 
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center"/>
+                    </button:SfButton.Content>
+
+                </button:SfButton>
+
+                <button:SfButton x:Name="EditMealButton"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 BackgroundColor="{DynamicResource Primary}"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Clicked="EditMealButton_OnClicked"
+                                 >
+                    <button:SfButton.Content>
+                        <Image Source="editSmall.png" 
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </button:SfButton.Content>
+
+                </button:SfButton>
+
+                <button:SfButton x:Name="AddStoolButton"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 BackgroundColor="{DynamicResource Primary}"
+                                 Grid.Row="1"
+                                 Grid.Column="2"
+                                 Clicked="AddStoolButton_OnClicked"
+                                 >
+                    <button:SfButton.Content>
+                        <Image Source="addSmall.png" 
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </button:SfButton.Content>
+
+                </button:SfButton>
+
+                <button:SfButton x:Name="EditStoolButton"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 BackgroundColor="{DynamicResource Primary}"
+                                 Grid.Row="1"
+                                 Grid.Column="3"
+                                 Clicked="EditStoolButton_OnClicked"
+                                 >
+                    <button:SfButton.Content>
+                        <Image Source="editSmall.png" 
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </button:SfButton.Content>
+
+                </button:SfButton>
+                
+                <button:SfButton x:Name="AddPainButton"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 BackgroundColor="{DynamicResource Primary}"
+                                 Grid.Row="1"
+                                 Grid.Column="4"
+                                 Clicked="AddPainButton_OnClicked"
+                                 >
+                    <button:SfButton.Content>
+                        <Image Source="addSmall.png" 
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </button:SfButton.Content>
+
+                </button:SfButton>
+
+                <button:SfButton x:Name="EditPainButton"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 BackgroundColor="{DynamicResource Primary}"
+                                 Grid.Row="1"
+                                 Grid.Column="5"
+                                 Clicked="EditPainButton_OnClicked"
+                                 >
+                    <button:SfButton.Content>
+                        <Image Source="editSmall.png" 
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </button:SfButton.Content>
+
+                </button:SfButton>
+            </Grid>
+            
+            <Grid ColumnDefinitions="*, *, *"
+                  Margin="0, 15, 0, 0">
+            
+                <abstractions:CircleButton x:Name="DailyReportCircleButton" 
+                                           FontIcon="FontAwesome" 
+                                           Icon="fa-stethoscope"
+                                           FontSize="25" 
+                                           TextColor="Black"
+                                           HorizontalOptions="Center"
+                                           HeightRequest="50" 
+                                           WidthRequest="50" 
+                                           CornerRadius="50"
+                                           BorderColor="Black" 
+                                           BorderThickness="5" 
+                                           BackgroundColor="CadetBlue"
+                                           Grid.Column="0"
+                                           Clicked="DailyReportCircleButton_OnClicked"
+                />
+
+                <abstractions:CircleButton x:Name="ChartsAndReportsCircleButton" 
+                                           FontIcon="FontAwesome" 
+                                           Icon="fa-pie-chart"
+                                           FontSize="25" 
+                                           TextColor="Black"
+                                           HorizontalOptions="Center"
+                                           HeightRequest="50" 
+                                           WidthRequest="50" 
+                                           CornerRadius="50"
+                                           BorderColor="Black" 
+                                           BorderThickness="5" 
+                                           BackgroundColor="Orange"
+                                           Grid.Column="1"
+                                           Clicked="ChartsAndReportsCircleButton_OnClicked"
+                                           />
+
+                <abstractions:CircleButton x:Name="AboutCircleButton" 
+                                           FontIcon="FontAwesome" 
+                                           Icon="fa-info-circle"
+                                           FontSize="25" 
+                                           TextColor="Black"
+                                           HorizontalOptions="Center"
+                                           HeightRequest="50" 
+                                           WidthRequest="50" 
+                                           CornerRadius="50"
+                                           BorderColor="Black" 
+                                           BorderThickness="5" 
+                                           BackgroundColor="{DynamicResource Primary}"
+                                           Grid.Column="2"
+                                           Clicked="AboutCircleButton_OnClicked"
+                />
+
+            </Grid>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

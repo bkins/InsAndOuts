@@ -10,14 +10,14 @@ namespace InsAndOuts.ViewModels
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
-        private static DataAccess _dataAccess;
+        public DataAccess DataAccess;
     
         public DataAccess DataAccessLayer
         {
-            get => _dataAccess = _dataAccess ?? new DataAccess(App.Database);
-            set => _dataAccess = value;
+            get => DataAccess = DataAccess ?? new DataAccess(App.Database);
+            set => DataAccess = value;
         }
-    
+        
         public event PropertyChangedEventHandler PropertyChanged;
     
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

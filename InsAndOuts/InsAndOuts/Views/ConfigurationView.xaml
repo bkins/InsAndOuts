@@ -5,6 +5,7 @@
              xmlns:viewmodels="clr-namespace:InsAndOuts.ViewModels;assembly=InsAndOuts"
              xmlns:views="clr-namespace:InsAndOuts.Views;assembly=InsAndOuts"
              x:DataType="views:ConfigurationView"
+             Shell.TabBarIsVisible="False"
              
              Title="Settings"
              >
@@ -24,7 +25,7 @@
                            Grid.Column="0"
                            />
                     <Label x:Name="UseHtmlSwitchLabelMoreInfo"
-                           Text="(This will allow you to format your emails better.  Turn it off if you need to send email as Plain Text.)"
+                           Text="(Emails formatted in HTML or Pain Text.  Try both and select whichever works best with you email client.)"
                            FontSize="Small"
                            Grid.Row="1"
                            Grid.Column="0"
@@ -50,23 +51,26 @@
                         Unfocused="EmailToDoctorEditor_OnUnfocused"
                         />
 
-                <Button x:Name="DoneButton"
+                <!--<Button x:Name="DoneButton"
                         Text="Done"
                         Clicked="DoneButton_OnClicked"
-                        />
+                        />-->
 
             </StackLayout>
             
             <Grid ColumnDefinitions="auto,*">
+
                 <Label x:Name="AdvancedLabel"
                        Text="Advanced Options"
                        Grid.Column="0"
                        />
+
                 <Switch x:Name="AdvancedSwitch"
                         IsToggled="False"
                         Grid.Column="1"
                         Toggled="AdvancedSwitch_OnToggled"
-                />
+                        />
+
             </Grid>
             
 
@@ -85,6 +89,12 @@
                         Clicked="ClearData_OnClicked"
                         VerticalOptions="End"
                         />
+                    
+                    
+                    <Button x:Name="LoadTestData"
+                            Text="LoadTestData"
+                            Clicked="LoadTestData_OnClicked"
+                    />
 
                 </StackLayout>
             </StackLayout>

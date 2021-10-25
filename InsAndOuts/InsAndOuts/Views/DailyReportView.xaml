@@ -9,6 +9,7 @@
              x:Class="InsAndOuts.Views.DailyReportView"
              x:DataType="views:DailyReportView"
              x:Name="DailyReportViewName"
+             Shell.TabBarIsVisible="False"
              Title="Report to Doctor"
              >
 
@@ -63,7 +64,7 @@
                        />
 
                 <Switch x:Name="HtmlSwitch"
-                        IsToggled="True"
+                        IsToggled="False"
                         HorizontalOptions="Start"
                         VerticalOptions="Start"
                         Grid.Column="1"
