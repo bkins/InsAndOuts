@@ -527,7 +527,7 @@
                                        IconWidth="14"
                                        IconHeight="14" />
                 </chart:SfChart.Legend>-->
-
+                <!--Color="#404041"-->
                 <chart:SfChart.Series>
                     <chart:BarSeries x:Name="CountByHourGroupBarSeries" 
                                      XBindingPath="Label"
@@ -537,7 +537,7 @@
                                      EnableTooltip="true"
                                      EnableAnimation="True" 
                                      TooltipTemplate="{StaticResource ToolTipTemplate}"
-                                     Color="#404041">
+                                     >
                         <chart:BarSeries.DataMarker>
                             <chart:ChartDataMarker ShowLabel="True">
                                 <chart:ChartDataMarker.LabelStyle>
@@ -547,7 +547,7 @@
                             </chart:ChartDataMarker>
                         </chart:BarSeries.DataMarker>
                     </chart:BarSeries>
-
+                    <!--Color="DarkRed"-->
                     <chart:BarSeries x:Name="AverageByHourGroupBarSeries" 
                                      XBindingPath="Label"
                                      YBindingPath="Value" 
@@ -556,7 +556,6 @@
                                      EnableTooltip="true"
                                      EnableAnimation="True" 
                                      TooltipTemplate="{StaticResource ToolTipTemplate2}"
-                                     Color="DarkRed"
                                      >
                         <chart:BarSeries.DataMarker>
                             <chart:ChartDataMarker ShowLabel="True">

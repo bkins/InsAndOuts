@@ -53,13 +53,13 @@ namespace InsAndOuts.ViewModels
 
             PainPercentages          = GetPainPercentages();
             NumberOfPainsByHourGroup = GetNumberOfPainsByHourGroup();
-            AveragePainsByHourGroup  = GetAveragePainsByHourGroup();
+            AveragePainsByHourGroup  = CalculatePainLevelAveragesByHour();  //GetAveragePainsByHourGroup();
             NumberOfPainsByDayOfWeek = GetNumberOfPainsByDayOfWeek();
             AveragePainsByDayOfWeek  = CalculatePainLevelAveragesByDay();
 
             StoolTypePercentages         = GetStoolTypePercentages();
             NumberOfStoolsByHourGroup    = GetNumberOfStoolsByHourGroup();
-            AverageStoolTypesByHourGroup = GetAverageStoolTypesByHourGroup();
+            AverageStoolTypesByHourGroup = CalculateStoolTypeAveragesByHour();  //GetAverageStoolTypesByHourGroup();
             NumberOfStoolByDayOfWeek     = GetNumberOfStoolByDayOfWeek();
             AverageStoolTypesByDayOfWeek = CalculateStoolTypeAveragesByDay();
 
@@ -158,6 +158,82 @@ namespace InsAndOuts.ViewModels
             
             return new ObservableCollection<ChartItem>(new ObservableCollection<ChartItem>(averagePains).OrderBy(fields => fields.LabelUnderlyingValue));
         }
+        
+        private ObservableCollection<ChartItem> CalculatePainLevelAveragesByHour()
+        {
+            var painLevelCountByHour = new List<ChartItem>(); //new Dictionary<string, int>();
+            var painLevelSumsByHour  = new List<ChartItem>(); //new Dictionary<string, int>();
+
+            foreach (var pain in Pains)
+            {
+                var painWhenHour = $"{pain.WhenToDateTime():HH}";
+
+                UpdateHourGroupListsValues(painWhenHour
+                                         , int.Parse(painWhenHour)
+                                         , pain.Level
+                                         , painLevelSumsByHour
+                                         , painLevelCountByHour);
+            }
+            
+            var averagePains = painLevelCountByHour
+                              .Select(chartItem => 
+                                              new ChartItem
+                                              {
+                                                  Label                = chartItem.Label
+                                                , LabelUnderlyingValue = chartItem.LabelUnderlyingValue
+                                                , Value = ((double)painLevelSumsByHour.FirstOrDefault(fields => fields.Label == chartItem.Label)
+                                                                                     .Value)
+                                                        / ((double)painLevelCountByHour.FirstOrDefault(fields => fields.Label == chartItem.Label)
+                                                                                      .Value)
+                                              })
+                              .ToList();
+
+            return new ObservableCollection<ChartItem>
+                    (
+                        new ObservableCollection<ChartItem>
+                                (
+                                    ArrangeListForChart(averagePains)
+                                )
+                    );
+        }
+        
+        private ObservableCollection<ChartItem> CalculateStoolTypeAveragesByHour()
+        {
+            var stoolTypeCountByHour = new List<ChartItem>(); //new Dictionary<string, int>();
+            var stoolTypeSumsByHour  = new List<ChartItem>(); //new Dictionary<string, int>();
+
+            foreach (var stool in StoolTypes)
+            {
+                var stoolWhenHour = $"{stool.WhenToDateTime():HH}";
+
+                UpdateHourGroupListsValues(stoolWhenHour
+                                         , int.Parse(stoolWhenHour)
+                                         , stool.StoolTypeNumber
+                                         , stoolTypeSumsByHour
+                                         , stoolTypeCountByHour);
+            }
+            
+            var averageStools = stoolTypeCountByHour
+                              .Select(chartItem => 
+                                              new ChartItem
+                                              {
+                                                  Label                = chartItem.Label
+                                                , LabelUnderlyingValue = chartItem.LabelUnderlyingValue
+                                                , Value = ((double)stoolTypeSumsByHour.FirstOrDefault(fields => fields.Label == chartItem.Label)
+                                                                                     .Value)
+                                                        / ((double)stoolTypeCountByHour.FirstOrDefault(fields => fields.Label == chartItem.Label)
+                                                                                      .Value)
+                                              })
+                              .ToList();
+
+            return new ObservableCollection<ChartItem>
+                    (
+                        new ObservableCollection<ChartItem>
+                                (
+                                    ArrangeListForChart(averageStools)
+                                )
+                    );
+        }
 
         private ObservableCollection<ChartItem> CalculateStoolTypeAveragesByDay()
         {
@@ -219,6 +295,39 @@ namespace InsAndOuts.ViewModels
 
                 countsByDay.FirstOrDefault(fields => fields       != null 
                                                   && fields.Label == dayOfWeek.ToString())
+                           .Value++;
+            }
+        }
+
+        private static void UpdateHourGroupListsValues(string          hourGrouping
+                                                     , int             hourGroupingInt
+                                                     , int             value
+                                                     , List<ChartItem> sumsByDay
+                                                     , List<ChartItem> countsByDay)
+        {
+
+            if (sumsByDay.All(fields => fields.Label != hourGrouping))
+            {
+                sumsByDay.Add(new ChartItem
+                              {
+                                  Label                = hourGrouping
+                                , LabelUnderlyingValue = hourGroupingInt
+                                , Value                = value
+                              });
+
+                countsByDay.Add(new ChartItem
+                                {
+                                    Label                = hourGrouping
+                                  , LabelUnderlyingValue = hourGroupingInt
+                                  , Value                = 1
+                                });
+            }
+            else
+            {
+                sumsByDay.FirstOrDefault(fields => fields != null && fields.Label == hourGrouping)
+                         .Value += value;
+
+                countsByDay.FirstOrDefault(fields => fields != null && fields.Label == hourGrouping)
                            .Value++;
             }
         }
