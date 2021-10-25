@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using Windows.UI.Xaml;
+using InsAndOuts.Data;
 using InsAndOuts.Models;
 
 namespace InsAndOuts.ViewModels
@@ -11,25 +12,35 @@ namespace InsAndOuts.ViewModels
     public class ReportPainStoolViewModel : ViewModelBase
     {
         //Chart data
-        public List<Pain>                      Pains                        { get; set; }
+        public List<Pain>                      Pains                    { get; set; }
+        public ObservableCollection<ChartItem> PainPercentages          { get; set; }
+        public ObservableCollection<ChartItem> NumberOfPainsByHourGroup { get; set; }
+        public ObservableCollection<ChartItem> AveragePainsByHourGroup  { get; set; }
+        public ObservableCollection<ChartItem> NumberOfPainsByDayOfWeek { get; set; }
+        public ObservableCollection<ChartItem> AveragePainsByDayOfWeek  { get; set; }
+
         public List<Stool>                     StoolTypes                   { get; set; }
-        public List<string>                    AvailableDateStrings         { get; set; }
-        public List<DateTime>                  AvailableDateTimes           { get; set; }
-        public ObservableCollection<ChartItem> PainPercentages              { get; set; }
         public ObservableCollection<ChartItem> StoolTypePercentages         { get; set; }
-        public ObservableCollection<ChartItem> NumberOfStoolByDayOfWeek     { get; set; }
         public ObservableCollection<ChartItem> NumberOfStoolsByHourGroup    { get; set; }
         public ObservableCollection<ChartItem> AverageStoolTypesByHourGroup { get; set; }
-        public ObservableCollection<ChartItem> NumberOfPainsByHourGroup     { get; set; }
-        public ObservableCollection<ChartItem> AveragePainsByHourGroup      { get; set; }
+        public ObservableCollection<ChartItem> NumberOfStoolByDayOfWeek     { get; set; }
+        public ObservableCollection<ChartItem> AverageStoolTypesByDayOfWeek { get; set; }
+
+        public List<string>                    AvailableDateStrings         { get; set; }
+        public List<DateTime>                  AvailableDateTimes           { get; set; }
 
 
         //Chart metadata
         public string ChartTitle { get; set; }
 
-        private List<Range> HourRanges => GetHourRanges();
+        public List<Range> HourRanges => GetHourRanges();
 
         public ReportPainStoolViewModel()
+        {
+            SetDataMembers();
+        }
+
+        private void SetDataMembers()
         {
             Pains      = DataAccessLayer.GetAllPain();
             StoolTypes = DataAccessLayer.GetAllStools();
@@ -40,15 +51,29 @@ namespace InsAndOuts.ViewModels
             SetAvailablePainDateLists();
             SetAvailableStoolTypeLists();
 
-            PainPercentages              = GetPainPercentages();
-            StoolTypePercentages         = GetStoolTypePercentages();
-            NumberOfStoolByDayOfWeek     = GetNumberOfStoolByDayOfWeek();
+            PainPercentages          = GetPainPercentages();
+            NumberOfPainsByHourGroup = GetNumberOfPainsByHourGroup();
+            AveragePainsByHourGroup  = GetAveragePainsByHourGroup();
+            NumberOfPainsByDayOfWeek = GetNumberOfPainsByDayOfWeek();
+            AveragePainsByDayOfWeek  = CalculatePainLevelAveragesByDay();
 
+            StoolTypePercentages         = GetStoolTypePercentages();
             NumberOfStoolsByHourGroup    = GetNumberOfStoolsByHourGroup();
             AverageStoolTypesByHourGroup = GetAverageStoolTypesByHourGroup();
+            NumberOfStoolByDayOfWeek     = GetNumberOfStoolByDayOfWeek();
+            AverageStoolTypesByDayOfWeek = CalculateStoolTypeAveragesByDay();
 
-            NumberOfPainsByHourGroup     = GetNumberOfPainsByHourGroup();
-            AveragePainsByHourGroup      = GetAveragePainsByHourGroup();
+        }
+
+        //BENDO:  This is not the right way to do this.  Do it better!
+        public ReportPainStoolViewModel(bool useTestData = false, IDataStore database = null)
+        {
+            if (useTestData)
+            {
+                DataAccessLayer = new DataAccess(database);
+            }
+
+            SetDataMembers();
         }
 
         private static List<Range> GetHourRanges()
@@ -101,6 +126,101 @@ namespace InsAndOuts.ViewModels
 
             return CalculateAverageBasedOnSumsAndCountsByHourGroup(collectionWithCountsByGrouping
                                                                  , collectWithSumsByGrouping);
+        }
+
+        
+        private ObservableCollection<ChartItem> CalculatePainLevelAveragesByDay()
+        {
+            var painLevelCountByDay = new List<ChartItem>(); //new Dictionary<string, int>();
+            var painLevelSumsByDay  = new List<ChartItem>(); //new Dictionary<string, int>();
+
+            foreach (var pain in Pains)
+            {
+                UpdateDayOfWeekListsValues(pain.WhenToDateTime()
+                                               .DayOfWeek
+                                         , pain.Level
+                                         , painLevelSumsByDay
+                                         , painLevelCountByDay);
+            }
+            
+            var averagePains = painLevelCountByDay
+                                        .Select(chartItem => 
+                                                      new ChartItem
+                                                      {
+                                                          Label                = chartItem.Label
+                                                        , LabelUnderlyingValue = chartItem.LabelUnderlyingValue
+                                                        , Value = ((double)painLevelSumsByDay.FirstOrDefault(fields => fields.Label == chartItem.Label)
+                                                                                             .Value)
+                                                                / ((double)painLevelCountByDay.FirstOrDefault(fields => fields.Label == chartItem.Label)
+                                                                                              .Value)
+                                                      })
+                                        .ToList();
+            
+            return new ObservableCollection<ChartItem>(new ObservableCollection<ChartItem>(averagePains).OrderBy(fields => fields.LabelUnderlyingValue));
+        }
+
+        private ObservableCollection<ChartItem> CalculateStoolTypeAveragesByDay()
+        {
+            var stoolTypeCountsByDay = new List<ChartItem>(); //new Dictionary<string, int>();
+            var stoolTypeSumsByDay   = new List<ChartItem>(); //new Dictionary<string, int>();
+
+            foreach (var stool in StoolTypes)
+            {
+                UpdateDayOfWeekListsValues(stool.WhenToDateTime()
+                                                .DayOfWeek
+                                         , stool.StoolTypeNumber
+                                         , stoolTypeSumsByDay
+                                         , stoolTypeCountsByDay);
+            }
+            
+            var averagesList= stoolTypeCountsByDay
+                                        .Select(chartItem => 
+                                                       new ChartItem
+                                                       {
+                                                           Label                = chartItem.Label
+                                                         , LabelUnderlyingValue = chartItem.LabelUnderlyingValue
+                                                         , Value = ((double)stoolTypeSumsByDay.FirstOrDefault(fields => fields.Label == chartItem.Label)
+                                                                                              .Value)
+                                                                 / ((double)stoolTypeCountsByDay.FirstOrDefault(fields => fields.Label == chartItem.Label)
+                                                                                                .Value)
+                                                       })
+                                       .ToList();
+            
+            return new ObservableCollection<ChartItem>(new ObservableCollection<ChartItem>(averagesList).OrderBy(fields => fields.LabelUnderlyingValue));
+        }
+        
+        private static void UpdateDayOfWeekListsValues(DayOfWeek       dayOfWeek
+                                                     , int             value
+                                                     , List<ChartItem> sumsByDay
+                                                     , List<ChartItem> countsByDay)
+        {
+
+            if (sumsByDay.All(fields => fields.Label != dayOfWeek.ToString()))
+            {
+                sumsByDay.Add(new ChartItem
+                              {
+                                  Label                = dayOfWeek.ToString()
+                                , LabelUnderlyingValue = (int)dayOfWeek
+                                , Value                = value
+                              });
+
+                countsByDay.Add(new ChartItem
+                                {
+                                    Label                = dayOfWeek.ToString()
+                                  , LabelUnderlyingValue = (int)dayOfWeek
+                                  , Value                = 1
+                                });
+            }
+            else
+            {
+                sumsByDay.FirstOrDefault(fields => fields       != null 
+                                                && fields.Label == dayOfWeek.ToString())
+                         .Value += value;
+
+                countsByDay.FirstOrDefault(fields => fields       != null 
+                                                  && fields.Label == dayOfWeek.ToString())
+                           .Value++;
+            }
         }
 
         private ObservableCollection<ChartItem> CalculateAverageBasedOnSumsAndCountsByHourGroup(ObservableCollection<ChartItem> collectionWithCountsByGrouping
@@ -248,6 +368,21 @@ namespace InsAndOuts.ViewModels
                                                .ToList();
 
             return new ObservableCollection<ChartItem>(new ObservableCollection<ChartItem>(stoolTypeByDayList).OrderBy(fields=>fields.LabelUnderlyingValue));
+        }
+        
+        private ObservableCollection<ChartItem> GetNumberOfPainsByDayOfWeek()
+        {
+            var painTypeByDayList = Pains.GroupBy(fields => fields.WhenToDateTime()
+                                                                  .DayOfWeek)
+                                               .Select(group => new ChartItem
+                                                                {
+                                                                    Label                = group.Key.ToString()
+                                                                  , LabelUnderlyingValue = (int)group.Key
+                                                                  , Value                = group.Count()
+                                                                })
+                                               .ToList();
+
+            return new ObservableCollection<ChartItem>(new ObservableCollection<ChartItem>(painTypeByDayList).OrderBy(fields=>fields.LabelUnderlyingValue));
         }
 
         private void SetAvailableStoolTypeLists()

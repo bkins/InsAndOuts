@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using InsAndOuts.Data;
 using InsAndOuts.Models;
 using InsAndOuts.Utilities;
 
@@ -18,17 +19,24 @@ namespace InsAndOuts.ViewModels
 
         public DailyReportViewModel(DateTime dateToReportOn)
         {
+            BuildDailyReport(dateToReportOn);
+        }
+
+        private void BuildDailyReport(DateTime dateToReportOn)
+        {
             DatesWithData = new List<string>();
-            
-            var allMeals  = DataAccessLayer.GetAllMeals()
-                                           .OrderBy(field => DateTime.Parse(field.When));
+
+            var allMeals = DataAccessLayer.GetAllMeals()
+                                          .OrderBy(field => DateTime.Parse(field.When));
+
             var allStools = DataAccessLayer.GetAllStools()
                                            .OrderBy(field => DateTime.Parse(field.When));
-            var allPains  = DataAccessLayer.GetAllPain()
-                                           .OrderBy(field => DateTime.Parse(field.When));
+
+            var allPains = DataAccessLayer.GetAllPain()
+                                          .OrderBy(field => DateTime.Parse(field.When));
 
             var filterDate = dateToReportOn.ToShortDateString();
-            
+
             SetAllItemsByFilterDate(filterDate
                                   , allMeals
                                   , allPains
@@ -39,9 +47,19 @@ namespace InsAndOuts.ViewModels
                                , allPains);
         }
 
-        private void SetDatesWithDataList(IOrderedEnumerable<Meal>  allMeals
-                                        , IOrderedEnumerable<Stool> allStools
-                                        , IOrderedEnumerable<Pain>  allPains)
+        public DailyReportViewModel(DateTime dateToReportOn, bool useTestData = false, IDataStore database = null)
+        {
+            if (useTestData)
+            {
+                DataAccessLayer = new DataAccess(database);
+            }
+
+            BuildDailyReport(dateToReportOn);
+        }
+
+        private void SetDatesWithDataList(IEnumerable<Meal>  allMeals
+                                        , IEnumerable<Stool> allStools
+                                        , IEnumerable<Pain>  allPains)
         {
             foreach (var meal in allMeals.Where(meal => meal.Id != 0 && ! DatesWithData.Contains(meal.When)))
             {
@@ -77,10 +95,10 @@ namespace InsAndOuts.ViewModels
             }
         }
 
-        private void SetAllItemsByFilterDate(string                    filterDate
-                                           , IOrderedEnumerable<Meal>  allMeals
-                                           , IOrderedEnumerable<Pain>  allPains
-                                           , IOrderedEnumerable<Stool> allStools)
+        private void SetAllItemsByFilterDate(string             filterDate
+                                           , IEnumerable<Meal>  allMeals
+                                           , IEnumerable<Pain>  allPains
+                                           , IEnumerable<Stool> allStools)
         {
             Meals = allMeals.Where(field => GetShortDateFromString(field.When) == filterDate)
                             .ToList();

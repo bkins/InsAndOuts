@@ -22,9 +22,10 @@ namespace InsAndOuts.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ReportsView : ContentPage
     {
-        private const string PAIN_PIE_CHART_TITLE            = "Pain Level Percentages";
-        private const string STOOL_TYPE_PIE_CHART_TITLE      = "Stool Type Percentages";
-        private const string NUMBER_OF_STOOLS_BY_DAY_OF_WEEK = "Number of Stools by Day Of Week";
+        private const string PAIN_PIE_CHART_TITLE       = "Pain Level Percentages";
+        private const string STOOL_TYPE_PIE_CHART_TITLE = "Stool Type Percentages";
+        private const string STOOLS_BY_DAY_OF_WEEK      = "Stools by Day Of Week";
+        private const string PAINS_BY_DAY_OF_WEEK       = "Number of Stools by Day Of Week";
 
         public ReportPainStoolViewModel ViewModel { get; set; }
         
@@ -66,18 +67,21 @@ namespace InsAndOuts.Views
                 return;
             }
 
+            ToggleReportSelectionVisibility();
+
             PainAndStoolRadioButton.IsChecked         = true;
             PainPercentagesRadioButton.IsChecked      = false;
             StoolTypePercentagesRadioButton.IsChecked = false;
             StoolsByDayOfWeekRadioButton.IsChecked    = false;
+            PainsByDayOfWeekRadioButton.IsChecked     = false;
             StoolsByHourGroupRadioButton.IsChecked    = false;
             PainsByHourGroupRadioButton.IsChecked     = false;
             
-            SearchPicker.IsVisible           = true;
-            PainAndStoolChart.IsVisible      = true;
-            PieChart.IsVisible               = false;
-            StoolsByDayOfWeekChart.IsVisible = false;
-            ByHourGroupChart.IsVisible       = false;
+            SearchPicker.IsVisible      = true;
+            PainAndStoolChart.IsVisible = true;
+            PieChart.IsVisible          = false;
+            ByDayOfWeekChart.IsVisible  = false;
+            ByHourGroupChart.IsVisible  = false;
 
             //var viewModel = new ReportPainStoolViewModel();
             
@@ -98,18 +102,21 @@ namespace InsAndOuts.Views
                 return;
             }
             
+            ToggleReportSelectionVisibility();
+
             PainAndStoolRadioButton.IsChecked         = false;
             PainPercentagesRadioButton.IsChecked      = true;
             StoolTypePercentagesRadioButton.IsChecked = false;
             StoolsByDayOfWeekRadioButton.IsChecked    = false;
+            PainsByDayOfWeekRadioButton.IsChecked     = false;
             StoolsByHourGroupRadioButton.IsChecked    = false;
             PainsByHourGroupRadioButton.IsChecked     = false;
 
-            PieChart.IsVisible               = true;
-            SearchPicker.IsVisible           = false;
-            PainAndStoolChart.IsVisible      = false;
-            StoolsByDayOfWeekChart.IsVisible = false;
-            ByHourGroupChart.IsVisible       = false;
+            PieChart.IsVisible          = true;
+            SearchPicker.IsVisible      = false;
+            PainAndStoolChart.IsVisible = false;
+            ByDayOfWeekChart.IsVisible  = false;
+            ByHourGroupChart.IsVisible  = false;
 
             //var viewModel = new ReportPainStoolViewModel();
 
@@ -129,18 +136,21 @@ namespace InsAndOuts.Views
                 return;
             }
             
+            ToggleReportSelectionVisibility();
+
             PainAndStoolRadioButton.IsChecked         = false;
             PainPercentagesRadioButton.IsChecked      = false;
             StoolTypePercentagesRadioButton.IsChecked = true;
             StoolsByDayOfWeekRadioButton.IsChecked    = false;
+            PainsByDayOfWeekRadioButton.IsChecked     = false;
             StoolsByHourGroupRadioButton.IsChecked    = false;
             PainsByHourGroupRadioButton.IsChecked     = false;
 
-            PieChart.IsVisible               = true;
-            SearchPicker.IsVisible           = false;
-            PainAndStoolChart.IsVisible      = false;
-            StoolsByDayOfWeekChart.IsVisible = false;
-            ByHourGroupChart.IsVisible       = false;
+            PieChart.IsVisible          = true;
+            SearchPicker.IsVisible      = false;
+            PainAndStoolChart.IsVisible = false;
+            ByDayOfWeekChart.IsVisible  = false;
+            ByHourGroupChart.IsVisible  = false;
 
             //var viewModel = new ReportPainStoolViewModel();
 
@@ -160,22 +170,58 @@ namespace InsAndOuts.Views
                 return;
             }
             
+            ToggleReportSelectionVisibility();
+
             PainAndStoolRadioButton.IsChecked         = false;
             PainPercentagesRadioButton.IsChecked      = false;
             StoolTypePercentagesRadioButton.IsChecked = false;
             StoolsByDayOfWeekRadioButton.IsChecked    = true;
+            PainsByDayOfWeekRadioButton.IsChecked     = false;
             StoolsByHourGroupRadioButton.IsChecked    = false;
             PainsByHourGroupRadioButton.IsChecked     = false;
 
-            PieChart.IsVisible               = false;
-            SearchPicker.IsVisible           = false;
-            PainAndStoolChart.IsVisible      = false;
-            StoolsByDayOfWeekChart.IsVisible = true;
-            ByHourGroupChart.IsVisible       = false;
+            PieChart.IsVisible          = false;
+            SearchPicker.IsVisible      = false;
+            PainAndStoolChart.IsVisible = false;
+            ByDayOfWeekChart.IsVisible  = true;
+            ByHourGroupChart.IsVisible  = false;
 
-            Title = StoolsByDayOfWeekRadioButton.Text;
+            NumberByDayOfWeekBarSeries.ItemsSource  = ViewModel.NumberOfStoolByDayOfWeek;
+            AverageByDayOfWeekBarSeries.ItemsSource = ViewModel.AverageStoolTypesByDayOfWeek;
+            Title                                   = StoolsByDayOfWeekRadioButton.Text;
         }
+        
+        private void PainsByDayOfWeekRadioButton_OnStateChanged(object                sender
+                                                              , StateChangedEventArgs e)
+        {
+            var isChecked = e.IsChecked.HasValue 
+                         && e.IsChecked.Value;
 
+            if ( ! isChecked)
+            {
+                return;
+            }
+            
+            ToggleReportSelectionVisibility();
+
+            PainAndStoolRadioButton.IsChecked         = false;
+            PainPercentagesRadioButton.IsChecked      = false;
+            StoolTypePercentagesRadioButton.IsChecked = false;
+            StoolsByDayOfWeekRadioButton.IsChecked    = false;
+            PainsByDayOfWeekRadioButton.IsChecked     = true;
+            StoolsByHourGroupRadioButton.IsChecked    = false;
+            PainsByHourGroupRadioButton.IsChecked     = false;
+
+            PieChart.IsVisible          = false;
+            SearchPicker.IsVisible      = false;
+            PainAndStoolChart.IsVisible = false;
+            ByDayOfWeekChart.IsVisible  = true;
+            ByHourGroupChart.IsVisible  = false;
+
+            NumberByDayOfWeekBarSeries.ItemsSource  = ViewModel.NumberOfPainsByDayOfWeek;
+            AverageByDayOfWeekBarSeries.ItemsSource = ViewModel.AveragePainsByDayOfWeek;
+            Title                                   = PainsByDayOfWeekRadioButton.Text;
+        }
         private void StoolsByHourGroupRadioButton_OnStateChanged(object                sender
                                                                , StateChangedEventArgs e)
         {
@@ -187,25 +233,25 @@ namespace InsAndOuts.Views
                 return;
             }
             
-            //var viewModel = new ReportPainStoolViewModel();
-
-            CountByHourGroupBarSeries.ItemsSource     = ViewModel.NumberOfStoolsByHourGroup;
-            AverageByHourGroupBarSeries.ItemsSource   = ViewModel.AverageStoolTypesByHourGroup;
+            ToggleReportSelectionVisibility();
 
             PainAndStoolRadioButton.IsChecked         = false;
             PainPercentagesRadioButton.IsChecked      = false;
             StoolTypePercentagesRadioButton.IsChecked = false;
             StoolsByDayOfWeekRadioButton.IsChecked    = false;
+            PainsByDayOfWeekRadioButton.IsChecked     = false;
             StoolsByHourGroupRadioButton.IsChecked    = true;
             PainsByHourGroupRadioButton.IsChecked     = false;
 
-            PieChart.IsVisible               = false;
-            SearchPicker.IsVisible           = false;
-            PainAndStoolChart.IsVisible      = false;
-            StoolsByDayOfWeekChart.IsVisible = false;
-            ByHourGroupChart.IsVisible       = true;
-
-            Title = StoolsByHourGroupRadioButton.Text;
+            PieChart.IsVisible          = false;
+            SearchPicker.IsVisible      = false;
+            PainAndStoolChart.IsVisible = false;
+            ByDayOfWeekChart.IsVisible  = false;
+            ByHourGroupChart.IsVisible  = true;
+            
+            CountByHourGroupBarSeries.ItemsSource   = ViewModel.NumberOfStoolsByHourGroup;
+            AverageByHourGroupBarSeries.ItemsSource = ViewModel.AverageStoolTypesByHourGroup;
+            Title                                   = StoolsByHourGroupRadioButton.Text;
         }
         
         private void PainsByHourGroupRadioButton_OnStateChanged(object                sender
@@ -219,25 +265,25 @@ namespace InsAndOuts.Views
                 return;
             }
             
-            //var viewModel = new ReportPainStoolViewModel();
-
-            CountByHourGroupBarSeries.ItemsSource     = ViewModel.NumberOfPainsByHourGroup;
-            AverageByHourGroupBarSeries.ItemsSource   = ViewModel.AveragePainsByHourGroup;
+            ToggleReportSelectionVisibility();
 
             PainAndStoolRadioButton.IsChecked         = false;
             PainPercentagesRadioButton.IsChecked      = false;
             StoolTypePercentagesRadioButton.IsChecked = false;
             StoolsByDayOfWeekRadioButton.IsChecked    = false;
+            PainsByDayOfWeekRadioButton.IsChecked     = false;
             StoolsByHourGroupRadioButton.IsChecked    = false;
             PainsByHourGroupRadioButton.IsChecked     = true;
 
-            PieChart.IsVisible                        = false;
-            SearchPicker.IsVisible                    = false;
-            PainAndStoolChart.IsVisible               = false;
-            StoolsByDayOfWeekChart.IsVisible          = false;
-            ByHourGroupChart.IsVisible                = true;
+            PieChart.IsVisible          = false;
+            SearchPicker.IsVisible      = false;
+            PainAndStoolChart.IsVisible = false;
+            ByDayOfWeekChart.IsVisible  = false;
+            ByHourGroupChart.IsVisible  = true;
 
-            Title = PainsByHourGroupRadioButton.Text;
+            CountByHourGroupBarSeries.ItemsSource   = ViewModel.NumberOfPainsByHourGroup;
+            AverageByHourGroupBarSeries.ItemsSource = ViewModel.AveragePainsByHourGroup;
+            Title                                   = PainsByHourGroupRadioButton.Text;
         }
 
         private async void ShareToolbarItem_OnClicked(object    sender
@@ -265,6 +311,18 @@ namespace InsAndOuts.Views
                                          Title = filename,
                                          File  = new ShareFile(filepath)
                                      });
+        }
+
+        private void ShowReportsButton_OnClicked(object    sender
+                                               , EventArgs e)
+        {
+            ToggleReportSelectionVisibility();
+        }
+
+        private void ToggleReportSelectionVisibility()
+        {
+            ShowReportsButton.IsVisible         = ! ShowReportsButton.IsVisible;
+            ReportSelectionFlexLayout.IsVisible = ! ReportSelectionFlexLayout.IsVisible;
         }
 
     }

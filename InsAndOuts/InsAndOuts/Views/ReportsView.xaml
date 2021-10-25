@@ -74,7 +74,7 @@
 
                     </DataTemplate>
                     
-                    <DataTemplate x:Key="toolTipTemplate2">
+                    <DataTemplate x:Key="ToolTipTemplate2">
                         
                         <StackLayout BackgroundColor="#404041">
                             
@@ -105,15 +105,18 @@
                                          Padding="3" 
                                          Margin="0"
                                          >
-                                <Label Text="Average: " 
-                                       VerticalTextAlignment="Center"
+                                <Label VerticalTextAlignment="Center"
                                        HorizontalOptions="StartAndExpand" 
                                        TextColor="#CCCCCC" 
                                        FontAttributes="Bold"
                                        FontFamily="Helvetica" 
                                        FontSize="12"
                                        Margin="{OnPlatform Default='0', WPF='3,0,0,0'}" 
-                                       />
+                                       >
+                                    <Label.Text>
+                                        Average: 
+                                    </Label.Text>
+                                </Label>
                                 <Label Text="{Binding Value}" 
                                        VerticalTextAlignment="Center"
                                        HorizontalOptions="EndAndExpand" 
@@ -129,14 +132,25 @@
 
                 </ResourceDictionary>
             </StackLayout.Resources>
+            
+            <Button x:Name="ShowReportsButton"
+                    Text="Select a report"
+                    IsVisible="False"
+                    Clicked="ShowReportsButton_OnClicked"
+                    />
 
-            <FlexLayout Wrap="Wrap" AlignItems="Start" AlignContent="Start">
+            <FlexLayout x:Name="ReportSelectionFlexLayout" 
+                        Wrap="Wrap" 
+                        AlignItems="Start" 
+                        AlignContent="Start"
+                        IsVisible="True"
+                        >
                 
                 <radiogroup:SfRadioButton x:Name="PainAndStoolRadioButton" 
-                                          Text="S &amp; P"
+                                          Text="Stools &amp; Pains"
                                           StateChanged="PainAndStoolRadioButton_OnStateChanged"
                                           LineBreakMode="WordWrap"
-                />
+                                          />
 
                 <radiogroup:SfRadioButton x:Name="PainPercentagesRadioButton" 
                                           Text="Pain Percentages"
@@ -151,17 +165,22 @@
                 <radiogroup:SfRadioButton x:Name="StoolsByDayOfWeekRadioButton"
                                           Text="Stools By Day Of Week"
                                           StateChanged="StoolsByDayOfWeekRadioButton_OnStateChanged"
-                />
+                                          />
+
+                <radiogroup:SfRadioButton x:Name="PainsByDayOfWeekRadioButton"
+                                          Text="Pains By Day Of Week"
+                                          StateChanged="PainsByDayOfWeekRadioButton_OnStateChanged"
+                                          />
 
                 <radiogroup:SfRadioButton x:Name="StoolsByHourGroupRadioButton"
                                           Text="Stools By Hour Group"
                                           StateChanged="StoolsByHourGroupRadioButton_OnStateChanged"
-                />
+                                          />
             
                 <radiogroup:SfRadioButton x:Name="PainsByHourGroupRadioButton"
                                           Text="Pains By Hour Group"
                                           StateChanged="PainsByHourGroupRadioButton_OnStateChanged"
-                />
+                                          />
 
             </FlexLayout>
             
@@ -173,7 +192,7 @@
 
                     IsVisible="{Binding StoolAndPainRadioButton.IsChecked}"
                     SelectedIndexChanged="SearchPicker_OnSelectedIndexChanged"
-            />
+                    />
 
             <chart:SfChart x:Name="PainAndStoolChart" 
                                HorizontalOptions="FillAndExpand" 
@@ -272,9 +291,9 @@
             </chart:SfChart>
 
             <chart:SfChart x:Name="PieChart"
-                               HorizontalOptions="FillAndExpand" 
-                               VerticalOptions="FillAndExpand"
-                               >
+                           HorizontalOptions="FillAndExpand" 
+                           VerticalOptions="FillAndExpand"
+                           >
 
                 <chart:SfChart.BindingContext>
                     <viewmodel:ReportPainStoolViewModel/>
@@ -352,7 +371,7 @@
 
             </chart:SfChart>
 
-            <chart:SfChart x:Name="StoolsByDayOfWeekChart" 
+            <chart:SfChart x:Name="ByDayOfWeekChart" 
                            HorizontalOptions="FillAndExpand" 
                            VerticalOptions="FillAndExpand"
                            >
@@ -361,9 +380,9 @@
                     <viewmodel:ReportPainStoolViewModel/>
                 </chart:SfChart.BindingContext>
 
-                <chart:SfChart.Title>
+                <!--<chart:SfChart.Title>
                     <chart:ChartTitle Text="Number of Stools by Day Of Week" />
-                </chart:SfChart.Title>
+                </chart:SfChart.Title>-->
 
                 <chart:SfChart.PrimaryAxis>
 
@@ -389,25 +408,17 @@
                         </chart:NumericalAxis.MajorTickStyle>
                     </chart:NumericalAxis>
                 </chart:SfChart.SecondaryAxis>
-
-                <!--<chart:SfChart.Legend>
-                    <chart:ChartLegend ToggleSeriesVisibility="False" 
-                                       DockPosition="Bottom" 
-                                       IconWidth="14"
-                                       IconHeight="14" />
-                </chart:SfChart.Legend>-->
-
+                <!--ItemsSource="{Binding NumberOfStoolByDayOfWeek}"-->
                 <chart:SfChart.Series>
-                    <chart:BarSeries x:Name="NumberOfStoolByDayOfWeekBarSeries" 
-                                     ItemsSource="{Binding NumberOfStoolByDayOfWeek}" 
+                    <chart:BarSeries x:Name="NumberByDayOfWeekBarSeries" 
+                                      
                                      XBindingPath="Label"
                                      YBindingPath="Value" 
                                      LegendIcon="SeriesType" 
                                      Label="Stools" 
                                      EnableTooltip="true"
                                      EnableAnimation="True" 
-                                     TooltipTemplate="{StaticResource ToolTipTemplate}"
-                                     Color="#404041">
+                                     TooltipTemplate="{StaticResource ToolTipTemplate}">
                         <chart:BarSeries.DataMarker>
                             <chart:ChartDataMarker ShowLabel="True">
                                 <chart:ChartDataMarker.LabelStyle>
@@ -417,7 +428,27 @@
                             </chart:ChartDataMarker>
                         </chart:BarSeries.DataMarker>
                     </chart:BarSeries>
-                    
+                    <!--ItemsSource="{Binding AverageStoolTypesByDayOfWeek}" -->
+                    <chart:BarSeries x:Name="AverageByDayOfWeekBarSeries" 
+                                     
+                                     XBindingPath="Label"
+                                     YBindingPath="Value" 
+                                     LegendIcon="SeriesType" 
+                                     Label="Stools" 
+                                     EnableTooltip="true"
+                                     EnableAnimation="True" 
+                                     TooltipTemplate="{StaticResource ToolTipTemplate2}">
+                        <chart:BarSeries.DataMarker>
+                            <chart:ChartDataMarker ShowLabel="True">
+                                <chart:ChartDataMarker.LabelStyle>
+                                    <chart:DataMarkerLabelStyle LabelPosition="Inner" 
+                                                                FontSize="12" />
+                                </chart:ChartDataMarker.LabelStyle>
+                            </chart:ChartDataMarker>
+                        </chart:BarSeries.DataMarker>
+                    </chart:BarSeries>
+
+
                 </chart:SfChart.Series>
                
                 <!--<chart:ColumnSeries x:Name="StoolTypeColumnSeries"
@@ -524,7 +555,7 @@
                                      Label="Average" 
                                      EnableTooltip="true"
                                      EnableAnimation="True" 
-                                     TooltipTemplate="{StaticResource toolTipTemplate2}"
+                                     TooltipTemplate="{StaticResource ToolTipTemplate2}"
                                      Color="DarkRed"
                                      >
                         <chart:BarSeries.DataMarker>
