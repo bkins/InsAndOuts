@@ -28,7 +28,7 @@ namespace InsAndOuts.ViewModels
         public List<string> BuildStoolsList()
         {
             var stools = DataAccessLayer.GetAllStools();
-
+            
             return stools.Select(stool => stool.ToString())
                          .ToList();
         }

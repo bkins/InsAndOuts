@@ -46,7 +46,10 @@ namespace InsAndOuts.ViewModels
 
         public void Delete()
         {
-            var deletedMealId = DataAccessLayer.DeleteMeal(Meal);
+            if (Meal?.Id != 0)
+            {
+                var deletedMealId = DataAccessLayer.DeleteMeal(Meal);
+            }
         }
     }
 }

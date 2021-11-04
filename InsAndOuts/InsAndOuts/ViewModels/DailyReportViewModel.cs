@@ -26,21 +26,27 @@ namespace InsAndOuts.ViewModels
         {
             DatesWithData = new List<string>();
 
-            var allMeals = DataAccessLayer.GetAllMeals()
-                                          .OrderBy(field => DateTime.Parse(field.When));
+            Meals = DataAccessLayer.GetAllMeals();
+            var allMeals = Meals
+                          .Where(field => GetShortDateFromString(field.When) == dateToReportOn.ToShortDateString())
+                          .OrderBy(field => DateTime.Parse(field.When));
 
-            var allStools = DataAccessLayer.GetAllStools()
-                                           .OrderBy(field => DateTime.Parse(field.When));
+            Stools = DataAccessLayer.GetAllStools();
+            var allStools = Stools
+                           .Where(field => GetShortDateFromString(field.When) == dateToReportOn.ToShortDateString())
+                           .OrderBy(field => DateTime.Parse(field.When));
 
-            var allPains = DataAccessLayer.GetAllPain()
-                                          .OrderBy(field => DateTime.Parse(field.When));
+            Pains = DataAccessLayer.GetAllPain();
+            var allPains = Pains
+                          .Where(field => GetShortDateFromString(field.When) == dateToReportOn.ToShortDateString())
+                          .OrderBy(field => DateTime.Parse(field.When));
 
             var filterDate = dateToReportOn.ToShortDateString();
 
-            SetAllItemsByFilterDate(filterDate
-                                  , allMeals
-                                  , allPains
-                                  , allStools);
+            //SetAllItemsByFilterDate(filterDate
+            //                      , allMeals
+            //                      , allPains
+            //                      , allStools);
 
             SetDatesWithDataList(allMeals
                                , allStools
@@ -113,42 +119,27 @@ namespace InsAndOuts.ViewModels
         public string ToPainText()
         {
             var report = new StringBuilder();
-
-            report.AppendLine("Meals:");
-
-            foreach (var meal in Meals)
+            
+            if (Meals != null)
             {
-                report.AppendLine("");
-                report.AppendLine($"* {meal.Name} ({DateTime.Parse(meal.When).ToShortTimeString()}):");
-
-                if (meal.DescriptionPainText.HasValue())
-                {
-                    report.AppendLine($"  {meal.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
-                }
+                BuildMealsReport(report);
             }
 
-            report.AppendLine("");
-            report.AppendLine("Stools:");
-            report.AppendLine("");
-
-            foreach (var stool in Stools)
+            if (Stools != null)
             {
-                var hasPhoto = stool.Image == null 
-                            || stool.Image.Length == 0 ?
-                                       "No" :
-                                       "Yes";
-
-                report.AppendLine($"* {stool.StoolType.Split(':')[0]} ({DateTime.Parse(stool.When).ToShortTimeString()}):");
-
-                if (stool.DescriptionPainText.HasValue())
-                {
-                    report.AppendLine($"  {stool.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
-                }
-                        
-                report.AppendLine($"  Has an photo: {hasPhoto}");
-                report.AppendLine("");
+                BuildStoolsReport(report);
             }
 
+            if (Pains != null)
+            {
+                BuildPainsReport(report);
+            }
+
+            return report.ToString();
+        }
+
+        private void BuildPainsReport(StringBuilder report)
+        {
             report.AppendLine("Pains:");
             report.AppendLine("");
 
@@ -161,25 +152,92 @@ namespace InsAndOuts.ViewModels
                     report.AppendLine($"  {pain.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
                 }
             }
-
-            return report.ToString();
         }
-        
-        public string ToHtml()
+
+        private void BuildStoolsReport(StringBuilder report)
         {
-            var report = new StringBuilder();
-            
-            report.AppendLine("<b>Meals:</b><br>");
+            report.AppendLine("");
+            report.AppendLine("Stools:");
+            report.AppendLine("");
+
+            foreach (var stool in Stools)
+            {
+                var hasPhoto = stool.Image == null || stool.Image.Length == 0 ?
+                                       "No" :
+                                       $"Yes ({stool.ImageFileName})";
+
+                report.AppendLine($"* {stool.StoolType.Split(':')[0]} ({DateTime.Parse(stool.When).ToShortTimeString()}):");
+
+                if (stool.DescriptionPainText.HasValue())
+                {
+                    report.AppendLine($"  {stool.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                }
+
+                report.AppendLine($"  Has an photo: {hasPhoto}");
+                
+                report.AppendLine("");
+            }
+        }
+
+        private void BuildMealsReport(StringBuilder report)
+        {
+            report.AppendLine("Meals:");
 
             foreach (var meal in Meals)
             {
-                report.AppendLine($"&emsp;<i>{meal.Name} ({DateTime.Parse(meal.When).ToShortTimeString()}):</i>");
-                
-                var description = FormatDescriptionForHtml(meal.DescriptionHtml);
+                report.AppendLine("");
+                var mealName                = meal.Name;
+                var mealWhen                = meal.When;
+                var mealWhenDateTime        = DateTime.Parse(mealWhen);
+                var mealWhenShortTimeString = mealWhenDateTime.ToShortTimeString();
 
-                report.AppendLine($"&emsp;{description}");
+                report.AppendLine($"* {mealName} ({mealWhenShortTimeString}):");
+
+                if (meal.DescriptionPainText.HasValue())
+                {
+                    report.AppendLine($"  {meal.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                }
+            }
+        }
+
+        public string ToHtml()
+        {
+            var report = new StringBuilder();
+
+            if (Meals != null)
+            {
+                BuildMealsHtmlReport(report);
             }
 
+            if (Stools != null)
+            {
+                BuildStoolsHtmlReport(report);
+            }
+
+            if (Pains != null)
+            {
+                BuildPainsHtmlReport(report);
+            }
+
+            return report.ToString();
+        }
+
+        private void BuildPainsHtmlReport(StringBuilder report)
+        {
+            report.AppendLine("<b>Pains:</b><br>");
+
+            foreach (var pain in Pains)
+            {
+                report.AppendLine($"&emsp;<i>Level: {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):</i>");
+
+                var description = $"{FormatDescriptionForHtml(pain.DescriptionHtml)}</ul>";
+
+                report.AppendLine($"{description}");
+            }
+        }
+
+        private void BuildStoolsHtmlReport(StringBuilder report)
+        {
             report.AppendLine("<b>Stools:</b><br>");
 
             foreach (var stool in Stools)
@@ -190,28 +248,28 @@ namespace InsAndOuts.ViewModels
 
                 report.AppendLine($"&emsp;<i>{stoolType} ({DateTime.Parse(stool.When).ToShortTimeString()}):</i>");
 
-                var hasPhoto = stool.Image        == null 
-                            || stool.Image.Length == 0 ?
+                var hasPhoto = stool.Image == null || stool.Image.Length == 0 ?
                                        "No" :
                                        $"Yes ({stool.ImageFileName})";
-                
+
                 var description = $"{FormatDescriptionForHtml(stool.DescriptionHtml)}<li>Has an photo: {hasPhoto}</li></ul>";
 
                 report.AppendLine(description);
             }
-            
-            report.AppendLine("<b>Pains:</b><br>");
+        }
 
-            foreach (var pain in Pains)
+        private void BuildMealsHtmlReport(StringBuilder report)
+        {
+            report.AppendLine("<b>Meals:</b><br>");
+
+            foreach (var meal in Meals)
             {
-                report.AppendLine($"&emsp;<i>Level: {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):</i>");
-                
-                var description = $"{FormatDescriptionForHtml(pain.DescriptionHtml)}</ul>";
-                
-                report.AppendLine($"{description}");
-            }
+                report.AppendLine($"&emsp;<i>{meal.Name} ({DateTime.Parse(meal.When).ToShortTimeString()}):</i>");
 
-            return report.ToString();
+                var description = FormatDescriptionForHtml(meal.DescriptionHtml);
+
+                report.AppendLine($"&emsp;{description}");
+            }
         }
 
         private static string FormatDescriptionForHtml(string description)

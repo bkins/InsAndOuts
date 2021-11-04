@@ -90,11 +90,16 @@
                         VerticalOptions="End"
                         />
                     
+                    <Button x:Name="BackupDatabaseButton"
+                            Text="Backup Database"
+
+                            Clicked="BackupDatabaseButton_OnClicked"
+                            />
                     
-                    <Button x:Name="LoadTestData"
+                    <!--<Button x:Name="LoadTestData"
                             Text="LoadTestData"
                             Clicked="LoadTestData_OnClicked"
-                    />
+                    />-->
 
                 </StackLayout>
             </StackLayout>

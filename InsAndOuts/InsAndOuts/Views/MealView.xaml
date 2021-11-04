@@ -51,8 +51,17 @@
 
             <Entry x:Name="NameEntry"
                    Placeholder="Name of meal"
+                   PlaceholderColor="Red"
                    Focused="NameEntry_OnFocused"
-                   />
+                   >
+                <Entry.Keyboard>
+                    <Keyboard x:FactoryMethod="Create">
+                        <x:Arguments>
+                            <KeyboardFlags>Suggestions,CapitalizeWord</KeyboardFlags>
+                        </x:Arguments>
+                    </Keyboard>
+                </Entry.Keyboard>
+            </Entry>
 
             <richTextEditor:SfRichTextEditor x:Name="DescriptionRtf"
                                              PlaceHolder="What did you eat"

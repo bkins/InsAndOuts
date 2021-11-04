@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using InsAndOuts.Models;
 using InsAndOuts.Services;
 using InsAndOuts.Utilities;
 using InsAndOuts.ViewModels;
-using Plugin.Media.Abstractions;
-using Syncfusion.XForms.RichTextEditor;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -61,20 +57,10 @@ namespace InsAndOuts.Views
             ReportDatePicker.SelectedItem = DateToReport.ToShortDateString();
         }
 
-        private async void SendReport_OnClicked(object    sender
+        private  void SendReport_OnClicked(object    sender
                                         , EventArgs e)
         {
-            try
-            {
-                SendEmail();
-            }
-            catch (FeatureNotSupportedException exception)
-            {
-                await DisplayAlert("Feature Not Supported"
-                                 , $"{exception.Message}{Environment.NewLine}(Your device is not setup to send emails.)"
-                                 , "OK");
-            }
-            
+            SendEmail();
         }
 
         private async void SendEmail()
@@ -102,8 +88,11 @@ namespace InsAndOuts.Views
             //}
             
             emailFormat = EmailBodyFormat.PlainText;
-            body        = ViewModel.ToPainText();
-
+            
+            body = Configuration.UseHtmlForEmailBody ?
+                           ViewModel.ToHtml() :
+                           ViewModel.ToPainText();
+    
             var emailer = new Emailer
                           {
                               EmailFormat = emailFormat
@@ -111,7 +100,7 @@ namespace InsAndOuts.Views
                                                         .ToList()
                             , SubjectPrefix = string.Empty
                           };
-
+            
             await emailer.SendEmail($"Ins & Outs Report for {DateToReport.Date.ToShortDateString()}"
                                   , body
                                   , listOfAttachments);
@@ -161,6 +150,8 @@ namespace InsAndOuts.Views
         {
             ReportHtml.IsVisible      = showHtml;
             ReportPlainText.IsVisible = ! showHtml;
+
+            Configuration.UseHtmlForEmailBody = HtmlSwitch.IsToggled;
         }
        
         private void ReportDatePicker_OnOkButtonClicked(object                    sender

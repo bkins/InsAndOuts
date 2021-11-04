@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Storage.Pickers;
-using InsAndOuts.Models;
 using InsAndOuts.ViewModels;
-using Plugin.Media.Abstractions;
-using Syncfusion.SfChart.XForms;
 using Syncfusion.XForms.Buttons;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Pain = InsAndOuts.Models.Pain;
 
 namespace InsAndOuts.Views
 {

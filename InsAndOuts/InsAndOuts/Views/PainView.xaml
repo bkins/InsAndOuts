@@ -17,13 +17,13 @@
     <ContentPage.ToolbarItems>
 
         <ToolbarItem x:Name="SelectToolbarItem"
-                     Text="Select meal"
+                     Text="Select pain"
                      IconImageSource="search.png"
                      Clicked="SelectToolbarItem_OnClicked"
         />
 
         <ToolbarItem x:Name="DeleteToolbarItem"
-                     Text="Delete Meal"
+                     Text="Delete pain"
                      IconImageSource="Delete.png"
                      Clicked="DeleteToolbarItem_OnClicked" 
         />
@@ -95,7 +95,7 @@
                              ImageSource="saved.png"
                              VerticalOptions="Start"
                              BackgroundColor="{DynamicResource Primary}"
-                             Margin="0,0,0,25"
+                             Margin="0,0,0,0"
                              Clicked="SaveButton_OnClicked"
                              />
         </StackLayout>

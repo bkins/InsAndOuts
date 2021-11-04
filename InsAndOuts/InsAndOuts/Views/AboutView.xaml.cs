@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using InsAndOuts.Services;
 using InsAndOuts.Utilities;
 using Xamarin.Essentials;
@@ -21,7 +18,7 @@ namespace InsAndOuts.Views
         {
             InitializeComponent();
 
-            VersionNumberSpan.Text = $" v{VersionTracking.CurrentVersion}";
+            VersionNumberSpan.Text = $" version: {VersionTracking.CurrentVersion}";
             BuildNumberSpan.Text   = $" ({VersionTracking.CurrentBuild})";
         }
 
@@ -50,6 +47,39 @@ namespace InsAndOuts.Views
                                            , EventArgs e)
         {
             await PageNavigation.NavigateTo(nameof(Credits));
+        }
+
+        private async void CreatorButton_OnClicked(object    sender
+                                                 , EventArgs e)
+        {
+            var emailer = new Emailer();
+
+            emailer.Recipients = new List<string>
+                                 {
+                                     "benhop@gmail.com"
+                                 };
+
+            emailer.SubjectPrefix = $"Question about {AppNameSpan.Text}";
+
+            await emailer.SendEmail(string.Empty
+                                  , string.Empty);
+        }
+
+        private async void AssociationWithButton_OnClicked(object    sender
+                                                        , EventArgs e)
+        {
+            try
+            {
+                //await Launcher.OpenAsync(url)
+                await Browser.OpenAsync("http://www.MoralCoding.org"
+                                      , BrowserLaunchMode.SystemPreferred);
+            }
+            catch(Exception ex)
+            {
+                await DisplayAlert("Problem loading web browser."
+                                 , $"Problem: {ex.Message}{Environment.NewLine}Is a browser installed on your device?"
+                                 , "OK");
+            }
         }
     }
 }

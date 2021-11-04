@@ -33,6 +33,8 @@ namespace InsAndOuts.ViewModels
 
         public void Save()
         {
+            Stool.StoolTypeNumber = Stool.ConvertStoolTypeToNumber(Stool.StoolType);
+
             if (Stool.Id == 0)
             {
                 DataAccessLayer.InsertStool(Stool);
@@ -45,7 +47,7 @@ namespace InsAndOuts.ViewModels
 
         public void Delete()
         {
-            if (Stool.Id != 0)
+            if (Stool?.Id != 0)
             {
                 DataAccessLayer.DeleteStool(Stool);
             }

@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InsAndOuts.Services;
-using Xamarin.Forms;
+﻿using InsAndOuts.Services;
 using Xamarin.Forms.Xaml;
-using Rg.Plugins.Popup;
 using Syncfusion.XForms.Buttons;
 
 namespace InsAndOuts.Views

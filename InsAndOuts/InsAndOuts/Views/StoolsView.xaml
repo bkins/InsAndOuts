@@ -35,7 +35,7 @@
             <picker:SfPicker x:Name="SearchPicker"
                              VerticalOptions="CenterAndExpand" 
                              HorizontalOptions="CenterAndExpand" 
-                             HeaderText="Select a meal to edit" 
+                             HeaderText="Select a stool to edit" 
                              ShowFooter="True"
                              OkButtonClicked="SearchPicker_OnOkButtonClicked"
                              CancelButtonClicked="SearchPicker_OnCancelButtonClicked"
@@ -86,51 +86,6 @@
                             NumberOfTapsRequired="1" />
                     </Label.GestureRecognizers>
                 </Label>
-                <!--<Picker x:Name="StoolTypePicker"
-                        Title="Select Bristol Stool Type:"
-                        VerticalOptions="Start"
-                        Margin="0,0,0,0"
-                        SelectedIndexChanged="StoolTypePicker_OnSelectedIndexChanged"
-                        Grid.Row="2"
-                        >
-                    <Picker.Items>
-                        <x:String>Type 1: Separate hard lumps, like nuts (difficult to pass and can be black)</x:String>
-                        <x:String>Type 2: Sausage-shaped, but lumpy</x:String>
-                        <x:String>Type 3: Like a sausage but with cracks on its surface (can be black)</x:String>
-                        <x:String>Type 4: Like a sausage or snake, smooth and soft (average stool)</x:String>
-                        <x:String>Type 5: Soft blobs with clear cut edges</x:String>
-                        <x:String>Type 6: Fluffy pieces with ragged edges, a mushy stool (diarrhea)</x:String>
-                        <x:String>Type 7: Watery, no solid pieces, entirely liquid (diarrhea)</x:String>
-                    </Picker.Items>
-                </Picker-->
-                <!--BENDO: Set the choices to include images.
-                    See https://www.syncfusion.com/kb/8589/how-to-customize-sfpicker-header-view
-                    Hint: Set the HeaderView
-                -->
-                <!--<picker:SfPicker x:Name="StoolTypePicker" 
-                                 HeaderText="Select a stool type..."
-                                 HeaderBackgroundColor="{DynamicResource PageBackgroundColor}"
-                                 HeaderTextColor="{DynamicResource PageForegroundColor}"
-                                 HeaderFontSize="Medium"
-                                 
-                                 VerticalOptions="Center" 
-                                 HorizontalOptions="Center" 
-                                 Grid.Row="2"
-                                 >
-                    <picker:SfPicker.ItemsSource>
-                        --><!--BENDO:  Move this to the database(?)--><!--
-                        <listCollection:List x:TypeArguments="x:String">
-                            <x:String>Type 1: Separate hard lumps, like nuts (difficult to pass and can be black)</x:String>
-                            <x:String>Type 2: Sausage-shaped, but lumpy</x:String>
-                            <x:String>Type 3: Like a sausage but with cracks on its surface (can be black)</x:String>
-                            <x:String>Type 4: Like a sausage or snake, smooth and soft (average stool)</x:String>
-                            <x:String>Type 5: Soft blobs with clear cut edges</x:String>
-                            <x:String>Type 6: Fluffy pieces with ragged edges, a mushy stool (diarrhea)</x:String>
-                            <x:String>Type 7: Watery, no solid pieces, entirely liquid (diarrhea)</x:String>
-                        </listCollection:List>
-                    </picker:SfPicker.ItemsSource>
-
-                </picker:SfPicker>-->
                 
                 <DatePicker x:Name="WhenDatePicker"
                             Grid.Row="3"

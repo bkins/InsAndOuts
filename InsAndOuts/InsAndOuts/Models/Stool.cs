@@ -32,7 +32,7 @@ namespace InsAndOuts.Models
             ImageFileName   = string.Empty;
         }
 
-        private static string ConvertNumberToStoolType(int typeNumber)
+        public static string ConvertNumberToStoolType(int typeNumber)
         {
             /*
              *Type 1: Separate hard lumps, like nuts (difficult to pass and can be black)</x:String>
@@ -75,6 +75,12 @@ namespace InsAndOuts.Models
             }
 
             return string.Empty;
+        }
+
+        public static int ConvertStoolTypeToNumber(string typeDescription)
+        {
+            return int.Parse(typeDescription.Split(':')[0]
+                                            .Split(' ')[1]);
         }
 
         //[ForeignKey(typeof(StoolType))]

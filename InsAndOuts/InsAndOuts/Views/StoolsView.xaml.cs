@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using InsAndOuts.Services;
@@ -14,6 +12,7 @@ using Plugin.Media.Abstractions;
 using Syncfusion.XForms.Buttons;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using static InsAndOuts.Utilities.DateTimeFormatter;
 using SelectionChangedEventArgs = Syncfusion.SfPicker.XForms.SelectionChangedEventArgs;
 
 namespace InsAndOuts.Views
@@ -23,12 +22,15 @@ namespace InsAndOuts.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class StoolsView : ContentPage, IQueryAttributable
     {   
-        public  string          ViewMode          { get; set; }
-        public  StoolViewModel  ViewModel         { get; set; }
-        private bool            LeftToTakePicture { get; set; }
-        public  SearchViewModel SearchViewModel   { get; set; }
+        public  string          ViewMode        { get; set; }
+        public  StoolViewModel  ViewModel       { get; set; }
+        private bool            LeftToGetData   { get; set; }
+        public  SearchViewModel SearchViewModel { get; set; }
 
         private bool EditMode { get; set; }
+        
+        private const string CURRENT_MODEL             = "Stool";
+        private const string INITIAL_STOOL_PICKER_TEXT = "Select Bristol Stool Type:";
 
         public void ApplyQueryAttributes(IDictionary<string, string> query)
         {
@@ -38,62 +40,75 @@ namespace InsAndOuts.Views
              && ViewMode.Equals("EDIT"
                               , StringComparison.CurrentCultureIgnoreCase))
             {
-                EditMode = true;
-
+                EditMode               = true;
                 SearchPicker.IsVisible = true;
+
                 SearchViewModel        = new SearchViewModel();
 
                 SearchPicker.ItemsSource = SearchViewModel.SearchableStools;
                 SearchPicker.Focus();
+
+                ToggleControlsVisible();
             }
             
             SelectToolbarItem.IsEnabled = EditMode;
             DeleteToolbarItem.IsEnabled = EditMode;
             
-            ToggleControlsEnabled();
-
             UpdateViewTitle();
         }
 
         public StoolsView()
         {
             InitializeComponent();
-
-            DescriptionHtmlRtEditor.AlignLeft();
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
-            
-            ViewModel              = new StoolViewModel();
 
-            SearchPicker.IsVisible = EditMode;
-
-            if (PageCommunication.Instance.IntegerValue != 0)
+            if ( SearchViewModel    != null
+            && ! SearchViewModel.SearchableStools.Any())
             {
-                SelectedStoolTypeLabel.Text = $"Type {PageCommunication.Instance.IntegerValue}: {PageCommunication.Instance.StringValue}";
+                await DisplayAlert("Nothing to edit"
+                                 , $"There are no {CURRENT_MODEL}s to edit.  Please add {CURRENT_MODEL}s before attempting to edit them."
+                                 , "OK").ConfigureAwait(false);
+
+                await PageNavigation.NavigateBackwards().ConfigureAwait(false);
             }
+            else
+            {
+                ResetData();
+            
+                SearchPicker.IsVisible = EditMode;
+
+                if (PageCommunication.Instance.IntegerValue == 0)
+                    return;
+
+                DescriptionHtmlRtEditor.Text = PageCommunication.Instance.CachedStringValue;
+                SelectedStoolTypeLabel.Text  = $"Type {PageCommunication.Instance.IntegerValue}: {PageCommunication.Instance.StringValue}";
+                PageCommunication.Instance.Clear();
+            }
+            
         }
+
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             
-            if (LeftToTakePicture)
+            if ( ! LeftToGetData)
             {
-                return;
+                PageCommunication.Instance.Clear();
             }
-
-            ResetData();
         }
 
         private void ResetData()
         {
-            //StoolTypePicker.SelectedItem    = null;
-            SelectedStoolTypeLabel.Text = "Select Bristol Stool Type:";
-            ImageFromCamera.Source      = new FileImageSource();
-            WhenDatePicker.Date         = DateTime.Today;
-            WhenTimePicker.Time         = DateTime.Now.TimeOfDay;
+            DescriptionHtmlRtEditor.Text = PageCommunication.Instance.CachedStringValue;
+            
+            SelectedStoolTypeLabel.Text  = INITIAL_STOOL_PICKER_TEXT;
+            ImageFromCamera.Source       = new FileImageSource();
+            WhenDatePicker.Date          = DateTime.Today;
+            WhenTimePicker.Time          = DateTime.Now.TimeOfDay;
             
             SetSaveButtonNotSaved();
 
@@ -104,7 +119,7 @@ namespace InsAndOuts.Views
 
         private void UpdateViewTitle()
         {
-            Title = $"{ViewMode.ToTitleCase(force: true)} Stool";
+            Title = $"{ViewMode.ToTitleCase(force: true)} {CURRENT_MODEL}";
         }
 
         private void SetSaveButtonNotSaved()
@@ -118,20 +133,7 @@ namespace InsAndOuts.Views
             button.ShowIcon = true;
             button.Text     = "SAVED";
         }
-
-        private void StoolTypePicker_OnSelectedIndexChanged(object    sender
-                                                          , EventArgs e)
-        {
-            var picker = sender as Picker ?? new Picker();
-            
-            if (picker.SelectedItem == null)
-            {
-                return;
-            }
-
-            ViewModel.Stool.StoolType = picker.SelectedItem.ToString();
-        }
-        
+  
         private void DescriptionHtmlRtEditor_OnFocused(object    sender
                                                      , EventArgs e)
         {
@@ -151,9 +153,9 @@ namespace InsAndOuts.Views
         }
 
         private async void TakePictureImage_Tapped(object    sender
-                                           , EventArgs e)
+                                                 , EventArgs e)
         {
-            if (await ReadyToTakePicture())
+            if ( ! await ReadyToTakePicture())
                 return;
             
             try
@@ -176,8 +178,8 @@ namespace InsAndOuts.Views
                 
                 ImageFromCamera.IsVisible = true;
                 
-                ViewModel.Stool.ImageFileName = $"stool{ViewModel.Stool.Id}.jpg";
-                LeftToTakePicture             = false;
+                ViewModel.Stool.ImageFileName = $"{CURRENT_MODEL}{ViewModel.Stool.Id}.jpg";
+                LeftToGetData                 = false;
             }
             catch (ObjectDisposedException disposedException)
             {
@@ -204,13 +206,13 @@ namespace InsAndOuts.Views
 
         private async Task<MediaFile> GetImage()
         {
-            LeftToTakePicture = true;
+            LeftToGetData = true;
             var file = await CrossMedia.Current
                                        .TakePhotoAsync(new StoreCameraMediaOptions
                                                        {
                                                            PhotoSize = PhotoSize.Medium
-                                                         , Directory = "Stools"
-                                                         , Name      = $"stool{ViewModel.Stool.Id}.jpg"
+                                                         , Directory = $"{CURRENT_MODEL}s"
+                                                         , Name      = $"{CURRENT_MODEL}{ViewModel.Stool.Id}.jpg"
                                                        });
             
             return file;
@@ -218,6 +220,15 @@ namespace InsAndOuts.Views
 
         private async Task<bool> ReadyToTakePicture()
         {
+            if (SelectedStoolTypeLabel.Text == INITIAL_STOOL_PICKER_TEXT)
+            {
+                await DisplayAlert($"Select a {CURRENT_MODEL} type first."
+                                 , $"Please select a {CURRENT_MODEL} type before taking a picture."
+                                 , "OK");
+
+                return false;
+            }
+
             //Open camera
             if (! CrossMedia.Current.IsCameraAvailable
              || ! CrossMedia.Current.IsTakePhotoSupported)
@@ -226,108 +237,137 @@ namespace InsAndOuts.Views
                                  , "This feature will not work with your device."
                                  , "OK");
 
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
-
-        private string GetSelectDateTimeFromPickers()
-        {
-            var dateTimeToSave = $"{WhenDatePicker.Date.ToShortDateString()} {WhenTimePicker.Time.ToString("g", CultureInfo.CreateSpecificCulture("en-US"))}";
-            return dateTimeToSave;
-        }
-
+        
         private void SaveButton_OnClicked(object    sender
                                         , EventArgs e)
         {
-            ViewModel.Stool.DescriptionPainText = DescriptionHtmlRtEditor.Text;
-            ViewModel.Stool.DescriptionHtml     = DescriptionHtmlRtEditor.HtmlText;
-            //StoolType set on Unfocus of the slider control
-            //Image and ImageFile set in the tapped event of the camera icon
-            ViewModel.Stool.When                = GetSelectDateTimeFromPickers();
-
+            SetViewModelDataFromPage();
             ViewModel.Save();
             
-            if (EditMode)
-            {
-                SearchViewModel = new SearchViewModel();
-
-                SearchPicker.ItemsSource = SearchViewModel.SearchableStools;
-            }
+            ResetSearchViewModel();
             
-            if (sender is SfButton button)
-                SetSaveButtonSaved(button);
-
             ResetData();
+
+            ResetSaveButton(sender);
         }
-        
-        
+
+        private void SetViewModelDataFromPage()
+        {
+            ViewModel.Stool.DescriptionPainText = DescriptionHtmlRtEditor.Text;
+            ViewModel.Stool.DescriptionHtml     = DescriptionHtmlRtEditor.HtmlText;
+            ViewModel.Stool.StoolType           = SelectedStoolTypeLabel.Text;
+
+            //StoolType set on Unfocus of the slider control
+            //Image and ImageFile set in the tapped event of the camera icon
+            ViewModel.Stool.When = DateTimeTimeSpanForSaving(WhenDatePicker.Date
+                                                           , WhenTimePicker.Time);
+        }
+
+        private void ResetSaveButton(object sender)
+        {
+            if (sender is SfButton button)
+            {
+                SetSaveButtonSaved(button);
+            }
+        }
+
+        private void ResetSearchViewModel()
+        {
+            if ( ! EditMode)
+                return;
+
+            SearchViewModel = new SearchViewModel();
+
+            SearchPicker.ItemsSource = SearchViewModel.SearchableStools;
+        }
 
         private void SearchPicker_OnOkButtonClicked(object                    sender
                                                   , SelectionChangedEventArgs e)
         {
-            ViewModel = new StoolViewModel(SearchPicker.SelectedItem.ToString());
-
-            if (ViewModel.Stool == null)
-            {
-                DisplayAlert("Stool not found"
-                           , "Something went wrong while retrieving the stool."
-                           , "OK");
+            if (FindTextInVewModel(SearchPicker.SelectedItem.ToString()))
                 return;
-            }
-            
-            DescriptionHtmlRtEditor.HtmlText = ViewModel.Stool.DescriptionHtml;
 
-            if (ViewModel.Stool.Image.Length > 0)
-            {
-                var imageStream = new MemoryStream(ViewModel.Stool.Image);
-                ImageFromCamera.Source = ImageSource.FromStream(() => imageStream);
-            }
-            
-            //StoolTypePicker.SelectedItem = ViewModel.Stool.StoolType;
-            SelectedStoolTypeLabel.Text = ViewModel.Stool.StoolType;
-            WhenDatePicker.Date         = ViewModel.Stool.WhenToDateTime();
-            WhenTimePicker.Time         = ViewModel.Stool.WhenToTimeSpan();
-            
-            ToggleControlsEnabled();
+            LoadPageFromViewModel();
+
+            ToggleControlsVisible();
 
             SearchPicker.IsVisible = false;
         }
 
-        private void SearchPicker_OnCancelButtonClicked(object                    sender
-                                                      , SelectionChangedEventArgs e)
+        private bool FindTextInVewModel(string searchText)
         {
-            ToggleControlsEnabled();
+            ViewModel = new StoolViewModel(searchText);
 
-            SearchPicker.IsVisible = false;
+            if (ViewModel.Stool != null)
+                return false;
+
+            DisplayAlert($"{CURRENT_MODEL} not found"
+                       , $"Something went wrong while retrieving the {CURRENT_MODEL}."
+                       , "OK");
+
+            return true;
+
+        }
+
+        private void LoadPageFromViewModel()
+        {
+            if (ViewModel.Stool.Image.Length > 0)
+            {
+                var imageStream = new MemoryStream(ViewModel.Stool.Image);
+                //ImageFromCamera.Source = ImageSource.FromStream(() => imageStream);
+                ImageFromCamera.Source = ImageSource.FromStream(() => new MemoryStream(ViewModel.Stool.Image));
+            }
+
+            DescriptionHtmlRtEditor.HtmlText = ViewModel.Stool.DescriptionHtml;
+            SelectedStoolTypeLabel.Text      = ViewModel.Stool.StoolType;
+            WhenDatePicker.Date              = ViewModel.Stool.WhenToDateTime();
+            WhenTimePicker.Time              = ViewModel.Stool.WhenToTimeSpan();
+        }
+
+        private async void SearchPicker_OnCancelButtonClicked(object                    sender
+                                                            , SelectionChangedEventArgs e)
+        {
+            await PageNavigation.NavigateBackwards();
         }
 
         private void SelectToolbarItem_OnClicked(object    sender
                                                , EventArgs e)
         {
-            ToggleControlsEnabled();
+            ToggleControlsVisible();
 
             SearchPicker.IsVisible = true;
         }
 
-        private void DeleteToolbarItem_OnClicked(object    sender
+        private async void DeleteToolbarItem_OnClicked(object    sender
                                                , EventArgs e)
         {
-            ViewModel.Delete();
+            ViewModel?.Delete();
+            UserInteraction.Toast($"{CURRENT_MODEL} Deleted");
+            await PageNavigation.NavigateBackwards();
         }
         
-        private void ToggleControlsEnabled()
+        private void ToggleControlsVisible()
         {
-            SaveButton.IsEnabled              = ! SaveButton.IsEnabled;
-            WhenDatePicker.IsEnabled          = ! WhenDatePicker.IsEnabled;
-            WhenTimePicker.IsEnabled          = ! WhenTimePicker.IsEnabled;
-            DescriptionHtmlRtEditor.IsEnabled = ! DescriptionHtmlRtEditor.IsEnabled;
+            SaveButton.IsVisible              = ! SaveButton.IsVisible;
+            WhenDatePicker.IsVisible          = ! WhenDatePicker.IsVisible;
+            WhenTimePicker.IsVisible          = ! WhenTimePicker.IsVisible;
+            DescriptionHtmlRtEditor.IsVisible = ! DescriptionHtmlRtEditor.IsVisible;
+            SelectedStoolTypeLabel.IsVisible  = ! SelectedStoolTypeLabel.IsVisible;
+            TakePictureImage.IsVisible        = ! TakePictureImage.IsVisible;
+            
         }
 
         private async void SelectedStoolTypeLabel_Tapped(object    sender
                                                  , EventArgs e)
         {
+            LeftToGetData                                = true;
+            PageCommunication.Instance.CachedStringValue = DescriptionHtmlRtEditor.HtmlText;
+
             await PageNavigation.NavigateTo(nameof(PopUpPickerView));
         }
     }

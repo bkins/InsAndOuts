@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
+using InsAndOuts.Services;
 using InsAndOuts.Utilities;
 using InsAndOuts.ViewModels;
 using Syncfusion.SfRangeSlider.XForms;
 using Syncfusion.XForms.Buttons;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using static InsAndOuts.Utilities.DateTimeFormatter;
 using SelectionChangedEventArgs = Syncfusion.SfPicker.XForms.SelectionChangedEventArgs;
 
 namespace InsAndOuts.Views
@@ -22,10 +21,12 @@ namespace InsAndOuts.Views
     public partial class PainView : ContentPage, IQueryAttributable
     {
         public  string          ViewMode          { get; set; }
-        public  SearchViewModel SearchViewModel   { get; set; }
         public  PainViewModel   ViewModel         { get; set; }
+        public  SearchViewModel SearchViewModel   { get; set; }
         
         private bool EditMode { get; set; }
+        
+        private const string CURRENT_MODEL = "Pain";
 
         public void ApplyQueryAttributes(IDictionary<string, string> query)
         {
@@ -35,47 +36,58 @@ namespace InsAndOuts.Views
              && ViewMode.Equals("EDIT"
                               , StringComparison.CurrentCultureIgnoreCase))
             {
-                EditMode = true;
-
+                EditMode               = true;
                 SearchPicker.IsVisible = true;
-                SearchViewModel        = new SearchViewModel();
+
+                SearchViewModel = new SearchViewModel();
 
                 SearchPicker.ItemsSource = SearchViewModel.SearchablePains;
                 SearchPicker.Focus();
+
+                ToggleControlsVisible();
             }
-            
+
             SelectToolbarItem.IsEnabled = EditMode;
             DeleteToolbarItem.IsEnabled = EditMode;
             
-            ToggleControlsEnabled();
-
             UpdateViewTitle();
         }
 
         public PainView()
         {
             InitializeComponent();
-            
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
-            
-            SearchPicker.IsVisible = EditMode;
+            if ( SearchViewModel != null
+              && ! SearchViewModel.SearchablePains.Any())
+            {
+                await DisplayAlert("Nothing to edit"
+                                 , $"There are no {CURRENT_MODEL}s to edit.  Please add {CURRENT_MODEL}s before attempting to edit them."
+                                 , "OK").ConfigureAwait(false);
+
+                await PageNavigation.NavigateBackwards().ConfigureAwait(false);
+            }
+            else
+            {
+                ResetData();
+                SearchPicker.IsVisible = EditMode;
+            }
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            
-            ResetData();
         }
 
         private void ResetData()
         {
-            WhenDatePicker.Date             = DateTime.Today;
-            WhenTimePicker.Time             = DateTime.Now.TimeOfDay;
+            DescriptionHtmlRtEditor.Text = string.Empty;
+            RangeSlider.Value            = 0;
+            WhenDatePicker.Date          = DateTime.Today;
+            WhenTimePicker.Time          = DateTime.Now.TimeOfDay;
             
             SetSaveButtonNotSaved();
 
@@ -86,37 +98,19 @@ namespace InsAndOuts.Views
         
         private void UpdateViewTitle()
         {
-            Title = $"{ViewMode.ToTitleCase(force: true)} Pain";
+            Title = $"{ViewMode.ToTitleCase(force: true)} {CURRENT_MODEL}";
         }
 
         private void SetSaveButtonNotSaved()
         {
-            if (NoRecordsChanged())
-                return;
-
             SaveButton.ShowIcon = false;
             SaveButton.Text     = "SAVE";
         }
-
-        private bool NoRecordsChanged()
-        {
-            return DescriptionHtmlRtEditor.HtmlText == null
-                || ViewModel.Pain.DescriptionHtml   == DescriptionHtmlRtEditor.HtmlText
-                && ViewModel.Pain.Level             == (int)RangeSlider.Value
-                && ViewModel.Pain.When              == GetSelectDateTimeFromPickers();
-        }
-
+        
         private void SetSaveButtonSaved(SfButton button)
         {
             button.ShowIcon = true;
             button.Text     = "SAVED";
-        }
-
-        //BENDO: Instead of copying method to each view, move it to a shared location
-        private string GetSelectDateTimeFromPickers()
-        {
-            var dateTimeToSave = $"{WhenDatePicker.Date.ToShortDateString()} {WhenTimePicker.Time.ToString("g", CultureInfo.CreateSpecificCulture("en-US"))}";
-            return dateTimeToSave;
         }
         
         private void RangeSlider_OnThumbTouchUp(object             sender
@@ -153,61 +147,95 @@ namespace InsAndOuts.Views
         private void SaveButton_OnClicked(object    sender
                                         , EventArgs e)
         {
-            ViewModel.Pain.When                = GetSelectDateTimeFromPickers();
-            ViewModel.Pain.DescriptionPainText = DescriptionHtmlRtEditor.Text;
-            ViewModel.Pain.DescriptionHtml     = DescriptionHtmlRtEditor.HtmlText;
-
-            if (ViewModel.Pain.DescriptionPainText.IsNullEmptyOrWhitespace()
-            && ViewModel.Pain.DescriptionHtml.HasValue())
-            {
-                ViewModel.Pain.DescriptionPainText = DescriptionHtmlRtEditor.Text;
-            }
-
+            SetViewModelDataFromPage();
             ViewModel.Save();
-            
+
+            ResetSearchViewModel();
+
+            ResetData();
+
+            ResetSaveButton(sender);
+        }
+
+        private void ResetSaveButton(object sender)
+        {
             if (sender is SfButton button)
             {
                 SetSaveButtonSaved(button);
             }
-            
-            ResetData();
         }
-        
+
+        private void ResetSearchViewModel()
+        {
+            if ( ! EditMode)
+                return;
+
+            SearchViewModel = new SearchViewModel();
+
+            SearchPicker.ItemsSource = SearchViewModel.SearchableStools;
+        }
+
+        private void SetViewModelDataFromPage()
+        {
+            ViewModel.Pain.When = DateTimeTimeSpanForSaving(WhenDatePicker.Date
+                                                          , WhenTimePicker.Time);
+
+            ViewModel.Pain.DescriptionPainText = DescriptionHtmlRtEditor.Text;
+            ViewModel.Pain.DescriptionHtml     = DescriptionHtmlRtEditor.HtmlText;
+            
+            if (ViewModel.Pain.DescriptionPainText.IsNullEmptyOrWhitespace()
+             && ViewModel.Pain.DescriptionHtml.HasValue())
+            {
+                ViewModel.Pain.DescriptionPainText = DescriptionHtmlRtEditor.Text;
+            }
+        }
+
         private void SearchPicker_OnOkButtonClicked(object                    sender
                                                   , SelectionChangedEventArgs e)
         {
-            ViewModel = new PainViewModel(SearchPicker.SelectedItem.ToString());
-
-            if (ViewModel.Pain == null)
-            {
-                DisplayAlert("Pain not found"
-                           , "Something went wrong while retrieving the pain."
-                           , "OK");
+            if (FindTextInVewModel(SearchPicker.SelectedItem.ToString()))
                 return;
-            }
             
+            LoadPageFromViewModel();
+
+            ToggleControlsVisible();
+
+            SearchPicker.IsVisible = false;
+        }
+
+        private void LoadPageFromViewModel()
+        {
             DescriptionHtmlRtEditor.HtmlText = ViewModel.Pain.DescriptionHtml;
             RangeSlider.Value                = ViewModel.Pain.Level;
             WhenDatePicker.Date              = ViewModel.Pain.WhenToDateTime();
             WhenTimePicker.Time              = ViewModel.Pain.WhenToTimeSpan();
-            
-            ToggleControlsEnabled();
-
-            SearchPicker.IsVisible = false;
         }
 
-        private void SearchPicker_OnCancelButtonClicked(object                    sender
+        private bool FindTextInVewModel(string searchText)
+        {
+            ViewModel = new PainViewModel(searchText);
+
+            if (ViewModel.Pain != null)
+                return false;
+
+            DisplayAlert($"{CURRENT_MODEL} not found"
+                       , $"Something went wrong while retrieving the {CURRENT_MODEL}."
+                       , "OK");
+
+            return true;
+
+        }
+
+        private async void SearchPicker_OnCancelButtonClicked(object                    sender
                                                       , SelectionChangedEventArgs e)
         {
-            ToggleControlsEnabled();
-
-            SearchPicker.IsVisible = false;
+            await PageNavigation.NavigateBackwards();
         }
 
         private void SelectToolbarItem_OnClicked(object    sender
                                                    , EventArgs e)
         {
-            ToggleControlsEnabled();
+            ToggleControlsVisible();
 
             SearchPicker.IsVisible = true;
         }
@@ -215,21 +243,18 @@ namespace InsAndOuts.Views
         private async void DeleteToolbarItem_OnClicked(object    sender
                                                    , EventArgs e)
         {
-            if (! EditMode
-             || ViewModel          == null
-             || ViewModel.Pain?.Id == 0)
-                return;
-
-            ViewModel.Delete();
+            ViewModel?.Delete();
+            UserInteraction.Toast($"{CURRENT_MODEL} Deleted");
             await PageNavigation.NavigateBackwards();
         }
         
-        private void ToggleControlsEnabled()
+        private void ToggleControlsVisible()
         {
-            SaveButton.IsEnabled              = ! SaveButton.IsEnabled;
-            WhenDatePicker.IsEnabled          = ! WhenDatePicker.IsEnabled;
-            WhenTimePicker.IsEnabled          = ! WhenTimePicker.IsEnabled;
-            DescriptionHtmlRtEditor.IsEnabled = ! DescriptionHtmlRtEditor.IsEnabled;
+            SaveButton.IsVisible              = ! SaveButton.IsVisible;
+            WhenDatePicker.IsVisible          = ! WhenDatePicker.IsVisible;
+            WhenTimePicker.IsVisible          = ! WhenTimePicker.IsVisible;
+            DescriptionHtmlRtEditor.IsVisible = ! DescriptionHtmlRtEditor.IsVisible;
+            RangeSlider.IsVisible             = ! RangeSlider.IsVisible;
         }
     }
 }
