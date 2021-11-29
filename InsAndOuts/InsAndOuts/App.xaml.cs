@@ -10,10 +10,13 @@ namespace InsAndOuts
     public partial class App : Application
     {
         private static Database _database;
-            public static readonly string Path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
-                                                                       , "IsAndOs.db3");
+        public static  string   DatabaseFolder   => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        public static  string   DatabaseFileName => "IsAndOs.db3";
+
+        public static readonly string FullDatabasePath = System.IO.Path.Combine(DatabaseFolder
+                                                                              , DatabaseFileName);
         
-        public static Database Database => _database = _database ?? new Database(Path);
+        public static Database Database => _database = _database ?? new Database(FullDatabasePath);
         
         public App()
         {

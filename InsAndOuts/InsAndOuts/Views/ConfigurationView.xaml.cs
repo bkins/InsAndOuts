@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
 using Android.Content;
 using InsAndOuts.Services;
 using InsAndOuts.Utilities;
@@ -158,14 +161,77 @@ namespace InsAndOuts.Views
         private async void BackupDatabaseButton_OnClicked(object    sender
                                                   , EventArgs e)
         {
-            var source = App.Path; //complete filename and path of the DB
+            var source = App.FullDatabasePath; //complete filename and path of the DB
             
             string[] sourceFiles = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
-
+            CopyDemoDB(App.DatabaseFileName);
             var destination = CreateDestination();
 
             await BackupDataBase(source
                                , await destination);
+
+        }
+
+        public void CopyDemoDB(string filename)
+        {
+            //data/user/0/com.moralcoding.insandouts/files/.local/share
+            if (Application.Context.Assets == null) 
+                return;
+
+            var sourceFilePath = Path.Combine(App.DatabaseFolder
+                                            , filename);
+
+            //This is returning null
+            //var sourceFileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceFilePath);
+
+            var sourceFileStream = File.Open(sourceFilePath
+                                           , FileMode.Open);
+
+            var destinationPath = Path.Combine(FileSystem.AppDataDirectory, filename); //make file name unique for each call
+
+            var sourceExists      = File.Exists(sourceFilePath);
+            var destinationExists = File.Exists(destinationPath);
+
+            try
+            {
+                if (Application.Context.Resources        != null
+                &&  Application.Context.Resources.Assets != null)
+                {
+                    var test1 = Application.Context.Resources.Assets.OpenFd(sourceFilePath);
+                }
+
+                var fileDescriptor = Application.Context.Assets.OpenFd(sourceFilePath);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
+            if (sourceFileStream == null)
+                return;
+
+            //File is being written, but I cannot see file from device.
+            //Is the file written to a folder the user does not have access to,
+            //or is the file not safe to a perminant file?
+            using (var binaryReader = new BinaryReader(sourceFileStream))
+            {
+                using (var binaryWriter = new BinaryWriter(new FileStream(destinationPath
+                                                         , FileMode.Create)))
+                {
+                    var buffer = new byte[2048];
+                    int bytesRead;
+
+                    while ((bytesRead = binaryReader.Read(buffer
+                                                        , 0
+                                                        , buffer.Length))
+                         > 0)
+                    {
+                        binaryWriter.Write(buffer
+                                         , 0
+                                         , bytesRead);
+                    }
+                }
+            }
 
         }
 
@@ -278,6 +344,123 @@ namespace InsAndOuts.Views
                                  , $"{exception.Message}"
                                  , "OK");
             }
+        }
+
+        private async void EmailLogFileButton_OnClicked(object    sender
+                                                      , EventArgs e)
+        {
+            if ( ! File.Exists(Logger.FullLogPath))
+            {
+                await DisplayAlert("Log File Not Found"
+                                 , "No log file was created.  Perform some action (add, edit or delete), and try again."
+                                 , "Ok");
+                return;
+            }
+
+            var emailer = new Emailer();
+            emailer.Recipients.Add("BenHop@GMail.com");
+            var attachments = new List<EmailAttachment>
+                              {
+                                  new EmailAttachment(Logger.FullLogPath)
+                              };
+
+            var userSelectedYes = await DisplayAlert("Attach database?"
+                                                   , "In addition to the log file, would you like to attach the database file?"
+                                                   , "Yes"
+                                                   , "No");
+
+            if (userSelectedYes)
+            {
+                attachments.Add(new EmailAttachment(App.FullDatabasePath));
+            }
+
+            try
+            {
+                await emailer.SendEmail("Log file"
+                                      , $"{GetImportantSection()}{GetSystemInfoSection()}{GetLogSection()}"
+                                      , attachments);
+
+            }
+            catch (Exception exception)
+            {
+                await DisplayAlert("Error"
+                                 , $"Could not sent email because: {Environment.NewLine}{exception.Message}"
+                                 , "OK");
+            }
+            
+
+            userSelectedYes = await DisplayAlert("Delete log file?"
+                                               , "Was the log file successfully sent?  If so, would you like to delete log file now?"
+                                               , "Yes (recommended)"
+                                               , "No");
+
+            if ( ! userSelectedYes)
+                return;
+
+            try
+            {
+                File.Delete(Logger.FullLogPath);
+                Logger.Clear();
+            }
+            catch (Exception exception)
+            {
+                Logger.WriteLine("Log file failed to delete", Category.Error, exception);
+            }
+        }
+
+        private static string GetLogSection()
+        {
+            var section = new StringBuilder();
+
+            section.AppendLine("Contents of log file (log file itself is also attached):");
+            section.AppendLine(Logger.CompleteLog);
+            section.AppendLine("");
+
+            return section.ToString();
+        }
+
+        private static string GetImportantSection()
+        {
+            var section = new StringBuilder();
+            
+            section.Append("IMPORTANT: Please review the contents of this email before sending.  ");
+            section.Append("Make sure you are comfortable with sharing the information you are providing.  "); 
+            section.AppendLine("If you are not, please remove any or all content that you do not want to share with the developer of this application -- this includes the attachments.");
+            section.AppendLine("");
+
+            return section.ToString();
+        }
+
+        private static string GetSystemInfoSection()
+        {
+            var sectionText = new StringBuilder();
+
+            sectionText.AppendLine("System Info:");
+            sectionText.AppendLine(GetSystemInfo());
+
+            return sectionText.ToString();
+        }
+        private static string GetSystemInfo()
+        {
+            var device       = $"Model:         {DeviceInfo.Model}";
+            var manufacturer = $"Manufacturer:  {DeviceInfo.Manufacturer}";
+            var deviceName   = $"Name:          {DeviceInfo.Name}";
+            var version      = $"VersionString: {DeviceInfo.VersionString}";
+            var platform     = $"Platform:      {DeviceInfo.Platform}";
+            var idiom        = $"Idiom:         {DeviceInfo.Idiom}";
+            var deviceType   = $"DeviceType:    {DeviceInfo.DeviceType}";
+
+            var systemInfo = new StringBuilder();
+            
+            systemInfo.AppendLine(device);
+            systemInfo.AppendLine(manufacturer);
+            systemInfo.AppendLine(deviceName);
+            systemInfo.AppendLine(version);
+            systemInfo.AppendLine(platform);
+            systemInfo.AppendLine(idiom);
+            systemInfo.AppendLine(deviceType);
+
+            return systemInfo.ToString();
         }
     }
 }
