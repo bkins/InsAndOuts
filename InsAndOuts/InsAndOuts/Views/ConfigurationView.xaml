@@ -95,7 +95,10 @@
 
                             Clicked="BackupDatabaseButton_OnClicked"
                             />
-                    
+                    <Button x:Name="EmailLogFileButton"
+                            Text="Send Log"
+                            Clicked="EmailLogFileButton_OnClicked"
+                            />
                     <!--<Button x:Name="LoadTestData"
                             Text="LoadTestData"
                             Clicked="LoadTestData_OnClicked"

@@ -155,39 +155,54 @@ namespace InsAndOuts.Views
         private async void TakePictureImage_Tapped(object    sender
                                                  , EventArgs e)
         {
+            TakePictureImage.IsEnabled = false;
+
             if ( ! await ReadyToTakePicture())
+            {
+                TakePictureImage.IsEnabled = true;
                 return;
-            
+            }
+
             try
             {
                 var photo = await GetImage();
 
                 if (await WasImageReturnedFromCamera(photo))
                 {
+                    TakePictureImage.IsEnabled = true;
+
                     return;
                 }
 
                 ImageFromCamera.Source = ImageSource.FromStream(() => photo.GetStream());
-                
-                using (var memory = new MemoryStream()) 
+
+                using (var memory = new MemoryStream())
                 {
                     var stream = photo.GetStream();
                     await stream.CopyToAsync(memory);
                     ViewModel.Stool.Image = memory.ToArray();
                 }
-                
+
                 ImageFromCamera.IsVisible = true;
-                
+
                 ViewModel.Stool.ImageFileName = $"{CURRENT_MODEL}{ViewModel.Stool.Id}.jpg";
                 LeftToGetData                 = false;
             }
             catch (ObjectDisposedException disposedException)
             {
-                await DisplayAlert("ObjectDisposedException", disposedException.Message, "OK");
+                await DisplayAlert("ObjectDisposedException"
+                                 , disposedException.Message
+                                 , "OK");
             }
             catch (Exception exception)
             {
-                await DisplayAlert("Exception", exception.Message, "OK");
+                await DisplayAlert("Exception"
+                                 , exception.Message
+                                 , "OK");
+            }
+            finally
+            {
+                TakePictureImage.IsEnabled = true;
             }
         }
         
@@ -246,6 +261,8 @@ namespace InsAndOuts.Views
         private void SaveButton_OnClicked(object    sender
                                         , EventArgs e)
         {
+            SaveButton.IsEnabled = false;
+
             SetViewModelDataFromPage();
             ViewModel.Save();
             
@@ -254,6 +271,8 @@ namespace InsAndOuts.Views
             ResetData();
 
             ResetSaveButton(sender);
+
+            SaveButton.IsEnabled = true;
         }
 
         private void SetViewModelDataFromPage()
@@ -298,6 +317,12 @@ namespace InsAndOuts.Views
 
             SearchPicker.IsVisible = false;
         }
+        
+        private async void SearchPicker_OnCancelButtonClicked(object                    sender
+                                                            , SelectionChangedEventArgs e)
+        {
+            await PageNavigation.NavigateBackwards();
+        }
 
         private bool FindTextInVewModel(string searchText)
         {
@@ -329,26 +354,26 @@ namespace InsAndOuts.Views
             WhenTimePicker.Time              = ViewModel.Stool.WhenToTimeSpan();
         }
 
-        private async void SearchPicker_OnCancelButtonClicked(object                    sender
-                                                            , SelectionChangedEventArgs e)
-        {
-            await PageNavigation.NavigateBackwards();
-        }
-
         private void SelectToolbarItem_OnClicked(object    sender
                                                , EventArgs e)
         {
+            SelectToolbarItem.IsEnabled = false;
             ToggleControlsVisible();
 
             SearchPicker.IsVisible = true;
+
+            SelectToolbarItem.IsEnabled = true;
         }
 
         private async void DeleteToolbarItem_OnClicked(object    sender
                                                , EventArgs e)
         {
+            DeleteToolbarItem.IsEnabled = false;
             ViewModel?.Delete();
             UserInteraction.Toast($"{CURRENT_MODEL} Deleted");
             await PageNavigation.NavigateBackwards();
+
+            DeleteToolbarItem.IsEnabled = true;
         }
         
         private void ToggleControlsVisible()
@@ -359,16 +384,18 @@ namespace InsAndOuts.Views
             DescriptionHtmlRtEditor.IsVisible = ! DescriptionHtmlRtEditor.IsVisible;
             SelectedStoolTypeLabel.IsVisible  = ! SelectedStoolTypeLabel.IsVisible;
             TakePictureImage.IsVisible        = ! TakePictureImage.IsVisible;
-            
         }
 
         private async void SelectedStoolTypeLabel_Tapped(object    sender
-                                                 , EventArgs e)
+                                                       , EventArgs e)
         {
+            SelectedStoolTypeLabel.IsEnabled             = false;
             LeftToGetData                                = true;
             PageCommunication.Instance.CachedStringValue = DescriptionHtmlRtEditor.HtmlText;
 
             await PageNavigation.NavigateTo(nameof(PopUpPickerView));
+
+            SelectedStoolTypeLabel.IsEnabled = true;
         }
     }
 }

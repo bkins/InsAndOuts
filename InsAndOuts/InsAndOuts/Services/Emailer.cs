@@ -17,6 +17,11 @@ namespace InsAndOuts.Services
         public EmailBodyFormat EmailFormat   { get; set; }
         public List<string>    Recipients    { get; set; }
 
+        public Emailer()
+        {
+            Recipients = new List<string>();
+        }
+
         public async Task SendEmail(string subject
                                   , string body
                                   , List<EmailAttachment> attachments = null)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using InsAndOuts.Models;
+using InsAndOuts.Utilities;
 
 namespace InsAndOuts.ViewModels
 {
@@ -32,18 +33,45 @@ namespace InsAndOuts.ViewModels
 
         public void Save()
         {
-            var mealId = 0;
+            Logger.WriteLine($"About to save {nameof(Meal)}:"
+                           , Category.Information);
+            LogMeal(Meal);
 
             if (Meal.Id == 0)
             {
-                mealId = DataAccessLayer.InsertMeal(Meal);
+                Logger.WriteLine($"Inserting new {nameof(Meal)}", Category.Information);
+                
+                DataAccessLayer.InsertMeal(Meal);
+                
+                Logger.WriteLine($"{nameof(Meal)} inserted as:", Category.Information);
+                LogMeal(Meal);
             }
             else
             {
+                Logger.WriteLine($"Updating existing {nameof(Meal)}. Before update:", Category.Information);
+                LogMeal(Meal);
+                
                 DataAccessLayer.UpdateMeal(Meal);
+
+                Logger.WriteLine("After update:", Category.Information);
+                LogMeal(Meal);
             }
         }
 
+        private void LogMeal(Meal meal)
+        {
+            Logger.WriteLine($"   {nameof(meal.Id)}:                  '{meal.Id}'"
+                           , Category.Information);
+            Logger.WriteLine($"   {nameof(meal.Name)}:                '{meal.Name}'"
+                           , Category.Information);
+            Logger.WriteLine($"   {nameof(meal.DescriptionHtml)}:     '{meal.DescriptionHtml}'"
+                           , Category.Information);
+            Logger.WriteLine($"   {nameof(meal.DescriptionPainText)}: '{meal.DescriptionPainText}'"
+                           , Category.Information);
+            Logger.WriteLine($"   {nameof(meal.When)}:                '{meal.When}'"
+                           , Category.Information);
+
+        }
         public void Delete()
         {
             if (Meal?.Id != 0)

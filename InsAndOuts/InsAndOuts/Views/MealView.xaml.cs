@@ -108,20 +108,34 @@ namespace InsAndOuts.Views
             return dateTimeToSave;
         }
         
-        private void SaveButton_OnClicked(object    sender
+        private async void SaveButton_OnClicked(object    sender
                                         , EventArgs e)
         {
-            if (NameInvalid())
-                return;
+            try
+            {
+                if (NameInvalid())
+                    return;
 
-            SetViewModelDataFromPage();
-            ViewModel.Save();
+                SetViewModelDataFromPage();
+                ViewModel.Save();
 
-            ResetSearchViewModel();
+                ResetSearchViewModel();
 
-            ResetData();
+                ResetData();
 
-            ResetSaveButton(sender);
+                ResetSaveButton(sender);
+            }
+            catch (Exception exception)
+            {
+                await DisplayAlert("Error"
+                                 , exception.Message
+                                 , "OK");
+
+                Logger.WriteLine($"Error occurred in {nameof(SaveButton_OnClicked)}"
+                               , Category.Error
+                               , exception);
+            }
+            
         }
 
         private void SetViewModelDataFromPage()
