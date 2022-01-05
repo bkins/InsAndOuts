@@ -155,6 +155,7 @@ namespace InsAndOuts.Views
         private async void TakePictureImage_Tapped(object    sender
                                                  , EventArgs e)
         {
+            //BENDO: Refactor this method
             TakePictureImage.IsEnabled = false;
 
             if ( ! await ReadyToTakePicture())

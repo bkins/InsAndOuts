@@ -16,6 +16,7 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Android.App;
+using Avails.D_Flat;
 using Application = Android.App.Application;
 
 namespace InsAndOuts.Views
@@ -161,14 +162,36 @@ namespace InsAndOuts.Views
         private async void BackupDatabaseButton_OnClicked(object    sender
                                                   , EventArgs e)
         {
-            var source = App.FullDatabasePath; //complete filename and path of the DB
-            
-            string[] sourceFiles = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
-            CopyDemoDB(App.DatabaseFileName);
-            var destination = CreateDestination();
+            var email = new Emailer
+                        {
+                            EmailFormat = EmailBodyFormat.PlainText
+                          , Recipients = new List<string>
+                                         {
+                                             "<enter your email address here>"
+                                         }
+                          , SubjectPrefix = "Is&Os&Oohs: "
+                        };
 
-            await BackupDataBase(source
-                               , await destination);
+            await email.SendEmail("Backup Database"
+                                , $"Save this to restore your data to the {AppInfo.Name}"
+                                , new List<EmailAttachment>
+                                  {
+                                      new EmailAttachment(App.FullDatabasePath)
+                                  });
+
+            //BENDO: Finish Db3FileActivity.cs in the InsAndOuts.Android project to be able to open a db3 file and
+            //restore by copying it over the existing database file, of course first prompting the user to make sure that is ok!
+            //This is a temporary solution to the code not working in Android 11.
+
+            //BUG:  Will not work as is.  Either need a new strategy or modify to work:
+            //var source = App.FullDatabasePath; //complete filename and path of the DB
+
+            //string[] sourceFiles = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+            //CopyDemoDB(App.DatabaseFileName);
+            //var destination = CreateDestination();
+
+            //await BackupDataBase(source
+            //                   , await destination);
 
         }
 
@@ -212,7 +235,7 @@ namespace InsAndOuts.Views
 
             //File is being written, but I cannot see file from device.
             //Is the file written to a folder the user does not have access to,
-            //or is the file not safe to a perminant file?
+            //or is the file not safe to a permanent file?
             using (var binaryReader = new BinaryReader(sourceFileStream))
             {
                 using (var binaryWriter = new BinaryWriter(new FileStream(destinationPath
@@ -237,25 +260,6 @@ namespace InsAndOuts.Views
 
         private async Task<string> CreateDestination()
         {
-            var year = DateTime.Today.Year;
-
-            var month = DateTime.Today.Month
-                                .ToString()
-                                .PadLeft(2, '0');
-
-            var day = DateTime.Today.Day
-                              .ToString()
-                              .PadLeft(2, '0');
-
-            var hour = DateTime.Now.Hour.ToString()
-                               .PadLeft(2, '0');
-
-            var minute = DateTime.Now.Minute.ToString()
-                                 .PadLeft(2, '0');
-
-            var second = DateTime.Now.Second.ToString()
-                                 .PadLeft(2, '0');
-
             var externalDirectory = Application.Context
                                                .GetExternalFilesDir(null)
                                                ?.AbsolutePath;
@@ -309,9 +313,9 @@ namespace InsAndOuts.Views
             {
                 string[] destinationFiles = Directory.GetFiles(destinationFolder);
                 Directory.CreateDirectory(destinationFolder);
-
+                
                 var destination = Path.Combine(destinationFolder
-                                             , $"IsAndOs-{year}{month}{day}{hour}{minute}{second}.db3");
+                                             , $"IsAndOs-{DateTime.Now.ToLong()}.db3");
 
                 return destination;
             }
