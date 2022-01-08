@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using InsAndOuts.Models;
 using InsAndOuts.Utilities;
+using InsAndOuts.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -13,8 +17,55 @@ namespace InsAndOuts.Views
             InitializeComponent();
             
             Title = @"Is & Os & Ooohs!!";
+            
+            AssignMissingSymptomTypes();
         }
+
+        private void AssignMissingSymptomTypes()
+        {
+            var symptomTypeVm = new SymptomsViewModel();
+
+            if (symptomTypeVm.Pains.All(fields => fields.Type != null))
+                return;
         
+            DisplayAlert("New Symptom Types"
+                       , "As of this new version, Symptoms replaced Pains and Symptom Types are required. All existing Symptoms/Pains that do not have a Symptom Type will be assigned the Symptom Type \"Pain\""
+                       , "OK");
+
+            AddPainSymptomType(symptomTypeVm);
+
+            AddPainSymptomTypeToAllPainsWhereMissing(symptomTypeVm);
+        
+        }
+
+        private static void AddPainSymptomTypeToAllPainsWhereMissing(SymptomsViewModel symptomTypeVm)
+        {
+            var painSymptomType = symptomTypeVm.SymptomTypes.FirstOrDefault(fields => fields.Name == "Pain");
+
+            if (painSymptomType==null)
+            {
+                return;
+            }
+
+            foreach (var pain in symptomTypeVm.Pains
+                                              .Where(pain => pain.Type == null))
+            {
+                pain.TypeId        = painSymptomType.Id;
+                pain.Type          = painSymptomType;
+                symptomTypeVm.Pain = pain;
+                
+                symptomTypeVm.Save();
+            }
+        }
+
+        private static void AddPainSymptomType(SymptomsViewModel symptomTypeVm)
+        {
+            if (symptomTypeVm.SymptomTypes.All(fields => fields.Name != "Pain"))
+            {
+                symptomTypeVm.AddNewSymptomType("Pain");
+            }
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -104,26 +155,26 @@ namespace InsAndOuts.Views
             EditStoolButton.IsEnabled = true;
         }
 
-        private async void AddPainButton_OnClicked(object    sender
+        private async void AddSymptomButton_OnClicked(object    sender
                                                  , EventArgs e)
         {
-            AddPainButton.IsEnabled = false;
-            await PageNavigation.NavigateTo(nameof(PainView)
-                                          , nameof(PainView.ViewMode)
+            AddSymptomButton.IsEnabled = false;
+            await PageNavigation.NavigateTo(nameof(SymptomsView)
+                                          , nameof(SymptomsView.ViewMode)
                                           , "ADD");
 
-            AddPainButton.IsEnabled = true;
+            AddSymptomButton.IsEnabled = true;
         }
 
-        private async void EditPainButton_OnClicked(object    sender
+        private async void EditSymptomButton_OnClicked(object    sender
                                                   , EventArgs e)
         {
-            EditPainButton.IsEnabled = false;
-            await PageNavigation.NavigateTo(nameof(PainView)
-                                          , nameof(PainView.ViewMode)
+            EditSymptomButton.IsEnabled = false;
+            await PageNavigation.NavigateTo(nameof(SymptomsView)
+                                          , nameof(SymptomsView.ViewMode)
                                           , "EDIT");
 
-            EditPainButton.IsEnabled = true;
+            EditSymptomButton.IsEnabled = true;
         }
         
     }

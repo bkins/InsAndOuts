@@ -14,40 +14,45 @@ namespace InsAndOuts.Data
 
     #region Adds
 
-        int  AddMeal         (Meal meal);
-        int  AddPain         (Pain pain);
-        void AddStoolWithType(Stool stool);
+        int  AddMeal         (Meal          meal);
+        void AddPain         (Pain          pain);
+        int  AddSymptomType  (SymptomType   symptomType);
+        void AddStoolWithType(Stool         stool);
 
     #endregion
 
     #region Gets
 
-        Meal                   GetMeal         (int mealId);
-        IEnumerable<Meal>      GetAllMeals     ();
-        Pain                   GetPain         (int painId);
-        IEnumerable<Pain>      GetAllPain      ();
-        Stool                  GetStool        (int stoolId);
-        IEnumerable<Stool>     GetAllStools    ();
-        StoolType              GetStoolType    (int stoolTypeId);
-        IEnumerable<StoolType> GetAllStoolTypes();
+        Meal                     GetMeal            (int mealId);
+        IEnumerable<Meal>        GetAllMeals        ();
+        Pain                     GetPain            (int painId);
+        IEnumerable<Pain>        GetAllPain         ();
+        IEnumerable<SymptomType> GetAllSymptomTypes ();
+        SymptomType              GetSymptomType     (string   name);
+        Stool                    GetStool           (int stoolId);
+        IEnumerable<Stool>       GetAllStools       ();
+        StoolType                GetStoolType       (int stoolTypeId);
+        IEnumerable<StoolType>   GetAllStoolTypes   ();
 
     #endregion
 
     #region Updates
 
-        int  UpdateMeal     (Meal      meal);
-        int  UpdatePain     (Pain      pain);
-        void UpdateStool    (Stool     stool);
-        int  UpdateStoolType(StoolType stoolType);
+        int  UpdateMeal         (Meal           meal);
+        void UpdatePain         (Pain           pain);
+        int  UpdateSymptomType  (SymptomType    symptomType);
+        void UpdateStool        (Stool          stool);
+        int  UpdateStoolType    (StoolType      stoolType);
         
     #endregion
 
     #region Deletes
 
-        int DeleteMeal     (ref Meal      meal);
-        int DeletePain     (ref Pain      pain);
-        int DeleteStool    (ref Stool     stool);
-        int DeleteStoolType(ref StoolType stoolType);
+        int DeleteMeal       (ref Meal        meal);
+        int DeletePain       (ref Pain        pain);
+        int DeleteStool      (ref Stool       stool);
+        int DeleteSymptomType(ref SymptomType symptomType);
+        int DeleteStoolType  (ref StoolType   stoolType);
 
         #endregion
     }

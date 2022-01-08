@@ -62,8 +62,8 @@
                          Grid.RowSpan="2"
                          />
 
-                <Label x:Name="PainsLabel"
-                       Text="Pains"
+                <Label x:Name="SymptomsLabel"
+                       Text="Symptoms"
                        FontAttributes="Bold"
                        HorizontalOptions="Center"
                        BackgroundColor="{DynamicResource Primary}"
@@ -137,13 +137,13 @@
 
                 </button:SfButton>
                 
-                <button:SfButton x:Name="AddPainButton"
+                <button:SfButton x:Name="AddSymptomButton"
                                  VerticalOptions="Center"
                                  HorizontalOptions="Center"
                                  BackgroundColor="{DynamicResource Primary}"
                                  Grid.Row="1"
                                  Grid.Column="4"
-                                 Clicked="AddPainButton_OnClicked"
+                                 Clicked="AddSymptomButton_OnClicked"
                                  >
                     <button:SfButton.Content>
                         <Image Source="addSmall.png" 
@@ -153,13 +153,13 @@
 
                 </button:SfButton>
 
-                <button:SfButton x:Name="EditPainButton"
+                <button:SfButton x:Name="EditSymptomButton"
                                  VerticalOptions="Center"
                                  HorizontalOptions="Center"
                                  BackgroundColor="{DynamicResource Primary}"
                                  Grid.Row="1"
                                  Grid.Column="5"
-                                 Clicked="EditPainButton_OnClicked"
+                                 Clicked="EditSymptomButton_OnClicked"
                                  >
                     <button:SfButton.Content>
                         <Image Source="editSmall.png" 

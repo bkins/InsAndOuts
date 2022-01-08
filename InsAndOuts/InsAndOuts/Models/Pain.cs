@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Avails.D_Flat;
 using InsAndOuts.Utilities;
 using SQLite;
+using SQLiteNetExtensions.Attributes;
 
 namespace InsAndOuts.Models
 {
@@ -10,9 +10,18 @@ namespace InsAndOuts.Models
     public class Pain : BaseModel
     {
         [PrimaryKey, AutoIncrement]
-        public int Id    { get; set; }
-        public int Level { get; set; }
+        public int Id { get;     set; }
+        public int Level  { get; set; }
+        
+        [ForeignKey(typeof(SymptomType))]
+        public int TypeId { get; set; }
 
+        [OneToOne(CascadeOperations = CascadeOperation.All)]
+        public SymptomType  Type  { get; set; }
+
+        /// <summary>
+        /// Pain is synonymous with symptom.  I did not want to change the name of this model in fear of losing data on update
+        /// </summary>
         public Pain()
         {
             Level = 0;
@@ -20,23 +29,13 @@ namespace InsAndOuts.Models
 
         public override string ToString()
         {
-            return $"{When} - Level: {Level}";
-        }
-        
-        public DateTime WhenToDateTime()
-        {
-            return DateTime.Parse(When);
+            var typeText = Type == null 
+                        || Type.Name.IsNullEmptyOrWhitespace() ?
+                                   "" :
+                                   $"- {Type?.Name}";
+
+            return $"{When} {typeText} - Level: {Level}";
         }
 
-        public TimeSpan WhenToTimeSpan()
-        {
-            if (When.IsNullEmptyOrWhitespace())
-            {
-                return new TimeSpan();
-            }
-
-            var time = When.Split(' ')[1];
-            return TimeSpan.Parse(time);
-        }
     }
 }

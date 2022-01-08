@@ -32,8 +32,8 @@ namespace InsAndOuts.Views
         private async void EditPains_OnClicked(object    sender
                                              , EventArgs e)
         {
-            await PageNavigation.NavigateTo(nameof(PainView)
-                                          , nameof(PainView.ViewMode)
+            await PageNavigation.NavigateTo(nameof(SymptomsView)
+                                          , nameof(SymptomsView.ViewMode)
                                           , "EDIT");
         }
     }

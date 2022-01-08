@@ -46,14 +46,40 @@ namespace InsAndOuts.Data
                            .ToList();
         }
 
-        public int InsertPain(Pain pain)
+        public void InsertPain(Pain pain)
         {
-            return Database.AddPain(pain);
+            Database.AddPain(pain);
         }
 
-        public int UpdatePain(Pain pain)
+        public void UpdatePain(Pain pain)
         {
-            return Database.UpdatePain(pain);
+            Database.UpdatePain(pain);
+        }
+        
+        /// <summary>
+        /// Returns a list of *unique* Symptom Types
+        /// </summary>
+        /// <returns></returns>
+        public List<SymptomType> GetAllSymptomTypes()
+        {
+            return Database.GetAllSymptomTypes()
+                           .Distinct()
+                           .ToList();
+        }
+
+        public int InsertSymptomType(SymptomType symptomType)
+        {
+            return Database.AddSymptomType(symptomType);
+        }
+
+        public int UpdateSymptomType(SymptomType symptomType)
+        {
+            return Database.UpdateSymptomType(symptomType);
+        }
+
+        public int DeleteSymptomType(ref SymptomType symptomType)
+        {
+            return Database.DeleteSymptomType(ref symptomType);
         }
 
         public void InsertStool(Stool stool)
