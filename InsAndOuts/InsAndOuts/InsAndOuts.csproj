@@ -41,6 +41,9 @@
     <Compile Update="Views\ManageDataView.xaml.cs">
       <DependentUpon>ManageDataView.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\SymptomsView.xaml.cs">
+      <DependentUpon>SymptomsView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\ReportsView.xaml.cs">
       <DependentUpon>ReportsView.xaml</DependentUpon>
     </Compile>
@@ -68,7 +71,7 @@
     <EmbeddedResource Update="Views\MealView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\PainView.xaml">
+    <EmbeddedResource Update="Views\SymptomsView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\PopUpPickerView.xaml">
