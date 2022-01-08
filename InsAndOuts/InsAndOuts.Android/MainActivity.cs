@@ -11,6 +11,7 @@ using ButtonCircle.FormsPlugin.Droid;
 using InsAndOuts.Services;
 using Xamarin.Essentials;
 using Environment = System.Environment;
+using InsAndOuts;
 
 namespace InsAndOuts.Droid
 {

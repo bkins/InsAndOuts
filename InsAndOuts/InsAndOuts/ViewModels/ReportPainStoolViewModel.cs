@@ -33,7 +33,7 @@ namespace InsAndOuts.ViewModels
         //Chart metadata
         public string ChartTitle { get; set; }
 
-        public List<Range> HourRanges => GetHourRanges();
+        public List<Models.Range> HourRanges => GetHourRanges();
 
         public ReportPainStoolViewModel()
         {
@@ -76,35 +76,35 @@ namespace InsAndOuts.ViewModels
             SetDataMembers();
         }
 
-        private static List<Range> GetHourRanges()
+        private static List<Models.Range> GetHourRanges()
         {
-            return new List<Range>
+            return new List<Models.Range>
                    {
-                       new Range
+                       new Models.Range
                        {
                            Title   = "12 AM - 4 AM"
                          , Minimum = 0
                          , Maximum = 4
                        }
-                     , new Range
+                     , new Models.Range
                        {
                            Title   = "5 AM - 9 AM"
                          , Minimum = 5
                          , Maximum = 9
                        }
-                     , new Range
+                     , new Models.Range
                        {
                            Title   = "10 AM - 2 PM"
                          , Minimum = 10
                          , Maximum = 14
                        }
-                     , new Range
+                     , new Models.Range
                        {
                            Title   = "3 PM - 6 PM"
                          , Minimum = 15
                          , Maximum = 19
                        }
-                     , new Range
+                     , new Models.Range
                        {
                            Title   = "8 PM - 12 AM"
                          , Minimum = 20
