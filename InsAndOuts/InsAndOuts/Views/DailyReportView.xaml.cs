@@ -70,7 +70,10 @@ namespace InsAndOuts.Views
                                             .ToList();
 
             var listOfAttachments = GetListOfEmailAttachments(stoolsWithImages);
-
+            
+            EmailBodyFormat emailFormat;
+            string          body;
+            
             //if (HtmlSwitch.IsToggled 
             // && Device.RuntimePlatform != Device.UWP)
             //{
@@ -84,11 +87,11 @@ namespace InsAndOuts.Views
             //    body        = ViewModel.ToPainText();
             //}
             
-            var emailFormat = EmailBodyFormat.PlainText;
+            emailFormat = EmailBodyFormat.PlainText;
             
-            var body = Configuration.UseHtmlForEmailBody ?
-                               ViewModel.ToHtml() :
-                               ViewModel.ToPainText();
+            body = Configuration.UseHtmlForEmailBody ?
+                           ViewModel.ToHtml() :
+                           ViewModel.ToPainText();
     
             var emailer = new Emailer
                           {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
-using Avails.D_Flat;
 using InsAndOuts.Services;
 using InsAndOuts.Utilities;
 using InsAndOuts.ViewModels;
@@ -142,7 +141,7 @@ namespace InsAndOuts.Views
         private void SetViewModelDataFromPage()
         {
             ViewModel.Meal.Name                = NameEntry.Text;
-            ViewModel.Meal.DescriptionPlainText = DescriptionRtf.Text;
+            ViewModel.Meal.DescriptionPainText = DescriptionRtf.Text;
             ViewModel.Meal.DescriptionHtml     = DescriptionRtf.HtmlText;
 
             ViewModel.Meal.When = DateTimeTimeSpanForSaving(WhenDatePicker.Date

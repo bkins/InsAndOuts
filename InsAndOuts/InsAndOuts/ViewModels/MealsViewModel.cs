@@ -66,7 +66,7 @@ namespace InsAndOuts.ViewModels
                            , Category.Information);
             Logger.WriteLine($"   {nameof(meal.DescriptionHtml)}:     '{meal.DescriptionHtml}'"
                            , Category.Information);
-            Logger.WriteLine($"   {nameof(meal.DescriptionPlainText)}: '{meal.DescriptionPlainText}'"
+            Logger.WriteLine($"   {nameof(meal.DescriptionPainText)}: '{meal.DescriptionPainText}'"
                            , Category.Information);
             Logger.WriteLine($"   {nameof(meal.When)}:                '{meal.When}'"
                            , Category.Information);

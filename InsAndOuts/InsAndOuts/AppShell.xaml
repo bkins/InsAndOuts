@@ -29,7 +29,7 @@
         <ShellContent x:Name="PainTabBarButton"
                       Title="Pain"
                       Icon="pain.png"
-                      ContentTemplate="{DataTemplate views:SymptomsView}"
+                      ContentTemplate="{DataTemplate views:PainView}"
                       />
     </TabBar>
 

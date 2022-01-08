@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using Avails.D_Flat;
 using InsAndOuts.Services;
 using InsAndOuts.Utilities;
 using InsAndOuts.ViewModels;
@@ -278,7 +277,7 @@ namespace InsAndOuts.Views
 
         private void SetViewModelDataFromPage()
         {
-            ViewModel.Stool.DescriptionPlainText = DescriptionHtmlRtEditor.Text;
+            ViewModel.Stool.DescriptionPainText = DescriptionHtmlRtEditor.Text;
             ViewModel.Stool.DescriptionHtml     = DescriptionHtmlRtEditor.HtmlText;
             ViewModel.Stool.StoolType           = SelectedStoolTypeLabel.Text;
 

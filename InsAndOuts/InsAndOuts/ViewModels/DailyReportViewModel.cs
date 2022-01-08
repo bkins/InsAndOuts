@@ -7,7 +7,6 @@ using System.Text;
 using InsAndOuts.Data;
 using InsAndOuts.Models;
 using InsAndOuts.Utilities;
-using Avails.D_Flat;
 
 namespace InsAndOuts.ViewModels
 {
@@ -146,11 +145,11 @@ namespace InsAndOuts.ViewModels
 
             foreach (var pain in Pains)
             {
-                report.AppendLine($"* {pain.Type.Name}: {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):");
+                report.AppendLine($"* {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):");
 
-                if (pain.DescriptionPlainText.HasValue())
+                if (pain.DescriptionPainText.HasValue())
                 {
-                    report.AppendLine($"  {pain.DescriptionPlainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                    report.AppendLine($"  {pain.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
                 }
             }
         }
@@ -169,9 +168,9 @@ namespace InsAndOuts.ViewModels
 
                 report.AppendLine($"* {stool.StoolType.Split(':')[0]} ({DateTime.Parse(stool.When).ToShortTimeString()}):");
 
-                if (stool.DescriptionPlainText.HasValue())
+                if (stool.DescriptionPainText.HasValue())
                 {
-                    report.AppendLine($"  {stool.DescriptionPlainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                    report.AppendLine($"  {stool.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
                 }
 
                 report.AppendLine($"  Has an photo: {hasPhoto}");
@@ -194,9 +193,9 @@ namespace InsAndOuts.ViewModels
 
                 report.AppendLine($"* {mealName} ({mealWhenShortTimeString}):");
 
-                if (meal.DescriptionPlainText.HasValue())
+                if (meal.DescriptionPainText.HasValue())
                 {
-                    report.AppendLine($"  {meal.DescriptionPlainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                    report.AppendLine($"  {meal.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
                 }
             }
         }

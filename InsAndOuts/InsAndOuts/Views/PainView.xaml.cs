@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net.Mime;
-using System.Threading.Tasks;
 using System.Web;
-using Avails.D_Flat;
-using InsAndOuts.Models;
 using InsAndOuts.Services;
 using InsAndOuts.Utilities;
 using InsAndOuts.ViewModels;
@@ -22,16 +18,15 @@ namespace InsAndOuts.Views
     [QueryProperty(nameof(ViewMode)
                  , nameof(ViewMode))]
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SymptomsView : ContentPage, IQueryAttributable
+    public partial class PainView : ContentPage, IQueryAttributable
     {
-        public  string            ViewMode                    { get; set; }
-        public  SymptomsViewModel ViewModel                   { get; set; }
-        public  SearchViewModel   SearchViewModel             { get; set; }
-        public  string            InitialSymptomTypeLabelText { get; set; }
-
+        public  string          ViewMode          { get; set; }
+        public  PainViewModel   ViewModel         { get; set; }
+        public  SearchViewModel SearchViewModel   { get; set; }
+        
         private bool EditMode { get; set; }
-
-        private const string CURRENT_MODEL = "Symptom";
+        
+        private const string CURRENT_MODEL = "Pain";
 
         public void ApplyQueryAttributes(IDictionary<string, string> query)
         {
@@ -58,19 +53,16 @@ namespace InsAndOuts.Views
             UpdateViewTitle();
         }
 
-        public SymptomsView()
+        public PainView()
         {
             InitializeComponent();
-
-            InitialSymptomTypeLabelText = SymptomsTypeLabel.Text;
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
             if ( SearchViewModel != null
-            && ! SearchViewModel.SearchablePains.Any())
+              && ! SearchViewModel.SearchablePains.Any())
             {
                 await DisplayAlert("Nothing to edit"
                                  , $"There are no {CURRENT_MODEL}s to edit.  Please add {CURRENT_MODEL}s before attempting to edit them."
@@ -81,8 +73,7 @@ namespace InsAndOuts.Views
             else
             {
                 ResetData();
-                SearchPicker.IsVisible        = EditMode;
-                SymptomTypePicker.ItemsSource = ViewModel.SymptomTypes;
+                SearchPicker.IsVisible = EditMode;
             }
         }
 
@@ -94,25 +85,22 @@ namespace InsAndOuts.Views
         private void ResetData()
         {
             DescriptionHtmlRtEditor.Text = string.Empty;
-            SymptomsTypeLabel.Text       = InitialSymptomTypeLabelText;
             RangeSlider.Value            = 0;
             WhenDatePicker.Date          = DateTime.Today;
             WhenTimePicker.Time          = DateTime.Now.TimeOfDay;
             
             SetSaveButtonNotSaved();
 
-            ViewModel = new SymptomsViewModel();
+            ViewModel = new PainViewModel();
 
             UpdateViewTitle();
         }
-
         
-
         private void UpdateViewTitle()
         {
             Title = $"{ViewMode.ToTitleCase(force: true)} {CURRENT_MODEL}";
         }
-            
+
         private void SetSaveButtonNotSaved()
         {
             SaveButton.ShowIcon = false;
@@ -156,12 +144,9 @@ namespace InsAndOuts.Views
             SetSaveButtonNotSaved();
         }
 
-        private async void SaveButton_OnClicked(object    sender
+        private void SaveButton_OnClicked(object    sender
                                         , EventArgs e)
         {
-            if (await IsAllDataValid())
-                return;
-
             SetViewModelDataFromPage();
             ViewModel.Save();
 
@@ -170,20 +155,6 @@ namespace InsAndOuts.Views
             ResetData();
 
             ResetSaveButton(sender);
-        }
-
-        private async Task<bool> IsAllDataValid()
-        {
-            if (SymptomsTypeLabel.Text == InitialSymptomTypeLabelText)
-            {
-                await DisplayAlert("Symptom Type Required"
-                                 , "Please select a Symptom Type before saving."
-                                 , "OK");
-
-                return true;
-            }
-
-            return false;
         }
 
         private void ResetSaveButton(object sender)
@@ -201,8 +172,7 @@ namespace InsAndOuts.Views
 
             SearchViewModel = new SearchViewModel();
 
-            SearchPicker.ItemsSource      = SearchViewModel.SearchableStools;
-            SymptomTypePicker.ItemsSource = ViewModel.SymptomTypes;
+            SearchPicker.ItemsSource = SearchViewModel.SearchableStools;
         }
 
         private void SetViewModelDataFromPage()
@@ -210,13 +180,13 @@ namespace InsAndOuts.Views
             ViewModel.Pain.When = DateTimeTimeSpanForSaving(WhenDatePicker.Date
                                                           , WhenTimePicker.Time);
 
-            ViewModel.Pain.DescriptionPlainText = DescriptionHtmlRtEditor.Text;
+            ViewModel.Pain.DescriptionPainText = DescriptionHtmlRtEditor.Text;
             ViewModel.Pain.DescriptionHtml     = DescriptionHtmlRtEditor.HtmlText;
             
-            if (ViewModel.Pain.DescriptionPlainText.IsNullEmptyOrWhitespace()
+            if (ViewModel.Pain.DescriptionPainText.IsNullEmptyOrWhitespace()
              && ViewModel.Pain.DescriptionHtml.HasValue())
             {
-                ViewModel.Pain.DescriptionPlainText = DescriptionHtmlRtEditor.Text;
+                ViewModel.Pain.DescriptionPainText = DescriptionHtmlRtEditor.Text;
             }
         }
 
@@ -236,7 +206,6 @@ namespace InsAndOuts.Views
         private void LoadPageFromViewModel()
         {
             DescriptionHtmlRtEditor.HtmlText = ViewModel.Pain.DescriptionHtml;
-            SymptomsTypeLabel.Text           = ViewModel.Pain.Type?.Name;
             RangeSlider.Value                = ViewModel.Pain.Level;
             WhenDatePicker.Date              = ViewModel.Pain.WhenToDateTime();
             WhenTimePicker.Time              = ViewModel.Pain.WhenToTimeSpan();
@@ -244,7 +213,7 @@ namespace InsAndOuts.Views
 
         private bool FindTextInVewModel(string searchText)
         {
-            ViewModel = new SymptomsViewModel(searchText);
+            ViewModel = new PainViewModel(searchText);
 
             if (ViewModel.Pain != null)
                 return false;
@@ -258,7 +227,7 @@ namespace InsAndOuts.Views
         }
 
         private async void SearchPicker_OnCancelButtonClicked(object                    sender
-                                                            , SelectionChangedEventArgs e)
+                                                      , SelectionChangedEventArgs e)
         {
             await PageNavigation.NavigateBackwards();
         }
@@ -285,55 +254,7 @@ namespace InsAndOuts.Views
             WhenDatePicker.IsVisible          = ! WhenDatePicker.IsVisible;
             WhenTimePicker.IsVisible          = ! WhenTimePicker.IsVisible;
             DescriptionHtmlRtEditor.IsVisible = ! DescriptionHtmlRtEditor.IsVisible;
-            SymptomsTypeLabel.IsVisible       = ! SymptomsTypeLabel.IsVisible;
             RangeSlider.IsVisible             = ! RangeSlider.IsVisible;
         }
-
-        private void SymptomsTypeLabel_OnTapped(object    sender
-                                              , EventArgs e)
-        {
-            SymptomTypePicker.IsVisible = true;
-        }
-
-        private async void SymptomTypePicker_OnOkButtonClicked(object                    sender
-                                                       , SelectionChangedEventArgs e)
-        {
-            ViewModel.SelectedSymptomType = (SymptomType)SymptomTypePicker.SelectedItem;
-            
-            if (ViewModel.SelectedSymptomType.Name.Equals("<Add>", StringComparison.CurrentCultureIgnoreCase))
-            {
-                await AddNewSymptomType();
-                SymptomTypePicker.ItemsSource = ViewModel.SymptomTypes;
-            }
-            else
-            {
-                SymptomsTypeLabel.Text = ViewModel.SelectedSymptomType.Name;
-                ViewModel.Pain.TypeId  = ViewModel.SelectedSymptomType.Id;
-                ViewModel.Pain.Type    = ViewModel.SelectedSymptomType;
-
-                SymptomTypePicker.IsVisible = false;
-            }
-        }
-
-        private async Task AddNewSymptomType()
-        {
-            var newSymptomTypeName = await DisplayPromptAsync("Add New Symptom Type:"
-                                                            , ""
-                                                            , "OK"
-                                                            , "Cancel"
-                                                            , "Enter a new Syptom Type Name"
-                                                            , -1
-                                                            , Keyboard.Create(KeyboardFlags.CapitalizeWord)
-                                                            , "");
-
-            ViewModel.AddNewSymptomType(newSymptomTypeName);
-        }
-
-        private void SymptomTypePicker_OnCancelButtonClicked(object                    sender
-                                                           , SelectionChangedEventArgs e)
-        {
-            SymptomTypePicker.IsVisible = false;
-        }
-
     }
 }

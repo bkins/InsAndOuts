@@ -74,7 +74,7 @@ namespace InsAndOuts.Services
             var stool = new Stool(stoolType)
                         {
                             DescriptionHtml     = "See image"
-                          , DescriptionPlainText = "See image"
+                          , DescriptionPainText = "See image"
                           , When                = $"{date} {DateTime.Now.AddHours(hoursToAdd).ToShortTimeString()}"
                         };
 
@@ -89,7 +89,7 @@ namespace InsAndOuts.Services
                        {
                            Level               = painLevel
                          , DescriptionHtml     = "Ouch"
-                         , DescriptionPlainText = "Ouch"
+                         , DescriptionPainText = "Ouch"
                          , When                = $"{date} {DateTime.Now.AddHours(hoursToAdd).ToShortTimeString()}"
                        };
 
@@ -104,7 +104,7 @@ namespace InsAndOuts.Services
                        {
                            Name                = "Breakfast"
                          , DescriptionHtml     = "<ul><li>Ham</li><li>Eggs</li><li>Bacon﻿﻿<br></li></ul>"
-                         , DescriptionPlainText = "Ham\r\nEggs\r\nBacon"
+                         , DescriptionPainText = "Ham\r\nEggs\r\nBacon"
                          , When                = $"{date} {hourOfMeal}:{minutesPastTheHour} AM"
                        };
 

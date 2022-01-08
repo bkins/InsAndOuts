@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using InsAndOuts.Models;
 using SQLite;
@@ -28,8 +27,6 @@ namespace InsAndOuts.Data
             _database.CreateTable<Meal>();
             _database.CreateTable<Pain>();
             _database.CreateTable<Stool>();
-            _database.CreateTable<SymptomType>();
-
             //_database.CreateTable<StoolType>();
         }
 
@@ -38,8 +35,6 @@ namespace InsAndOuts.Data
             _database.DropTable<Meal>();
             _database.DropTable<Pain>();
             _database.DropTable<Stool>();
-            _database.DropTable<SymptomType>();
-
             //_database.DropTable<StoolType>();
         }
 
@@ -56,14 +51,9 @@ namespace InsAndOuts.Data
             return _database.Insert(meal);
         }
 
-        public void AddPain(Pain pain)
+        public int AddPain(Pain pain)
         {
-            _database.InsertWithChildren(pain);
-        }
-
-        public int AddSymptomType(SymptomType symptomType)
-        {
-            return _database.Insert(symptomType);
+            return _database.Insert(pain);
         }
 
         public void AddStoolWithType(Stool stool)
@@ -100,17 +90,6 @@ namespace InsAndOuts.Data
             return _database.GetAllWithChildren<Pain>();
         }
 
-        public IEnumerable<SymptomType> GetAllSymptomTypes()
-        {
-            return _database.GetAllWithChildren<SymptomType>().Distinct();
-        }
-
-        public SymptomType GetSymptomType(string name)
-        {
-            return GetAllSymptomTypes()
-                   .FirstOrDefault(fields => fields.Name == name);
-        }
-
         public Stool GetStool(int stoolId)
         {
             return _database.Get<Stool>(stoolId);
@@ -141,14 +120,9 @@ namespace InsAndOuts.Data
             return _database.Update(meal);
         }
 
-        public void UpdatePain(Pain pain)
+        public int UpdatePain(Pain pain)
         {
-            _database.UpdateWithChildren(pain);
-        }
-
-        public int UpdateSymptomType(SymptomType symptomType)
-        {
-            return _database.Update(symptomType);
+            return _database.Update(pain);
         }
 
         public void UpdateStool(Stool stool)
@@ -167,41 +141,34 @@ namespace InsAndOuts.Data
 
         public int DeleteMeal(ref Meal meal)
         {
-            var rowCount = _database.Delete(meal);
+            var mealId = _database.Delete(meal);
             meal = null;
 
-            return rowCount;
+            return mealId;
         }
 
         public int DeletePain(ref Pain pain)
         {
-            var rowCount = _database.Delete(pain);
+            var painId = _database.Delete(pain);
             pain = null;
 
-            return rowCount;
+            return painId;
         }
 
-        public int DeleteSymptomType(ref SymptomType symptomType)
-        {
-            var rowCount = _database.Delete(symptomType);
-            symptomType = null;
-
-            return rowCount;
-        }
         public int DeleteStool(ref Stool stool)
         {
-            var rowCount = _database.Delete(stool);
+            var stoolId = _database.Delete(stool);
             stool = null;
 
-            return rowCount;
+            return stoolId;
         }
 
         public int DeleteStoolType(ref StoolType stoolType)
         {
-            var rowCount = _database.Delete(stoolType);
+            var stoolTypeId = _database.Delete(stoolType);
             stoolType = null;
 
-            return rowCount;
+            return stoolTypeId;
         }
 
     #endregion
