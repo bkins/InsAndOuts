@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:picker="clr-namespace:Syncfusion.SfPicker.XForms;assembly=Syncfusion.SfPicker.XForms"
+             xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+             xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+
+             xmlns:richTextEditor="clr-namespace:Syncfusion.XForms.RichTextEditor;assembly=Syncfusion.SfRichTextEditor.XForms"
+             xmlns:rangeSlider="clr-namespace:Syncfusion.SfRangeSlider.XForms;assembly=Syncfusion.SfRangeSlider.XForms"
+             
+             x:Class="InsAndOuts.Views.SymptomsView"
+             Shell.TabBarIsVisible="False"
+             
+             Title="Add New Symptom"
+             >
+    
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem x:Name="SelectToolbarItem"
+                     Text="Select Symptom"
+                     IconImageSource="search.png"
+                     Clicked="SelectToolbarItem_OnClicked"
+        />
+
+        <ToolbarItem x:Name="DeleteToolbarItem"
+                     Text="Delete Symptom"
+                     IconImageSource="Delete.png"
+                     Clicked="DeleteToolbarItem_OnClicked" 
+        />
+
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout>
+
+            <!--<Picker x:Name="SearchPicker"
+                    Title="Select a Symptom to edit"
+                    IsVisible="False"
+                    SelectedIndexChanged="SearchPicker_OnSelectedIndexChanged"
+            />-->
+            
+            <picker:SfPicker x:Name="SearchPicker"
+                             VerticalOptions="CenterAndExpand" 
+                             HorizontalOptions="CenterAndExpand" 
+                             HeaderText="Select a Symptom to edit" 
+                             ShowFooter="True"
+                             OkButtonClicked="SearchPicker_OnOkButtonClicked"
+                             CancelButtonClicked="SearchPicker_OnCancelButtonClicked"
+                             />
+
+            <richTextEditor:SfRichTextEditor x:Name="DescriptionHtmlRtEditor" 
+                                             PlaceHolder="Describe the Symptom"
+
+                                             AutoSize="TextChanges"
+
+                                             ToolbarPosition="Top"                                                 
+                                             ToolbarOptions="Bold,FontColor,Italic,IncreaseIndent,DecreaseIndent,BulletList,Alignment"
+                                             VerticalOptions="StartAndExpand"
+                                                 
+                                             Focused="DescriptionHtmlRtEditor_OnFocused"
+                                             />
+            <Label x:Name="SymptomsTypeLabel"
+                   Text="Select a Symptom Type..."
+                   >
+                <Label.GestureRecognizers>
+                    
+                    <TapGestureRecognizer
+                        Tapped="SymptomsTypeLabel_OnTapped"
+                        NumberOfTapsRequired="1" 
+                        />
+
+                </Label.GestureRecognizers>
+            </Label>
+
+            <picker:SfPicker x:Name="SymptomTypePicker"
+                             IsVisible="False"
+                             VerticalOptions="CenterAndExpand" 
+                             HorizontalOptions="CenterAndExpand" 
+                             HeaderText="Select a Symptom to edit" 
+                             ShowFooter="True"
+                             OkButtonClicked="SymptomTypePicker_OnOkButtonClicked"
+                             CancelButtonClicked="SymptomTypePicker_OnCancelButtonClicked"
+                             />
+
+            <rangeSlider:SfRangeSlider x:Name="RangeSlider" 
+                                       Orientation="Horizontal"
+                                       Minimum="0"
+                                       Maximum="10"
+                                       TickFrequency="1"
+                                       TickPlacement="Outside"
+                                       StepFrequency="1"
+                                       ShowCustomLabel="True"
+                                       ShowRange="False"
+                                       ThumbTouchUp="RangeSlider_OnThumbTouchUp"
+                                       ThumbTouchDown="RangeSlider_OnThumbTouchDown"
+                                       >
+
+                <rangeSlider:SfRangeSlider.CustomLabels>
+                    <rangeSlider:Items Label="None" Value="0"/>
+                    <rangeSlider:Items Label="Mild" Value="3"/>
+                    <rangeSlider:Items Label="Moderate" Value="6"/>
+                    <rangeSlider:Items Label="Severe" Value="9"/>
+                </rangeSlider:SfRangeSlider.CustomLabels>
+            </rangeSlider:SfRangeSlider>
+
+            <DatePicker x:Name="WhenDatePicker"
+                        Focused="WhenDatePicker_OnFocused"
+                        />
+
+            <TimePicker x:Name="WhenTimePicker"
+                        Focused="WhenTimePicker_OnFocused"
+                        />
+
+            <button:SfButton x:Name="SaveButton" 
+                             Text="SAVE"
+                             ImageAlignment="Right"
+                             ShowIcon="False"
+                             ImageSource="saved.png"
+                             VerticalOptions="Start"
+                             BackgroundColor="{DynamicResource Primary}"
+                             Margin="0,0,0,0"
+                             Clicked="SaveButton_OnClicked"
+                             />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
