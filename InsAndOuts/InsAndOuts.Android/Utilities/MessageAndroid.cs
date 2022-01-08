@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.Widget;
 using System;
-using System.Threading.Tasks;
 using InsAndOuts.Droid.Utilities;
 using InsAndOuts.Utilities.Interfaces;
 using NLog;
@@ -418,32 +417,6 @@ namespace InsAndOuts.Droid.Utilities
 
         public T Swallow<T>(Func<T> func,
                             T      fallback)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void          Swallow(Task                              task)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task          SwallowAsync(Task                         task)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task          SwallowAsync(Func<Task>                   asyncAction)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TResult> SwallowAsync<TResult>(Func<Task<TResult>> asyncFunc)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TResult> SwallowAsync<TResult>(Func<Task<TResult>> asyncFunc
-                                                 , TResult             fallback)
         {
             throw new NotImplementedException();
         }
