@@ -21,8 +21,9 @@ namespace InsAndOuts
         public App()
         {
             //BENDO:  Look at https://github.com/XamSome/awesome-xamarin for some tools and ideas to consider.
-
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTA0MDI3QDMxMzkyZTMyMmUzMFZXUzZFUWJuRnpLWm9IRFVXN0FKMUswMEdNUVd2WG15dE4yU3lQQmRWeE09");
+            //NTYxNzQyQDMxMzkyZTMyMmUzMGVCcDVrc0NXVDBqKytMRUlwTnZ6ZE44bjhld3lMb1ZpS1F2OHc4ZXJNc3M9 <-- Xamarin 19.2.0.62
+            //NTU5NzkyQDMxMzkyZTM0MmUzMEpqZmdrQmtSd2FWVmxZczRmVFVZZFNpZDZsQ3U3a3JrZFRlK3g5eUgyU0U9 <-- Xamarin 19.4.0.41
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTYxNzQyQDMxMzkyZTMyMmUzMGVCcDVrc0NXVDBqKytMRUlwTnZ6ZE44bjhld3lMb1ZpS1F2OHc4ZXJNc3M9");
             
             InitializeComponent();
             

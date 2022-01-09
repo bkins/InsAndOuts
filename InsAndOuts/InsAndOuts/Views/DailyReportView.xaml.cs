@@ -45,15 +45,15 @@ namespace InsAndOuts.Views
             SendTo.Text                = EmailToDoctor;
             ReportDatePickedLabel.Text = DateToReport.ToShortDateString();
 
-            var datesWIthData = new ObservableCollection<string>(ViewModel.DatesWithData);
+            var datesWithData = new ObservableCollection<string>(ViewModel.DatesWithData);
 
-            if ( ! datesWIthData.Any())
+            if ( ! datesWithData.Any())
             {
-                datesWIthData.Add("No date to select.");
+                datesWithData.Add("No date to select.");
                 ReportDatePicker.OKButtonTextColor = Color.Gray;
             }
 
-            ReportDatePicker.ItemsSource = datesWIthData;
+            ReportDatePicker.ItemsSource = datesWithData;
             ReportDatePicker.SelectedItem = DateToReport.ToShortDateString();
         }
 
@@ -70,10 +70,7 @@ namespace InsAndOuts.Views
                                             .ToList();
 
             var listOfAttachments = GetListOfEmailAttachments(stoolsWithImages);
-            
-            EmailBodyFormat emailFormat;
-            string          body;
-            
+
             //if (HtmlSwitch.IsToggled 
             // && Device.RuntimePlatform != Device.UWP)
             //{
@@ -87,11 +84,11 @@ namespace InsAndOuts.Views
             //    body        = ViewModel.ToPainText();
             //}
             
-            emailFormat = EmailBodyFormat.PlainText;
+            var emailFormat = EmailBodyFormat.PlainText;
             
-            body = Configuration.UseHtmlForEmailBody ?
-                           ViewModel.ToHtml() :
-                           ViewModel.ToPainText();
+            var body = Configuration.UseHtmlForEmailBody ?
+                               ViewModel.ToHtml() :
+                               ViewModel.ToPainText();
     
             var emailer = new Emailer
                           {

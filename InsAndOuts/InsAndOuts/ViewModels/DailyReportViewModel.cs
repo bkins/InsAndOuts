@@ -7,6 +7,7 @@ using System.Text;
 using InsAndOuts.Data;
 using InsAndOuts.Models;
 using InsAndOuts.Utilities;
+using Avails.D_Flat;
 
 namespace InsAndOuts.ViewModels
 {
@@ -42,18 +43,15 @@ namespace InsAndOuts.ViewModels
                           .OrderBy(field => DateTime.Parse(field.When));
 
             var filterDate = dateToReportOn.ToShortDateString();
-
-            //SetAllItemsByFilterDate(filterDate
-            //                      , allMeals
-            //                      , allPains
-            //                      , allStools);
-
+            
             SetDatesWithDataList(allMeals
                                , allStools
                                , allPains);
         }
 
-        public DailyReportViewModel(DateTime dateToReportOn, bool useTestData = false, IDataStore database = null)
+        public DailyReportViewModel(DateTime   dateToReportOn
+                                  , bool       useTestData = false
+                                  , IDataStore database    = null)
         {
             if (useTestData)
             {
@@ -140,16 +138,16 @@ namespace InsAndOuts.ViewModels
 
         private void BuildPainsReport(StringBuilder report)
         {
-            report.AppendLine("Pains:");
+            report.AppendLine("Syptoms:");
             report.AppendLine("");
 
             foreach (var pain in Pains)
             {
-                report.AppendLine($"* {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):");
+                report.AppendLine($"* {pain.Type.Name}: {pain.Level} ({DateTime.Now.ToShortTimeString()}):");
 
-                if (pain.DescriptionPainText.HasValue())
+                if (pain.DescriptionPlainText.HasValue())
                 {
-                    report.AppendLine($"  {pain.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                    report.AppendLine($"  {pain.DescriptionPlainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
                 }
             }
         }
@@ -168,9 +166,9 @@ namespace InsAndOuts.ViewModels
 
                 report.AppendLine($"* {stool.StoolType.Split(':')[0]} ({DateTime.Parse(stool.When).ToShortTimeString()}):");
 
-                if (stool.DescriptionPainText.HasValue())
+                if (stool.DescriptionPlainText.HasValue())
                 {
-                    report.AppendLine($"  {stool.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                    report.AppendLine($"  {stool.DescriptionPlainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
                 }
 
                 report.AppendLine($"  Has an photo: {hasPhoto}");
@@ -193,9 +191,9 @@ namespace InsAndOuts.ViewModels
 
                 report.AppendLine($"* {mealName} ({mealWhenShortTimeString}):");
 
-                if (meal.DescriptionPainText.HasValue())
+                if (meal.DescriptionPlainText.HasValue())
                 {
-                    report.AppendLine($"  {meal.DescriptionPainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
+                    report.AppendLine($"  {meal.DescriptionPlainText.Trim().Replace(Environment.NewLine, $"{Environment.NewLine}  ")}");
                 }
             }
         }
@@ -224,7 +222,7 @@ namespace InsAndOuts.ViewModels
 
         private void BuildPainsHtmlReport(StringBuilder report)
         {
-            report.AppendLine("<b>Pains:</b><br>");
+            report.AppendLine("<b>Symtoms:</b><br>");
 
             foreach (var pain in Pains)
             {

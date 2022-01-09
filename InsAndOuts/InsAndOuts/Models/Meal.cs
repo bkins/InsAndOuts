@@ -16,21 +16,6 @@ namespace InsAndOuts.Models
         {
             return $"{When} - {Name}";
         }
-
-        public DateTime WhenToDateTime()
-        {
-            return DateTime.Parse(When);
-        }
-
-        public TimeSpan WhenToTimeSpan()
-        {
-            if (When.IsNullEmptyOrWhitespace())
-            {
-                return new TimeSpan();
-            }
-
-            var time = When.Split(' ')[1];
-            return TimeSpan.Parse(time);
-        }
+        
     }
 }

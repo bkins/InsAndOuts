@@ -8,22 +8,22 @@
              xmlns:richTextEditor="clr-namespace:Syncfusion.XForms.RichTextEditor;assembly=Syncfusion.SfRichTextEditor.XForms"
              xmlns:rangeSlider="clr-namespace:Syncfusion.SfRangeSlider.XForms;assembly=Syncfusion.SfRangeSlider.XForms"
              
-             x:Class="InsAndOuts.Views.PainView"
+             x:Class="InsAndOuts.Views.SymptomsView"
              Shell.TabBarIsVisible="False"
              
-             Title="Add New Pain"
+             Title="Add New Symptom"
              >
     
     <ContentPage.ToolbarItems>
 
         <ToolbarItem x:Name="SelectToolbarItem"
-                     Text="Select pain"
+                     Text="Select Symptom"
                      IconImageSource="search.png"
                      Clicked="SelectToolbarItem_OnClicked"
         />
 
         <ToolbarItem x:Name="DeleteToolbarItem"
-                     Text="Delete pain"
+                     Text="Delete Symptom"
                      IconImageSource="Delete.png"
                      Clicked="DeleteToolbarItem_OnClicked" 
         />
@@ -34,7 +34,7 @@
         <StackLayout>
 
             <!--<Picker x:Name="SearchPicker"
-                    Title="Select a pain to edit"
+                    Title="Select a Symptom to edit"
                     IsVisible="False"
                     SelectedIndexChanged="SearchPicker_OnSelectedIndexChanged"
             />-->
@@ -42,14 +42,14 @@
             <picker:SfPicker x:Name="SearchPicker"
                              VerticalOptions="CenterAndExpand" 
                              HorizontalOptions="CenterAndExpand" 
-                             HeaderText="Select a pain to edit" 
+                             HeaderText="Select a Symptom to edit" 
                              ShowFooter="True"
                              OkButtonClicked="SearchPicker_OnOkButtonClicked"
                              CancelButtonClicked="SearchPicker_OnCancelButtonClicked"
-            />
+                             />
 
             <richTextEditor:SfRichTextEditor x:Name="DescriptionHtmlRtEditor" 
-                                             PlaceHolder="Describe the pain"
+                                             PlaceHolder="Describe the Symptom"
 
                                              AutoSize="TextChanges"
 
@@ -59,6 +59,28 @@
                                                  
                                              Focused="DescriptionHtmlRtEditor_OnFocused"
                                              />
+            <Label x:Name="SymptomsTypeLabel"
+                   Text="Select a Symptom Type..."
+                   >
+                <Label.GestureRecognizers>
+                    
+                    <TapGestureRecognizer
+                        Tapped="SymptomsTypeLabel_OnTapped"
+                        NumberOfTapsRequired="1" 
+                        />
+
+                </Label.GestureRecognizers>
+            </Label>
+
+            <picker:SfPicker x:Name="SymptomTypePicker"
+                             IsVisible="False"
+                             VerticalOptions="CenterAndExpand" 
+                             HorizontalOptions="CenterAndExpand" 
+                             HeaderText="Select a Symptom to edit" 
+                             ShowFooter="True"
+                             OkButtonClicked="SymptomTypePicker_OnOkButtonClicked"
+                             CancelButtonClicked="SymptomTypePicker_OnCancelButtonClicked"
+                             />
 
             <rangeSlider:SfRangeSlider x:Name="RangeSlider" 
                                        Orientation="Horizontal"
@@ -72,6 +94,7 @@
                                        ThumbTouchUp="RangeSlider_OnThumbTouchUp"
                                        ThumbTouchDown="RangeSlider_OnThumbTouchDown"
                                        >
+
                 <rangeSlider:SfRangeSlider.CustomLabels>
                     <rangeSlider:Items Label="None" Value="0"/>
                     <rangeSlider:Items Label="Mild" Value="3"/>
