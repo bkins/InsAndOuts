@@ -27,7 +27,7 @@ namespace InsAndOuts.Models
             Name                 = string.Empty;
             DescriptionPlainText = string.Empty;
             DescriptionHtml      = string.Empty;
-            When                 = $"{DateTime.Today.ToShortDateString()} {DateTime.Now.ToShortTimeString()}";;
+            When                 = DateTime.Now.ToShortDateTimeString(); //$"{DateTime.Today.ToShortDateString()} {DateTime.Now.ToShortTimeString()}";;
         }
         
         public DateTime WhenToDateTime()

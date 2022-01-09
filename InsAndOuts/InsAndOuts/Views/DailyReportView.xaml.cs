@@ -45,15 +45,15 @@ namespace InsAndOuts.Views
             SendTo.Text                = EmailToDoctor;
             ReportDatePickedLabel.Text = DateToReport.ToShortDateString();
 
-            var datesWIthData = new ObservableCollection<string>(ViewModel.DatesWithData);
+            var datesWithData = new ObservableCollection<string>(ViewModel.DatesWithData);
 
-            if ( ! datesWIthData.Any())
+            if ( ! datesWithData.Any())
             {
-                datesWIthData.Add("No date to select.");
+                datesWithData.Add("No date to select.");
                 ReportDatePicker.OKButtonTextColor = Color.Gray;
             }
 
-            ReportDatePicker.ItemsSource = datesWIthData;
+            ReportDatePicker.ItemsSource = datesWithData;
             ReportDatePicker.SelectedItem = DateToReport.ToShortDateString();
         }
 
