@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="NLog" Version="4.7.12" />
     <PackageReference Include="Plugins.Forms.ButtonCircle" Version="2.0.3" />
-    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.13" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.14" />
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
     <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
     <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
@@ -20,7 +20,7 @@
     <PackageReference Include="Syncfusion.Xamarin.SfRichTextEditor" Version="19.2.0.62" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
     <PackageReference Include="Xam.Plugin.Media" Version="5.0.1" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2083" />  
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
 
