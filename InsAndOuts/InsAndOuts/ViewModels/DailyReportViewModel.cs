@@ -143,7 +143,7 @@ namespace InsAndOuts.ViewModels
 
             foreach (var pain in Pains)
             {
-                report.AppendLine($"* {pain.Type.Name}: {pain.Level} ({DateTime.Now.ToShortDateString()}):");
+                report.AppendLine($"* {pain.Type.Name}: {pain.Level} ({DateTime.Now.ToShortTimeString()}):");
 
                 if (pain.DescriptionPlainText.HasValue())
                 {
