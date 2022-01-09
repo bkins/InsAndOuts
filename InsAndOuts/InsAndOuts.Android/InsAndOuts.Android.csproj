@@ -70,7 +70,7 @@
       <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
-      <Version>2.0.0.13</Version>
+      <Version>2.0.0.14</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.Buttons">
       <Version>19.2.0.62</Version>
@@ -90,8 +90,8 @@
     <PackageReference Include="Syncfusion.Xamarin.SfRichTextEditor">
       <Version>19.2.0.62</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
