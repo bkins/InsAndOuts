@@ -42,7 +42,7 @@
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-            <Label Text="This app is to help track meals, stools, and pains.  Including the ability to send a daily report to your doctor."
+            <Label Text="This app is to help track meals, stools, and symptoms (e.g. pains, boating, nausea, etc).  Including the ability to send a daily report to your doctor."
                        FontSize="Subtitle"
                        />
 

@@ -43,18 +43,15 @@ namespace InsAndOuts.ViewModels
                           .OrderBy(field => DateTime.Parse(field.When));
 
             var filterDate = dateToReportOn.ToShortDateString();
-
-            //SetAllItemsByFilterDate(filterDate
-            //                      , allMeals
-            //                      , allPains
-            //                      , allStools);
-
+            
             SetDatesWithDataList(allMeals
                                , allStools
                                , allPains);
         }
 
-        public DailyReportViewModel(DateTime dateToReportOn, bool useTestData = false, IDataStore database = null)
+        public DailyReportViewModel(DateTime   dateToReportOn
+                                  , bool       useTestData = false
+                                  , IDataStore database    = null)
         {
             if (useTestData)
             {
@@ -141,12 +138,12 @@ namespace InsAndOuts.ViewModels
 
         private void BuildPainsReport(StringBuilder report)
         {
-            report.AppendLine("Pains:");
+            report.AppendLine("Syptoms:");
             report.AppendLine("");
 
             foreach (var pain in Pains)
             {
-                report.AppendLine($"* {pain.Type.Name}: {pain.Level} ({DateTime.Parse(pain.When).ToShortTimeString()}):");
+                report.AppendLine($"* {pain.Type.Name}: {pain.Level} ({DateTime.Now.ToShortDateString()}):");
 
                 if (pain.DescriptionPlainText.HasValue())
                 {
@@ -225,7 +222,7 @@ namespace InsAndOuts.ViewModels
 
         private void BuildPainsHtmlReport(StringBuilder report)
         {
-            report.AppendLine("<b>Pains:</b><br>");
+            report.AppendLine("<b>Symtoms:</b><br>");
 
             foreach (var pain in Pains)
             {
