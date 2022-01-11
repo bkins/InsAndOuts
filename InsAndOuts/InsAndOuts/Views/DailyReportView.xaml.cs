@@ -40,6 +40,7 @@ namespace InsAndOuts.Views
         private void GenerateReport()
         {
             ViewModel                  = new DailyReportViewModel(DateToReport);
+            
             ReportPlainText.Text       = ViewModel.ToPainText();
             ReportHtml.HtmlText        = ViewModel.ToHtml();
             SendTo.Text                = EmailToDoctor;

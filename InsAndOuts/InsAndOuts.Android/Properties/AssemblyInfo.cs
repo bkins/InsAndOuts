@@ -12,12 +12,12 @@ using Android.App;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("InsAndOutsAndOoohs!")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Ins & Outs & Ooohs!")]
+[assembly: AssemblyDescription("This app is to help track meals, stools, and symptoms (e.g. pains, boating, nausea, etc).  Including the ability to send a daily report to your doctor.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("InsAndOuts.Android")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCompany("Ben Hopkins/Moral Coding")]
+[assembly: AssemblyProduct("Ins & Outs & Ooohs!")]
+[assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
