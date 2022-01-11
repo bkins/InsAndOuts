@@ -3,7 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <ApplicationIcon>gut.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="gut.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NLog" Version="5.0.0-rc1" />

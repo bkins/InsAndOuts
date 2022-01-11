@@ -29,17 +29,17 @@ namespace InsAndOuts.ViewModels
 
             Meals = DataAccessLayer.GetAllMeals();
             var allMeals = Meals
-                          .Where(field => GetShortDateFromString(field.When) == dateToReportOn.ToShortDateString())
+                          //.Where(field => GetShortDateFromString(field.When) == dateToReportOn.ToShortDateString())
                           .OrderBy(field => DateTime.Parse(field.When));
 
             Stools = DataAccessLayer.GetAllStools();
             var allStools = Stools
-                           .Where(field => GetShortDateFromString(field.When) == dateToReportOn.ToShortDateString())
+                           //.Where(field => GetShortDateFromString(field.When) == dateToReportOn.ToShortDateString())
                            .OrderBy(field => DateTime.Parse(field.When));
 
             Pains = DataAccessLayer.GetAllPain();
             var allPains = Pains
-                          .Where(field => GetShortDateFromString(field.When) == dateToReportOn.ToShortDateString())
+                          //.Where(field => GetShortDateFromString(field.When) == dateToReportOn.ToShortDateString())
                           .OrderBy(field => DateTime.Parse(field.When));
 
             var filterDate = dateToReportOn.ToShortDateString();
@@ -47,6 +47,11 @@ namespace InsAndOuts.ViewModels
             SetDatesWithDataList(allMeals
                                , allStools
                                , allPains);
+
+            SetAllItemsByFilterDate(filterDate
+                                    ,allMeals
+                                    , allPains
+                                    , allStools);
         }
 
         public DailyReportViewModel(DateTime   dateToReportOn
@@ -99,7 +104,7 @@ namespace InsAndOuts.ViewModels
             }
         }
 
-        private void SetAllItemsByFilterDate(string             filterDate
+        public void SetAllItemsByFilterDate(string             filterDate
                                            , IEnumerable<Meal>  allMeals
                                            , IEnumerable<Pain>  allPains
                                            , IEnumerable<Stool> allStools)
@@ -138,7 +143,7 @@ namespace InsAndOuts.ViewModels
 
         private void BuildPainsReport(StringBuilder report)
         {
-            report.AppendLine("Syptoms:");
+            report.AppendLine("Symptoms:");
             report.AppendLine("");
 
             foreach (var pain in Pains)
@@ -222,7 +227,7 @@ namespace InsAndOuts.ViewModels
 
         private void BuildPainsHtmlReport(StringBuilder report)
         {
-            report.AppendLine("<b>Symtoms:</b><br>");
+            report.AppendLine("<b>Symptoms:</b><br>");
 
             foreach (var pain in Pains)
             {

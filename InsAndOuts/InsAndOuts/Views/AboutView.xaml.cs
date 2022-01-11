@@ -18,9 +18,35 @@ namespace InsAndOuts.Views
         public AboutView()
         {
             InitializeComponent();
-
-            VersionNumberSpan.Text = $" version: {VersionTracking.CurrentVersion}";
-            BuildNumberSpan.Text   = $" ({VersionTracking.CurrentBuild})";
+            /*
+             * Semantic Versioning 2.0.0
+             *      MAJOR version when you make incompatible API changes,
+             *      MINOR version when you add functionality in a backwards compatible manner, and
+             *      PATCH version when you make backwards compatible bug fixes.
+             *  
+             * Which I will modify as follows:
+             *      MAJOR (Increment VersionTracking.CurrentBuild) 
+             *          Any significant change to the look and/or how the app works
+             *      MINOR (Increment the first number (left of the dot) of VersionTracking.CurrentVersion)
+             *          Added functionality (when a significant number of features are added, consider this a MAJOR change)
+             *      PATCH (Increment the second number (right of the dot) of VersionTracking.CurrentVersion)
+             *          Bug fixes
+             *          
+             *  These values are updated in Android Manifest file (AndroidManifest.xml)
+             *      versionCode = VersionTracking.CurrentBuild   (int)      >= 1
+             *      versionName = VersionTracking.CurrentVersion (string)   >= 0.0 (in decimal format: an int followed by a dot ('.') then another int.)
+             *          (Optionally, appended to the CurrentVersion, in parentheses, there can be a named version)
+             *      
+             *      Examples:
+             *          Very first version  : 1.0.0
+             *          First bug fix       : 1.1.1
+             *          Then feature added  : 1.2.1
+             *          Major UI revision   : 2.0.0 (beta)  <-- Notice the optional name of the version
+             *          Post beta version   : 2.1.1         <-- After fixing a bug and making a small change based on user feedback.
+             *          
+             */
+            VersionNumberSpan.Text = $" version: {VersionTracking.CurrentBuild}.{VersionTracking.CurrentVersion}";
+            //BuildNumberSpan.Text   = $" ({VersionTracking.CurrentBuild})";
         }
 
         private void Email_Tapped(object    sender
