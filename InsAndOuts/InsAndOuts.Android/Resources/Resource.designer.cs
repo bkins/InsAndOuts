@@ -24615,6 +24615,244 @@ namespace InsAndOuts.Droid
 			
 			// aapt resource value: 0x7F060163
 			public const int mtrl_progress_track_thickness = 2131100003;
+			public const int mtrl_progress_track_thickness = 2131100003;
+			
+			// aapt resource value: 0x7F060164
+			public const int mtrl_shape_corner_size_large_component = 2131100004;
+			
+			// aapt resource value: 0x7F060165
+			public const int mtrl_shape_corner_size_medium_component = 2131100005;
+			
+			// aapt resource value: 0x7F060166
+			public const int mtrl_shape_corner_size_small_component = 2131100006;
+			
+			// aapt resource value: 0x7F060167
+			public const int mtrl_slider_halo_radius = 2131100007;
+			
+			// aapt resource value: 0x7F060168
+			public const int mtrl_slider_label_padding = 2131100008;
+			
+			// aapt resource value: 0x7F060169
+			public const int mtrl_slider_label_radius = 2131100009;
+			
+			// aapt resource value: 0x7F06016A
+			public const int mtrl_slider_label_square_side = 2131100010;
+			
+			// aapt resource value: 0x7F06016B
+			public const int mtrl_slider_thumb_elevation = 2131100011;
+			
+			// aapt resource value: 0x7F06016C
+			public const int mtrl_slider_thumb_radius = 2131100012;
+			
+			// aapt resource value: 0x7F06016D
+			public const int mtrl_slider_track_height = 2131100013;
+			
+			// aapt resource value: 0x7F06016E
+			public const int mtrl_slider_track_side_padding = 2131100014;
+			
+			// aapt resource value: 0x7F06016F
+			public const int mtrl_slider_track_top = 2131100015;
+			
+			// aapt resource value: 0x7F060170
+			public const int mtrl_slider_widget_height = 2131100016;
+			
+			// aapt resource value: 0x7F060171
+			public const int mtrl_snackbar_action_text_color_alpha = 2131100017;
+			
+			// aapt resource value: 0x7F060172
+			public const int mtrl_snackbar_background_corner_radius = 2131100018;
+			
+			// aapt resource value: 0x7F060173
+			public const int mtrl_snackbar_background_overlay_color_alpha = 2131100019;
+			
+			// aapt resource value: 0x7F060174
+			public const int mtrl_snackbar_margin = 2131100020;
+			
+			// aapt resource value: 0x7F060175
+			public const int mtrl_snackbar_message_margin_horizontal = 2131100021;
+			
+			// aapt resource value: 0x7F060176
+			public const int mtrl_snackbar_padding_horizontal = 2131100022;
+			
+			// aapt resource value: 0x7F060177
+			public const int mtrl_switch_thumb_elevation = 2131100023;
+			
+			// aapt resource value: 0x7F060178
+			public const int mtrl_textinput_box_corner_radius_medium = 2131100024;
+			
+			// aapt resource value: 0x7F060179
+			public const int mtrl_textinput_box_corner_radius_small = 2131100025;
+			
+			// aapt resource value: 0x7F06017A
+			public const int mtrl_textinput_box_label_cutout_padding = 2131100026;
+			
+			// aapt resource value: 0x7F06017B
+			public const int mtrl_textinput_box_stroke_width_default = 2131100027;
+			
+			// aapt resource value: 0x7F06017C
+			public const int mtrl_textinput_box_stroke_width_focused = 2131100028;
+			
+			// aapt resource value: 0x7F06017D
+			public const int mtrl_textinput_counter_margin_start = 2131100029;
+			
+			// aapt resource value: 0x7F06017E
+			public const int mtrl_textinput_end_icon_margin_start = 2131100030;
+			
+			// aapt resource value: 0x7F06017F
+			public const int mtrl_textinput_outline_box_expanded_padding = 2131100031;
+			
+			// aapt resource value: 0x7F060180
+			public const int mtrl_textinput_start_icon_margin_end = 2131100032;
+			
+			// aapt resource value: 0x7F060181
+			public const int mtrl_toolbar_default_height = 2131100033;
+			
+			// aapt resource value: 0x7F060182
+			public const int mtrl_tooltip_arrowSize = 2131100034;
+			
+			// aapt resource value: 0x7F060183
+			public const int mtrl_tooltip_cornerSize = 2131100035;
+			
+			// aapt resource value: 0x7F060184
+			public const int mtrl_tooltip_minHeight = 2131100036;
+			
+			// aapt resource value: 0x7F060185
+			public const int mtrl_tooltip_minWidth = 2131100037;
+			
+			// aapt resource value: 0x7F060186
+			public const int mtrl_tooltip_padding = 2131100038;
+			
+			// aapt resource value: 0x7F060187
+			public const int mtrl_transition_shared_axis_slide_distance = 2131100039;
+			
+			// aapt resource value: 0x7F060188
+			public const int notification_action_icon_size = 2131100040;
+			
+			// aapt resource value: 0x7F060189
+			public const int notification_action_text_size = 2131100041;
+			
+			// aapt resource value: 0x7F06018A
+			public const int notification_big_circle_margin = 2131100042;
+			
+			// aapt resource value: 0x7F06018B
+			public const int notification_content_margin_start = 2131100043;
+			
+			// aapt resource value: 0x7F06018C
+			public const int notification_large_icon_height = 2131100044;
+			
+			// aapt resource value: 0x7F06018D
+			public const int notification_large_icon_width = 2131100045;
+			
+			// aapt resource value: 0x7F06018E
+			public const int notification_main_column_padding_top = 2131100046;
+			
+			// aapt resource value: 0x7F06018F
+			public const int notification_media_narrow_margin = 2131100047;
+			
+			// aapt resource value: 0x7F060190
+			public const int notification_right_icon_size = 2131100048;
+			
+			// aapt resource value: 0x7F060191
+			public const int notification_right_side_padding_top = 2131100049;
+			
+			// aapt resource value: 0x7F060192
+			public const int notification_small_icon_background_padding = 2131100050;
+			
+			// aapt resource value: 0x7F060193
+			public const int notification_small_icon_size_as_large = 2131100051;
+			
+			// aapt resource value: 0x7F060194
+			public const int notification_subtext_size = 2131100052;
+			
+			// aapt resource value: 0x7F060195
+			public const int notification_top_pad = 2131100053;
+			
+			// aapt resource value: 0x7F060196
+			public const int notification_top_pad_large_text = 2131100054;
+			
+			// aapt resource value: 0x7F060197
+			public const int preference_dropdown_padding_start = 2131100055;
+			
+			// aapt resource value: 0x7F060198
+			public const int preference_icon_minWidth = 2131100056;
+			
+			// aapt resource value: 0x7F060199
+			public const int preference_seekbar_padding_horizontal = 2131100057;
+			
+			// aapt resource value: 0x7F06019A
+			public const int preference_seekbar_padding_vertical = 2131100058;
+			
+			// aapt resource value: 0x7F06019B
+			public const int preference_seekbar_value_minWidth = 2131100059;
+			
+			// aapt resource value: 0x7F06019C
+			public const int test_mtrl_calendar_day_cornerSize = 2131100060;
+			
+			// aapt resource value: 0x7F06019D
+			public const int test_navigation_bar_active_item_max_width = 2131100061;
+			
+			// aapt resource value: 0x7F06019E
+			public const int test_navigation_bar_active_item_min_width = 2131100062;
+			
+			// aapt resource value: 0x7F06019F
+			public const int test_navigation_bar_active_text_size = 2131100063;
+			
+			// aapt resource value: 0x7F0601A0
+			public const int test_navigation_bar_elevation = 2131100064;
+			
+			// aapt resource value: 0x7F0601A1
+			public const int test_navigation_bar_height = 2131100065;
+			
+			// aapt resource value: 0x7F0601A2
+			public const int test_navigation_bar_icon_size = 2131100066;
+			
+			// aapt resource value: 0x7F0601A3
+			public const int test_navigation_bar_item_max_width = 2131100067;
+			
+			// aapt resource value: 0x7F0601A4
+			public const int test_navigation_bar_item_min_width = 2131100068;
+			
+			// aapt resource value: 0x7F0601A5
+			public const int test_navigation_bar_label_padding = 2131100069;
+			
+			// aapt resource value: 0x7F0601A6
+			public const int test_navigation_bar_shadow_height = 2131100070;
+			
+			// aapt resource value: 0x7F0601A7
+			public const int test_navigation_bar_text_size = 2131100071;
+			
+			// aapt resource value: 0x7F0601A8
+			public const int thumb_size = 2131100072;
+			
+			// aapt resource value: 0x7F0601A9
+			public const int tick_size = 2131100073;
+			
+			// aapt resource value: 0x7F0601AE
+			public const int tooltip_corner_radius = 2131100078;
+			
+			// aapt resource value: 0x7F0601AF
+			public const int tooltip_horizontal_padding = 2131100079;
+			
+			// aapt resource value: 0x7F0601B0
+			public const int tooltip_margin = 2131100080;
+			
+			// aapt resource value: 0x7F0601B1
+			public const int tooltip_precise_anchor_extra_offset = 2131100081;
+			
+			// aapt resource value: 0x7F0601B2
+			public const int tooltip_precise_anchor_threshold = 2131100082;
+			
+			// aapt resource value: 0x7F0601B3
+			public const int tooltip_textsize = 2131100083;
+			
+			// aapt resource value: 0x7F0601B4
+			public const int tooltip_vertical_padding = 2131100084;
+			
+			// aapt resource value: 0x7F0601B5
+			public const int tooltip_y_offset_non_touch = 2131100085;
+			
+			// aapt resource value: 0x7F0601B6
+			public const int tooltip_y_offset_touch = 2131100086;
 			
 			// aapt resource value: 0x7F060164
 			public const int mtrl_shape_corner_size_large_component = 2131100004;
@@ -25449,19 +25687,19 @@ namespace InsAndOuts.Droid
 			public const int pain = 2131165378;
 			
 			// aapt resource value: 0x7F0700C3
-			public const int play_store_512 = 2131165379;
+			public const int popup_forms_android_close_icon = 2131165379;
 			
 			// aapt resource value: 0x7F0700C4
-			public const int popup_forms_android_close_icon = 2131165380;
+			public const int popup_forms_android_shadow = 2131165380;
 			
 			// aapt resource value: 0x7F0700C5
-			public const int popup_forms_android_shadow = 2131165381;
+			public const int popup_forms_dark_theme_close_icon = 2131165381;
 			
 			// aapt resource value: 0x7F0700C6
-			public const int popup_forms_dark_theme_close_icon = 2131165382;
+			public const int popup_forms_light_theme_close_icon = 2131165382;
 			
 			// aapt resource value: 0x7F0700C7
-			public const int popup_forms_light_theme_close_icon = 2131165383;
+			public const int preference_list_divider_material = 2131165383;
 			
 			// aapt resource value: 0x7F0700C8
 			public const int preference_list_divider_material = 2131165384;
@@ -25659,6 +25897,9 @@ namespace InsAndOuts.Droid
 			// aapt resource value: 0x7F080049
 			public const int actions = 2131230793;
 			
+			// aapt resource value: 0x7F080049
+			public const int actions = 2131230793;
+			
 			// aapt resource value: 0x7F080037
 			public const int actionUp = 2131230775;
 			
@@ -25688,6 +25929,9 @@ namespace InsAndOuts.Droid
 			
 			// aapt resource value: 0x7F080040
 			public const int action_context_bar = 2131230784;
+			
+			// aapt resource value: 0x7F080041
+			public const int action_divider = 2131230785;
 			
 			// aapt resource value: 0x7F080041
 			public const int action_divider = 2131230785;
@@ -25743,6 +25987,9 @@ namespace InsAndOuts.Droid
 			// aapt resource value: 0x7F080052
 			public const int animateToStart = 2131230802;
 			
+			// aapt resource value: 0x7F080052
+			public const int animateToStart = 2131230802;
+			
 			// aapt resource value: 0x7F080053
 			public const int annotationLayout = 2131230803;
 			
@@ -25788,6 +26035,9 @@ namespace InsAndOuts.Droid
 			// aapt resource value: 0x7F080060
 			public const int beginOnFirstDraw = 2131230816;
 			
+			// aapt resource value: 0x7F080060
+			public const int beginOnFirstDraw = 2131230816;
+			
 			// aapt resource value: 0x7F080062
 			public const int bestChoice = 2131230818;
 			
@@ -25796,6 +26046,9 @@ namespace InsAndOuts.Droid
 			
 			// aapt resource value: 0x7F080064
 			public const int border = 2131230820;
+			
+			// aapt resource value: 0x7F080003
+			public const int BorderView = 2131230723;
 			
 			// aapt resource value: 0x7F080003
 			public const int BorderView = 2131230723;
@@ -25821,6 +26074,15 @@ namespace InsAndOuts.Droid
 			// aapt resource value: 0x7F080002
 			public const int BOTTOM_START = 2131230722;
 			
+			// aapt resource value: 0x7F080001
+			public const int BOTTOM_END = 2131230721;
+			
+			// aapt resource value: 0x7F080067
+			public const int bottom_labels = 2131230823;
+			
+			// aapt resource value: 0x7F080002
+			public const int BOTTOM_START = 2131230722;
+			
 			// aapt resource value: 0x7F08006A
 			public const int bounce = 2131230826;
 			
@@ -25835,6 +26097,9 @@ namespace InsAndOuts.Droid
 			
 			// aapt resource value: 0x7F08006E
 			public const int browser_actions_header_text = 2131230830;
+			
+			// aapt resource value: 0x7F080071
+			public const int browser_actions_menu_items = 2131230833;
 			
 			// aapt resource value: 0x7F080071
 			public const int browser_actions_menu_items = 2131230833;
@@ -25911,6 +26176,9 @@ namespace InsAndOuts.Droid
 			// aapt resource value: 0x7F080087
 			public const int circle_center = 2131230855;
 			
+			// aapt resource value: 0x7F080087
+			public const int circle_center = 2131230855;
+			
 			// aapt resource value: 0x7F080088
 			public const int clear_text = 2131230856;
 			
@@ -25922,6 +26190,9 @@ namespace InsAndOuts.Droid
 			
 			// aapt resource value: 0x7F08008B
 			public const int clockwise = 2131230859;
+			
+			// aapt resource value: 0x7F08008C
+			public const int closest = 2131230860;
 			
 			// aapt resource value: 0x7F08008C
 			public const int closest = 2131230860;
@@ -25962,6 +26233,9 @@ namespace InsAndOuts.Droid
 			// aapt resource value: 0x7F080004
 			public const int CTRL = 2131230724;
 			
+			// aapt resource value: 0x7F080004
+			public const int CTRL = 2131230724;
+			
 			// aapt resource value: 0x7F080098
 			public const int currentState = 2131230872;
 			
@@ -25992,6 +26266,9 @@ namespace InsAndOuts.Droid
 			// aapt resource value: 0x7F080005
 			public const int Default = 2131230725;
 			
+			// aapt resource value: 0x7F080005
+			public const int Default = 2131230725;
+			
 			// aapt resource value: 0x7F0800A1
 			public const int default_activity_button = 2131230881;
 			
@@ -26015,6 +26292,9 @@ namespace InsAndOuts.Droid
 			
 			// aapt resource value: 0x7F0800A8
 			public const int design_navigation_view = 2131230888;
+			
+			// aapt resource value: 0x7F080006
+			public const int Dialog = 2131230726;
 			
 			// aapt resource value: 0x7F080006
 			public const int Dialog = 2131230726;
@@ -26112,11 +26392,17 @@ namespace InsAndOuts.Droid
 			// aapt resource value: 0x7F0800C6
 			public const int expand_activities_button = 2131230918;
 			
+			// aapt resource value: 0x7F0800C6
+			public const int expand_activities_button = 2131230918;
+			
 			// aapt resource value: 0x7F0800C8
 			public const int fade = 2131230920;
 			
 			// aapt resource value: 0x7F0800C9
 			public const int fill = 2131230921;
+			
+			// aapt resource value: 0x7F0800CC
+			public const int filled = 2131230924;
 			
 			// aapt resource value: 0x7F0800CC
 			public const int filled = 2131230924;
@@ -26154,6 +26440,9 @@ namespace InsAndOuts.Droid
 			// aapt resource value: 0x7F080007
 			public const int FUNCTION = 2131230727;
 			
+			// aapt resource value: 0x7F080007
+			public const int FUNCTION = 2131230727;
+			
 			// aapt resource value: 0x7F0800D5
 			public const int ghost_view = 2131230933;
 			
@@ -26180,6 +26469,9 @@ namespace InsAndOuts.Droid
 			
 			// aapt resource value: 0x7F0800DE
 			public const int groups = 2131230942;
+			
+			// aapt resource value: 0x7F0800DC
+			public const int group_divider = 2131230940;
 			
 			// aapt resource value: 0x7F0800DC
 			public const int group_divider = 2131230940;
@@ -26258,6 +26550,9 @@ namespace InsAndOuts.Droid
 			
 			// aapt resource value: 0x7F0800F7
 			public const int italic = 2131230967;
+			
+			// aapt resource value: 0x7F080008
+			public const int Itemname = 2131230728;
 			
 			// aapt resource value: 0x7F080008
 			public const int Itemname = 2131230728;
@@ -30207,6 +30502,9 @@ namespace InsAndOuts.Droid
 			
 			// aapt resource value: 0x7F0F0280
 			public const int Widget_MaterialComponents_ActionBar_Primary = 2131690112;
+			
+			// aapt resource value: 0x7F0F0281
+			public const int Widget_MaterialComponents_ActionBar_PrimarySurface = 2131690113;
 			
 			// aapt resource value: 0x7F0F0281
 			public const int Widget_MaterialComponents_ActionBar_PrimarySurface = 2131690113;
