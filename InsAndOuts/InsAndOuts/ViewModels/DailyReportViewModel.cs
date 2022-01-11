@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -144,6 +144,7 @@ namespace InsAndOuts.ViewModels
         private void BuildPainsReport(StringBuilder report)
         {
             report.AppendLine("Symptoms:");
+
             report.AppendLine("");
 
             foreach (var pain in Pains)
